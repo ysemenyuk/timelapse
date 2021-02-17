@@ -1,8 +1,9 @@
 import { spawn } from "child_process";
 
-// const ls = spawn("ls", ["-la"]);
-const ls = spawn("ffmpeg", ["-r", "25", "-i", "G:/0217/img-%06d.jpg", "-vcodec", "libx264", "G:/output2.mp4"]);
 // "ffmpeg -r 25 -i G:/0217/img-%06d.jpg -vcodec libx264 G:/output.mp4"
+
+const ls = spawn("ffmpeg", ["-r", "25", "-i", "G:/0217/img-%06d.jpg", "-vcodec", "libx264", "G:/output2.mp4"]);
+
 
 ls.stdout.on("data", data => {
     console.log(`stdout: ${data}`);
