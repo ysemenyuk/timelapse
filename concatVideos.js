@@ -12,9 +12,11 @@ const execp = util.promisify(exec);
 // file G:\\videos\\timelapse-01.mp4
 // file G:\\videos\\timelapse-02.mp4
 
-const concatVideoFiles = (pathToVideosDir, pathToOutputDir, videoFileName) => {
+const concatVideoFiles = (pathToVideosDir, pathToOutputDir, videoFileName, pathToLogFile) => {
 
-  const pathToListFile = path.join(pathToVideosDir, `${videoFileName}-list.txt`)
+  log(pathToLogFile, `make fullVideo File ${pathToOutputDir}\\${videoFileName}-video.mp4`);
+
+  const pathToListFile = path.join(pathToOutputDir, `${videoFileName}-list.txt`)
 
   return fsp.readdir(pathToVideosDir)
     .then((files) => {
@@ -29,6 +31,7 @@ const concatVideoFiles = (pathToVideosDir, pathToOutputDir, videoFileName) => {
       console.log('stderr:', stderr);
     })
     .catch((e) => {
+      log(pathToLogFile, `error make fullVideo File ${e.message}`);
       console.log('error:', e.message)
     })
 

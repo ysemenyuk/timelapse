@@ -42,21 +42,24 @@ const startCam = (name) => {
   const logFileName = `${dirName}-log.txt`
   const pathToLogFile = path.join(pathToApp, logsDirName, logFileName);
 
-  const props = { pathToLogFile, dirName, pathToDir }
- 
   const nextDay = new Date(year, month, date + 1, 1, 1);
-  const startMakeVideo = new Date(year, month, date, 23, 1);
-  const startGetImages = new Date(year, month, date, 1, 1);
+  const startGetImages = new Date(year, month, date, 8, 1);
+  const startMakeVideo = new Date(year, month, date, 22, 1);
+  const startConcatVideos = new Date(year, month, date, 23, 1);
 
   setTimeout(() => startCam(name), nextDay - currentTime);
   
   setTimeout(() => {
-    makeVideoFile(pathToDir, pathToVideoFiles, dirName)
-  }, startMakeVideo - currentTime);
-  console.log(startGetImages - currentTime)
-  setTimeout(() => {
     getImgFromUrl(pathToDir, pathToLogFile, jpegUrl, recordInterval, stopRecordTime)
   }, startGetImages - currentTime);
+
+  setTimeout(() => {
+    makeVideoFile(pathToDir, pathToVideoFiles, dirName, pathToLogFile)
+  }, startMakeVideo - currentTime);
+
+  setTimeout(() => {
+    concatVideos(pathToVideoFiles, pathToApp, 'fullVideo', pathToLogFile)
+  }, startConcatVideos - currentTime);
 
   console.log(`start ${name}`, currentTime.toLocaleString());
 

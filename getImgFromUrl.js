@@ -16,7 +16,7 @@ const getImgFromUrl = (pathToDir, pathToLogFile, jpegUrl, recordInterval, stopRe
   const currentTime = `${hh}-${mm}`;
 
   if (currentTime > stopRecordTime) {
-    console.log('stop record');
+    log(pathToLogFile, `stop record`);
     return;
   }
 
@@ -48,9 +48,6 @@ const getImgFromUrl = (pathToDir, pathToLogFile, jpegUrl, recordInterval, stopRe
     .catch((e) => {
       log(pathToLogFile, `catch write file error: ${e.message}`);
     })
-    // .finally(() => {
-    //   setTimeout(() => getImgWithInterval(), recordInterval);
-    // })
 
 };
 

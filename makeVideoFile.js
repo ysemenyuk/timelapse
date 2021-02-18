@@ -7,8 +7,9 @@ import { makeNum, msToTime, log } from './utils.js'
 
 const execp = util.promisify(exec);
 
-const makeVideoFile = (pathToImages, pathToVideoFiles, videoFileName) => {
-  console.log('makeVideoFile');
+const makeVideoFile = (pathToImages, pathToVideoFiles, videoFileName, pathToLogFile) => {
+
+  log(pathToLogFile, `make Video File ${pathToVideoFiles}\\${videoFileName}.mp4`);
   
   return execp(`ffmpeg -y -r 25 -i ${pathToImages}\\img-%06d.jpg -vcodec libx264 ${pathToVideoFiles}\\${videoFileName}.mp4`)
     .then(({ stdout, stderr }) => {
@@ -16,6 +17,7 @@ const makeVideoFile = (pathToImages, pathToVideoFiles, videoFileName) => {
       console.log('stderr:', stderr);
     })
     .catch((e) => {
+      log(pathToLogFile, `error make Video File ${e.message}`);
       console.dir('error:', e.message)
     })
 }
