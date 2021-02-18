@@ -21,9 +21,9 @@ const renameFiles = (pathToSrcDir, pathToOutDir = pathToSrcDir) => {
     })
 };
 
-const pathToSrcDir = path.join('G:\\', '20210218')
+// const pathToSrcDir = path.join('G:\\', '20210218')
 // const pathToOutDir = path.join('G:\\', 'renamed')
 
-renameFiles(pathToSrcDir);
+// renameFiles(pathToSrcDir);
 
 export default renameFiles;

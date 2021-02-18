@@ -3,7 +3,7 @@ import fs from 'fs';
 import path from 'path';
 
 import makeVideo from './makeVideo.js';
-import renameFiles from './renameFiles.js'
+import renameFiles from '../renameFiles.js'
 
 const fsp = fs.promises;
 

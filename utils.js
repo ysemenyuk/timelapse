@@ -1,3 +1,8 @@
+import fs from 'fs';
+import path from 'path';
+
+const fsp = fs.promises;
+
 export const makeNum = (num) => {
   if (num < 10) {
     return `00000${num}`
@@ -28,4 +33,9 @@ export const msToTime = (duration) => {
   seconds = (seconds < 10) ? "0" + seconds : seconds;
   
   return hours + ":" + minutes + ":" + seconds;
+};
+
+export const log = (pathToLogFile, message) => {
+  console.log(new Date().toLocaleString(), message);
+  fsp.appendFile(pathToLogFile, `${new Date().toLocaleString()} - ${message}\n`)
 };
