@@ -3,23 +3,38 @@ import path from 'path';
 import { exec } from "child_process";
 import util from 'util';
 
-const exec = util.promisify(require('child_process').exec);
+const execp = util.promisify(exec);
 
-const makeVideoFile = (pathToImages, outputPath, videoFileName) => {
-  return exec("ffmpeg -r 25 -i G:/0217/img-%06d.jpg -vcodec libx264 G:/output.mp4")
+const makeVideoFile = (pathToImages, pathToVideoFiles, videoFileName) => {
+  
+  return execp(`ffmpeg -y -r 25 -i ${pathToImages}\\img-%06d.jpg -vcodec libx264 ${pathToVideoFiles}\\${videoFileName}.mp4`)
     .then(({ stdout, stderr }) => {
       console.log('stdout:', stdout);
-      console.log('stderr:', stderr);
+      console.error('stderr:', stderr);
     })
-    .catch((e) => {
-      console.log('error:', e.message)
-    })
+    // .catch((e) => {
+    //   console.dir('error:', e.message)
+    // })
 }
 
-const pathToImages = path.join('G:\\', '2021-02-17');
-const pathToVideoFiles = 'G:\\';
-const videoFileName = 'timelapse-170221';
+// const pathToImages = path.join('G:\\', '20210217');
+// const pathToVideoFiles = 'G:\\';
+// const videoFileName = 'timelapse-170221';
 
-makeVideo(pathToImages, pathToVideoFiles, videoFileName);
+
+// console.log('start', (new Date()).toLocaleString())
+
+// setInterval(() => {
+//   console.log('interval', (new Date()).toLocaleString())
+// }, 1000);
+
+// makeVideoFile(pathToImages, pathToVideoFiles, videoFileName)
+//   .then((res) => {
+//     console.log('end from then', (new Date()).toLocaleString())
+//   })
+//   .catch((e) => {
+//     console.log('error', e)
+//   })
+
 
 export default makeVideoFile;

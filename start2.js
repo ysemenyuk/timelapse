@@ -2,25 +2,26 @@ import axios from 'axios';
 import fs from 'fs';
 import path from 'path';
 
-import makeVideo from './makeVideo.js';
-import makeVideo2 from './makeVideo2.js';
+import makeVideoFile from './makeVideo.js';
+import makeVideoFile2 from './makeVideo2.js';
 
-import makeNum from './utils.js'
+import { makeNum, msToTime } from './utils.js'
 
 const fsp = fs.promises;
 
+const dd = (num) => num < 10 ? `0${num}` : `${num}`;
 
-const dd = (num) => {
-  return num < 10 ? `0${num}` : `${num}`
-};
-
-const recordInterval = 10000;
-const sleepInterval = 60000;
+const recordInterval = 5 * 1000;
+const sleepInterval = 60 * 1000;
 
 const startRecordTime = '08-00';
 const stopRecordTime = '20-00';
 
+const pathToApp = 'G:\\timelapse';
+
 const jpegUrl = "http://admin:qwer1234@192.168.1.64:80/ISAPI/Streaming/Channels/101/picture?snapShotImageType=JPEG"
+
+
 
 const getImgWithInterval = () => {
 
@@ -33,41 +34,42 @@ const getImgWithInterval = () => {
   const mm = dd(time.getMinutes());
   const ss = dd(time.getSeconds());
 
-  const current = `${year}.${month}.${date}--${hh}:${mm}:${ss}`
+  const current = `${year}.${month}.${date}--${hh}:${mm}:${ss}`;
   // console.log('current:', current);
   
-  const pathToLogFile = path.join('G:\\', `${year}${month}${date}-log.txt`)
-  const pathToVideoFiles = 'G:\\';
+  const pathToLogFile = path.join(pathToApp, 'logs', `${year}${month}${date}-log.txt`);
+  const pathToVideoFiles = path.join(pathToApp, `videos`);
 
-  const dirName = `${year}${month}${date}`
-  const pathToDir = path.join('G:\\', dirName)
+  const dirName = `${year}${month}${date}`;
+  const pathToDir = path.join(pathToApp, 'images', dirName);
 
-  const currentTime = `${hh}-${mm}`
+  const currentTime = `${hh}-${mm}`;
   // console.log('currentTime', currentTime)
 
   if (currentTime > stopRecordTime) {
 
-    // console.log('setTimeout sleep after stop')
-    // fsp.appendFile(pathToLogFile, `${current} - setTimeout sleep after stop\n`)
-    // setTimeout(() => start(), sleepInterval);
+    console.log('stop record');
+    fsp.appendFile(pathToLogFile, `${new Date().toLocaleString()} - stop record\n`);
 
-    console.log('start make video', new Date().toLocaleString)
-    fsp.appendFile(pathToLogFile, `${new Date().toLocaleString} - make video\n`)
+    console.log('start make video', new Date().toLocaleString());
+    fsp.appendFile(pathToLogFile, `${new Date().toLocaleString()} - make video\n`);
 
-    // makeVideo(pathToDir, pathToVideoFiles, dirName);
-
-    makeVideo2(pathToDir, pathToVideoFiles, dirName)
+    makeVideoFile2(pathToDir, pathToVideoFiles, dirName)
       .then(() => {
-        console.log('end make video', new Date().toLocaleString)
-        fsp.appendFile(pathToLogFile, `${new Date().toLocaleString} - end make video\n`)
-        console.log('setTimeout sleep after stop')
-        fsp.appendFile(pathToLogFile, `${current} - setTimeout sleep after stop\n`)
+        console.log('end make video', new Date().toLocaleString());
+        fsp.appendFile(pathToLogFile, `${new Date().toLocaleString()} - end make video\n`);
+      })
+      .catch((e) => {
+        console.log('catch make video error:', e.message);
+        fsp.appendFile(pathToLogFile, `${new Date().toLocaleString()} - catch make video error: ${e.message}\n`);
+      })
+      .finally(() => {
         setTimeout(() => start(), sleepInterval);
       })
    
   } else {
 
-    let count = 0
+    let count = 0;
 
     fsp.readdir(pathToDir)
 
@@ -90,15 +92,15 @@ const getImgWithInterval = () => {
         const fileName = `img-${makeNum(count)}.jpg`;
         const pathToFile = path.join(pathToDir, fileName);
 
-        console.log(pathToFile);
+        console.log('write file:',pathToFile);
         fsp.appendFile(pathToLogFile, `${current} - write file: ${pathToFile}\n`);
 
         return fsp.writeFile(pathToFile, resp.data);
       })
 
       .catch((e) => {
-        console.log('catch end error:', e.message)
-        fsp.appendFile(pathToLogFile, `${current} - catch end error: ${e.message}\n`)
+        console.log('catch write file error:', e.message);
+        fsp.appendFile(pathToLogFile, `${current} - catch write file error: ${e.message}\n`);
       })
 
       .finally(() => {
@@ -115,19 +117,39 @@ const start = () => {
   const hh = dd(time.getHours());
   const mm = dd(time.getMinutes());
 
-  const currentTime = `${hh}-${mm}`
+  const currentTime = `${hh}-${mm}`;
 
-  if (currentTime < startRecordTime || currentTime > stopRecordTime) {
 
-    console.log('sleep', currentTime)
+
+  if (currentTime < startRecordTime) {
+
+    const nextTime = new Date(time.getFullYear(), time.getMonth(), time.getDate(), 8, 0);
+
+    console.log('time', time.toLocaleString());
+    console.log('next start', nextTime.toLocaleString());
+    console.log('time to start', msToTime(nextTime - time));
+
+    // console.log('sleep', time.toLocaleString());
     setTimeout(() => start(), sleepInterval);
-
-  } else {
-
-    console.log('start record', currentTime)
-    getImgWithInterval()
-
+    return;
   }
+
+  if (currentTime > stopRecordTime) {
+
+    const nextTime = new Date(time.getFullYear(), time.getMonth(), time.getDate() + 1, 8, 0);
+
+    console.log('time', time.toLocaleString());
+    console.log('next start', nextTime.toLocaleString());
+    console.log('time to start', msToTime(nextTime - time));
+
+    // console.log('sleep', time.toLocaleString())
+    setTimeout(() => start(), sleepInterval);
+    return;
+  } 
+
+  console.log('start record', time.toLocaleString());
+  getImgWithInterval();
+
 };
 
-start()
+start();

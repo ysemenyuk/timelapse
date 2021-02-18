@@ -5,8 +5,6 @@ import makeNum from './utils.js'
 
 const fsp = fs.promises;
 
-
-
 const renameFiles = (pathToSrcDir, pathToOutDir = pathToSrcDir) => {
   return fsp.readdir(pathToSrcDir)
     .then((files) => {
@@ -23,9 +21,9 @@ const renameFiles = (pathToSrcDir, pathToOutDir = pathToSrcDir) => {
     })
 };
 
-// const pathToSrcDir = path.join('G:\\', '2021-02-17')
+const pathToSrcDir = path.join('G:\\', '20210218')
 // const pathToOutDir = path.join('G:\\', 'renamed')
 
-// renameFiles(pathToSrcDir);
+renameFiles(pathToSrcDir);
 
 export default renameFiles;
