@@ -49,7 +49,7 @@ const startCam = (settings, paths) => {
   console.log('startMakeVideo', startMakeVideo.toLocaleString());
   // console.log('startConcatVideos', startConcatVideos.toLocaleString());
 
-  setTimeout(() => startCam(settings, pathToCamDir), nextDay - currentTime);
+  setTimeout(() => startCam(settings, paths), nextDay - currentTime);
   
   setTimeout(() => {
     getImgFromUrl(pathToDir, pathToLogFile, jpegUrl, jpegInterval, stopRecordTime)
