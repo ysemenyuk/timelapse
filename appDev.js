@@ -6,23 +6,25 @@ import makeVideoFile from './makeVideoFile.js';
 import concatVideos from './concatVideos.js';
 
 import { makeNum, msToTime, log } from './utils.js';
-import { cam1Settings } from './camSettings.js';
+import settings from './settings.js';
 
+const { cams } = settings;
 const fsp = fs.promises;
 
 const dd = (num) => num < 10 ? `0${num}` : `${num}`;
 
 
 const pathToApp = path.resolve('../');
+
 const logsDirName = 'logs';
 const videosDirName = 'videos';
 const imagesDirName = 'images'
-const pathToVideoFiles = path.join(pathToApp, videosDirName);
 
 
-const startCam = (settings, pathToCamDir) => {
+const startCam = (settings, paths) => {
 
-  const { camName, recordInterval, startRecordTime, stopRecordTime, timeForMakeVideo, jpegUrl } = settings;
+  const { camName, jpegUrl, jpegInterval, startRecordTime, stopRecordTime, startMakeVideoTime } = settings;
+  const { pathToCamDir, pathToimagesDir, pathToVideosDir, pathToLogFile } = paths;
 
   const currentTime = new Date();
 
@@ -31,73 +33,75 @@ const startCam = (settings, pathToCamDir) => {
   const date = currentTime.getDate();
 
   const dirName = `${year}${dd(month + 1)}${dd(date)}`;
-  const pathToDir = path.join(pathToCamDir, imagesDirName, dirName);
+  const pathToDir = path.join(pathToimagesDir, dirName);
 
-  const logFileName = `${dirName}-log.txt`
-  const pathToLogFile = path.join(pathToCamDir, logsDirName, logFileName);
+  const [srHour, srMin] = startRecordTime;
+  const [smvHour, smvMin] = startMakeVideoTime;
 
   const nextDay = new Date(year, month, date + 1, 1, 1);
-  const startGetImages = new Date(year, month, date, 8, 1);
-  const startMakeVideo = new Date(year, month, date, 22, 1);
-  const startConcatVideos = new Date(year, month, date, 23, 1);
+  const startGetImages = new Date(year, month, date, srHour, srMin);
+  const startMakeVideo = new Date(year, month, date, smvHour, smvMin);
+  // const startConcatVideos = new Date(year, month, date, 23, 1);
 
-  // console.log('currentTime', currentTime.toLocaleString());
-  // console.log('nextDay', nextDay.toLocaleString());
-  // console.log('startGetImages', startGetImages.toLocaleString());
-  // console.log('startMakeVideo', startMakeVideo.toLocaleString());
+  console.log('currentTime', currentTime.toLocaleString());
+  console.log('nextDay', nextDay.toLocaleString());
+  console.log('startGetImages', startGetImages.toLocaleString());
+  console.log('startMakeVideo', startMakeVideo.toLocaleString());
   // console.log('startConcatVideos', startConcatVideos.toLocaleString());
 
   setTimeout(() => startCam(settings, pathToCamDir), nextDay - currentTime);
   
   setTimeout(() => {
-    getImgFromUrl(pathToDir, pathToLogFile, jpegUrl, recordInterval, stopRecordTime)
+    getImgFromUrl(pathToDir, pathToLogFile, jpegUrl, jpegInterval, stopRecordTime)
   }, startGetImages - currentTime);
 
   setTimeout(() => {
-    makeVideoFile(pathToDir, pathToVideoFiles, dirName, pathToLogFile)
+    makeVideoFile(pathToDir, pathToVideosDir, dirName, pathToLogFile)
   }, startMakeVideo - currentTime);
 
-  setTimeout(() => {
-    concatVideos(pathToVideoFiles, pathToCamDir, camName, pathToLogFile)
-  }, startConcatVideos - currentTime);
+  // setTimeout(() => {
+  //   concatVideos(pathToVideosDir, pathToCamDir, camName, pathToLogFile)
+  // }, startConcatVideos - currentTime);
 
 };
 
+const checkDir = (pathToDir) => {
+  return fsp.readdir(pathToDir)
+    .then(() => {
+      console.log(`dir already exist: ${pathToDir}`);
+    })
+    .catch((e) => {
+      console.log(`catch readdir error: ${e.message}`);
+      console.log(`make dir: ${pathToDir}`);
+      return fsp.mkdir(pathToDir);
+    })
+}
+
+
 const app = async () => {
-  const { camName } = cam1Settings;
-  const pathToCamDir = path.join(pathToApp, camName)
+  const camSettings = cams[0];
+  const { camName } = camSettings;
 
-  console.log('pathToCamDir', pathToCamDir)
+  const pathToCamDir = path.join(pathToApp, camName);
+  const pathToimagesDir = path.join(pathToCamDir, imagesDirName);
+  const pathToVideosDir = path.join(pathToCamDir, videosDirName);
 
-  try {
-    await fsp.mkdir(pathToCamDir)
-  } catch (err) {
-    console.log(err.message)
-  }
+  const logFileName = `${camName}-log.txt`
+  const pathToLogFile = path.join(pathToCamDir, logFileName);
 
-  try {
-    await fsp.mkdir(path.join(pathToCamDir, logsDirName))
-  } catch (err) {
-    console.log(err.message)
-  }
+  const camPaths = { pathToCamDir, pathToimagesDir, pathToVideosDir, pathToLogFile };
 
-  try {
-    await fsp.mkdir(path.join(pathToCamDir, videosDirName))
-  } catch (err) {
-    console.log(err.message)
-  }
+  console.log('try start camera', camName)
 
-  try {  
-    await fsp.mkdir(path.join(pathToCamDir, imagesDirName))
-  } catch (err) {
-    console.log(err.message)
-  }
+  checkDir(pathToCamDir)
+    .then(() => checkDir(pathToimagesDir))
+    .then(() => checkDir(pathToVideosDir))
+    .then(() => startCam(camSettings, camPaths))
+    .catch((e) => {
+      throw new Error(e);
+    });
 
-  console.log('got dirs')
-
-  console.log(`start ${camName}`, (new Date()).toLocaleString());
-
-  startCam(cam1Settings, pathToCamDir);
+  // console.log(`started camera`, camName, (new Date()).toLocaleString());
 };
 
 app();
