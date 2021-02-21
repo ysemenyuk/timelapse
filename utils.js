@@ -3,6 +3,28 @@ import path from 'path';
 
 const fsp = fs.promises;
 
+export const dd = (num) => num < 10 ? `0${num}` : `${num}`;
+
+
+export const parseTime = (time) => {
+  const year = time.getFullYear();
+  const month = time.getMonth();
+  const date = time.getDate();
+  const hh = time.getHours();
+  const mm = time.getMinutes();
+  const ss = time.getSeconds();
+
+  return { year, month, date, hh, mm, ss }
+
+};
+
+
+export const makeTodayName = (time) => {
+  const { year, month, date } = parseTime(time);
+  return  `${year}-${dd(month + 1)}-${dd(date)}`;
+}
+
+
 export const makeNum = (num) => {
   if (num < 10) {
     return `00000${num}`
@@ -22,20 +44,25 @@ export const makeNum = (num) => {
   return num;
 };
 
-export const msToTime = (duration) => {
-  let milliseconds = parseInt((duration%1000))
-  let seconds = parseInt((duration/1000)%60)
-  let minutes = parseInt((duration/(1000*60))%60)
-  let hours = parseInt((duration/(1000*60*60))%24);
-  
-  hours = (hours < 10) ? "0" + hours : hours;
-  minutes = (minutes < 10) ? "0" + minutes : minutes;
-  seconds = (seconds < 10) ? "0" + seconds : seconds;
-  
-  return hours + ":" + minutes + ":" + seconds;
-};
 
-export const log = (pathToLogFile, message) => {
+// export const msToTime = (duration) => {
+//   let milliseconds = parseInt((duration%1000))
+//   let seconds = parseInt((duration/1000)%60)
+//   let minutes = parseInt((duration/(1000*60))%60)
+//   let hours = parseInt((duration/(1000*60*60))%24);
+  
+//   hours = (hours < 10) ? "0" + hours : hours;
+//   minutes = (minutes < 10) ? "0" + minutes : minutes;
+//   seconds = (seconds < 10) ? "0" + seconds : seconds;
+  
+//   return hours + ":" + minutes + ":" + seconds;
+// };
+
+
+export const logger = (message, pathToLogFile) => {
   console.log(new Date().toLocaleString(), message);
-  fsp.appendFile(pathToLogFile, `${new Date().toLocaleString()} - ${message}\n`)
+
+  if (pathToLogFile) {
+    fsp.appendFile(pathToLogFile, `${new Date().toLocaleString()} - ${message}\n`);
+  }
 };

@@ -3,7 +3,7 @@ import path from 'path';
 import { exec } from "child_process";
 import util from 'util';
 
-import { log } from './utils.js'
+import { logger } from './utils.js'
 
 const execp = util.promisify(exec);
 
@@ -12,19 +12,19 @@ const execp = util.promisify(exec);
 
 const accVideoFile = (pathToInputVideo, pathToOutputVideo, pathToLogFile) => {
 
-  log(pathToLogFile, `start accVideoFile from - ${pathToInputVideo}`);
-  log(pathToLogFile, `start accVideoFile into - ${pathToOutputVideo}`);
+  // logger(`start accVideoFile from - ${pathToInputVideo}`, pathToLogFile);
+  // logger(`start accVideoFile into - ${pathToOutputVideo}`, pathToLogFile);
   
   return execp(`ffmpeg -i ${pathToInputVideo} -filter:v "setpts=0.5*PTS" -vcodec libx264 ${pathToOutputVideo}`)
     .then(({ stdout, stderr }) => {
       console.log('stdout:', stdout);
       console.log('stderr:', stderr);
-      log(pathToLogFile, `end accVideoFile - ${pathToOutputVideo}`);
+      // logger(`end accVideoFile - ${pathToOutputVideo}`, pathToLogFile);
     })
     .catch((e) => {
-      log(pathToLogFile, `error accVideoFile ${pathToInputVideo}`);
-      log(pathToLogFile, `error accVideoFile ${e.message}`);
-      // console.lod('error:', e.message)
+      // logger(`error accVideoFile ${pathToInputVideo}`, pathToLogFile);
+      // logger(`error accVideoFile ${e.message}`, pathToLogFile);
+      console.lod('error:', e.message)
     })
 }
 
@@ -38,7 +38,3 @@ export default accVideoFile;
 // const pathToLogFile = path.join(pathToCamDir, 'test-log.txt');
 
 // accVideoFile(pathToInputVideo, pathToOutputVideo, pathToLogFile)
-
-// setInterval(() => {
-//   console.log('interval', (new Date()).toLocaleString())
-// }, 1000);

@@ -21,5 +21,4 @@ export const cam1 = {
 
 export const cam2 = {
   camName: 'camera2',
-  
 };

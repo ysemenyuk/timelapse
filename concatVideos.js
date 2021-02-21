@@ -3,56 +3,70 @@ import path from 'path';
 import { exec } from "child_process";
 import util from 'util';
 
-import { log } from './utils.js'
+import { logger } from './utils.js'
 
 const fsp = fs.promises;
 const execp = util.promisify(exec);
 
-// ffmpeg -f concat -safe 0 -i G:\videos\list.txt -c copy G:\videos\output.mp4
-// list.txt
-// file G:\\videos\\timelapse-01.mp4
-// file G:\\videos\\timelapse-02.mp4
 
 const concatVideoFiles = (pathToVideosDir, pathToOutputDir, videoFileName, pathToLogFile) => {
 
-  log(pathToLogFile, `make fullVideo File ${pathToOutputDir}\\${videoFileName}-video.mp4`);
+  const pathToVideoFile = path.join(pathToOutputDir, `${videoFileName}-video.mp4`)
+
+  logger(`make fullVideo File ${pathToVideoFile}`, pathToLogFile);
   const pathToListFile = path.join(pathToOutputDir, `${videoFileName}-list.txt`)
 
   return fsp.readdir(pathToVideosDir)
     .then((files) => {
-      console.log(pathToVideosDir)
-      const newpathToVideosDir = pathToVideosDir.split('\\').join('\\\\');
-      console.log(newpathToVideosDir);
-      const pathsToVideoFiles = files.map((file) => `file ${newpathToVideosDir}\\\\${file}`);
+      const newPathToVideosDir = pathToVideosDir.split('\\').join('\\\\');
+      const pathsToVideoFiles = files.map((file) => `file ${newPathToVideosDir}\\\\${file}`);
       return fsp.writeFile(pathToListFile, pathsToVideoFiles.join('\n'));
     })
     .then(() => {
-      log(pathToLogFile, `start concatVideoFiles ${pathToOutputDir}\\${videoFileName}-video.mp4`);
-      return execp(`ffmpeg -y -f concat -safe 0 -i ${pathToListFile} -c copy ${pathToOutputDir}\\${videoFileName}-video.mp4`)
+      logger(`start concatVideoFiles ${pathToVideoFile}`, pathToLogFile);
+      return execp(`ffmpeg -y -f concat -safe 0 -i ${pathToListFile} -c copy ${pathToVideoFile}`)
     })
     .then(({ stdout, stderr }) => {
       console.log('stdout:', stdout);
       console.log('stderr:', stderr);
-      log(pathToLogFile, `end concatVideoFiles ${pathToOutputDir}\\${videoFileName}-video.mp4`);
+      logger(`end concatVideoFiles ${pathToVideosDir}`, pathToLogFile);
+      logger(`end concatVideoFiles ${pathToVideoFile}`, pathToLogFile);
     })
     .catch((e) => {
-      log(pathToLogFile, `error concatVideoFiles ${e.message}`);
+      logger(`error concatVideoFiles ${pathToVideoFile}`, pathToLogFile);
+      logger(`error concatVideoFiles ${e.message}`, pathToLogFile);
       // console.log('error:', e.message)
     })
 
-}
+};
 
-export default concatVideoFiles;
 
-// const pathToApp = path.resolve('../');
+const concatVideoFilesEveryDay = (settings) => {
 
-// const pathToVideoFiles = path.join(pathToCamDir, 'videos');
-// const pathToCamDir = path.join(pathToApp, 'cam1')
-// const videoFileName = '20210220';
-// const pathToLogFile = path.join(pathToCamDir, 'test-log.txt');
+  setTimeout(() => concatVideoFilesByTime(settings), 1000 * 60 * 60 * 24);
 
-// concatVideoFiles(pathToVideoFiles, pathToCamDir, videoFileName, pathToLogFile)
+  const { camName, pathToCamDir, pathToVideosDir, pathToLogFile } = settings;
+  concatVideoFiles(pathToVideosDir, pathToCamDir, camName, pathToLogFile);
+};
 
-// setInterval(() => {
-//   console.log('interval', (new Date()).toLocaleString())
-// }, 1000);
+
+const startConcatVideoFilesEveryDay = (settings) => {
+
+  const currentTime = new Date();
+  const { year, month, date } = parseTime(currentTime);
+  const startTime = new Date(year, month, date, 23, 0);
+
+  setTimeout(() => concatVideoFilesEveryDay(settings), startTime - currentTime);
+};
+
+
+
+export default startConcatVideoFilesEveryDay;
+
+
+// import { cam1 } from './settings.js';
+
+// const { camName, pathToCamDir, pathToVideosDir, pathToLogFile } = cam1;
+// concatVideoFiles(pathToVideosDir, pathToCamDir, camName, pathToLogFile);
+
+// startConcatVideoFilesEveryDay(cam1)

@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 
-import makeNum from './utils.js'
+import { makeNum } from './utils.js'
 
 const fsp = fs.promises;
 
