@@ -1,0 +1,11 @@
+{
+  "camName": "camera1",
+  "jpegUrl": "http://admin:qwer1234@192.168.1.64:80/ISAPI/Streaming/Channels/101/picture?snapShotImageType=JPEG",
+  "jpegInterval": 10000,
+  "startRecordTime": "08-00",
+  "stopRecordTime": "20-00",
+  "pathToCamDir": "G:\\timelapse\\camera1",
+  "pathToImagesDir": "G:\\timelapse\\camera1\\images",
+  "pathToVideosDir": "G:\\timelapse\\camera1\\videos",
+  "pathToLogFile": "G:\\timelapse\\camera1\\camera1-log.txt"
+}

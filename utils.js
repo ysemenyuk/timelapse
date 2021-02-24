@@ -66,3 +66,11 @@ export const logger = (message, pathToLogFile) => {
     fsp.appendFile(pathToLogFile, `${new Date().toLocaleString()} - ${message}\n`);
   }
 };
+
+// import { cam1 } from './settings.js';
+
+// const js = JSON.stringify(cam1, null, 2)
+// const pt = path.join(path.resolve(), 'settings.json')
+// fsp.writeFile(pt, js);
+
+// fsp.readFile(pt).then(res => console.log(JSON.parse(res)))

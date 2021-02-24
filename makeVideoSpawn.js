@@ -7,6 +7,8 @@ const makeVideoFile = (pathToImages, pathToOutputDir, videoFileName) => {
 
     const pathToVideoFile = path.join(pathToOutputDir, `${videoFileName}.mp4`)
     
+    console.log('start', (new Date()).toLocaleString())
+
     const settings = ["-y", "-r", "25", "-i", `${pathToImages}\\img-%06d.jpg`, "-vcodec", "libx264", `${pathToVideoFile}`];
     const video = spawn("ffmpeg", settings);
         
