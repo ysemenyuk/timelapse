@@ -44,7 +44,7 @@ const copySomeFiles = (pathToSrcDir, pathToOutDir, num) => {
 
 export default copySomeFiles;
 
-const pathToSrcDir = path.join('G:\\', 'timelapse', 'camera1', 'images')
-const pathToOutDir = path.join('G:\\', 'timelapse', 'camera1', 'images', 'tmp')
+// const pathToSrcDir = path.join('G:\\', 'timelapse', 'camera1', 'images')
+// const pathToOutDir = path.join('G:\\', 'timelapse', 'camera1', 'images', 'tmp')
 
-copySomeFiles(pathToSrcDir, pathToOutDir, 10);
+// copySomeFiles(pathToSrcDir, pathToOutDir, 10);
