@@ -2,18 +2,17 @@ import axios from 'axios';
 import fs from 'fs';
 import path from 'path';
 
-import { makeMonthName, makeFileName, logger, dd } from './utils.js'
+import { makeTodayName, logger, dd } from './utils.js'
 
 const fsp = fs.promises;
-
 
 // save images from url with interval
 
 const getImagesByTime = (settings) => {
 
-  const { jpegUrl, jpegIntervalMonth, startRecordTime, stopRecordTime, pathToImagesDir, pathToLogFile } = settings;
+  const { jpegUrl, jpegIntervalDay, startRecordTime, stopRecordTime, pathToImagesDir, pathToLogFile } = settings;
 
-  setTimeout(() => getImgagesByTime(settings), jpegIntervalMonth);
+  setTimeout(() => getImgagesByTime(settings), jpegIntervalDay);
 
   const time = new Date();
   const { hh, mm } = parseTime(time)
@@ -24,7 +23,7 @@ const getImagesByTime = (settings) => {
     return;
   } else {
 
-    const dirName = makeMonthName(time);
+    const dirName = makeTodayName(time);
     const pathToDir = path.join(pathToImagesDir, dirName);
 
     fsp.readdir(pathToDir)

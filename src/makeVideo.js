@@ -31,52 +31,7 @@ const makeVideoFile = (pathToImages, pathToVideosDir, videoFileName, pathToLogFi
 };
 
 
-// make video for today dir
-
-const makeVideoFileEveryDay = (settings) => {
-
-  setTimeout(() => makeVideoFileEveryDay(settings), 1000 * 60 * 60 * 24);
-
-  const { pathToImagesDir, pathToVideosDir, pathToLogFile } = settings;
-
-  const dirName = makeTodayName(new Date());
-  const pathToImages = path.join(pathToImagesDir, dirName);
-
-  makeVideoFile(pathToImages, pathToVideosDir, dirName, pathToLogFile);
-};
-
-
-const startMakeVideoFileEveryDay = (settings) => {
-
-  const currentTime = new Date();
-  const { year, month, date } = parseTime(currentTime);
-  const startTime = new Date(year, month, date, 22, 0);
-
-  setTimeout(() => makeVideoFileEveryDay(settings), startTime - currentTime);
-};
-
-
-// make video for dirs without video
-
-const makeVideoForDays = async (settings) => {
-
-  const { pathToImagesDir, pathToVideosDir, pathToLogFile } = settings;
-  
-  const existingVideos = await fsp.readdir(pathToVideosDir)
-  const existingNames = existingVideos.map((file) => file.slice(-4))
-
-  const allDirsWithImgs = await fsp.readdir(pathToImagesDir)
-  const dirsWithImgsWitoutVidio = allDirsWithImgs.filter((dirName) => !existingNames.includes(dirName))
-
-  dirsWithImgsWitoutVidio.forEach(async (dirName) => {
-    const pathToImages = path.join(pathToImagesDir, dirName);   
-    await makeVideoFile(pathToImages, pathToVideosDir, dirName, pathToLogFile)
-  })
-
-};
-
-
-export { makeVideoFile, makeVideoForDays, startMakeVideoFileEveryDay };
+export default makeVideoFile;
 
 
 // import { cam1 } from './settings.js';

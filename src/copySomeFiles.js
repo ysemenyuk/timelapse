@@ -3,30 +3,27 @@ import path from 'path';
 
 const fsp = fs.promises;
 
-const copySomeFiles = (pathToSrcDir, pathToOutDir, num) => {
+const copySomeFiles = (pathToSrcDir, pathToOutDir, num = 1) => {
   return fsp.readdir(pathToSrcDir)
     .then((files) => {
       let count = 1;
-      const arr = files
+      const filesArray = files
         .map((file) => {
           if (count === 1) {
-            // console.log(file)
             count = num;
-            const input = path.join(pathToSrcDir, file)
-            const output = path.join(pathToOutDir, file)
-            return fsp.copyFile(input, output)
+            const input = path.join(pathToSrcDir, file);
+            const output = path.join(pathToOutDir, file);
+            return fsp.copyFile(input, output);
           } else {
             count -= 1;
             return null;
           }
         })
         .filter(item => item)
-
-      // console.log(arr)
-      return Promise.all(arr);
+      return Promise.all(filesArray);
     })
     .catch((e) => {
-      console.log('catch rename err:', e.message)
+      console.log('catch err:', e.message);
     })
 };
 

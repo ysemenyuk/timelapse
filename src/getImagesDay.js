@@ -6,7 +6,6 @@ import { makeTodayName, makeNum, logger, dd } from './utils.js'
 
 const fsp = fs.promises;
 
-
 // save images from url with interval
 
 const getImagesByTime = (settings) => {
@@ -48,8 +47,6 @@ const getImagesByTime = (settings) => {
         const pathToFile = path.join(pathToDir, fileName);
 
         console.log(`write file: ${pathToFile}`);
-        // logger(`write file: ${pathToFile}`, pathToLogFile);
-        
         return fsp.writeFile(pathToFile, resp.data);
       })
       .catch((e) => {
