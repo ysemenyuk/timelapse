@@ -22,7 +22,7 @@ const copySomeFiles = (pathToSrcDir, pathToOutDir, num) => {
         })
         .filter(item => item)
 
-      console.log(arr)
+      // console.log(arr)
       return Promise.all(arr);
     })
     .catch((e) => {
@@ -37,4 +37,3 @@ export default copySomeFiles;
 
 // copySomeFiles(pathToSrcDir, pathToOutDir);
 
-// export default renameFiles;

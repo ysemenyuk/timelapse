@@ -22,6 +22,7 @@ fsp.rmdir(pathToTmpDir, { recursive: true })
   .then(() => copySomeFiles(pathToSrcDir, pathToTmpDir, count))
   .then(() => renameFiles(pathToTmpDir))
   .then(() => makeVideoSpawn(pathToTmpDir, pathToVideosDir, videoFileName))
+  .catch((e) => console.log(e.message))
 
 
 // fsp.mkdir(pathToTmpDir)
