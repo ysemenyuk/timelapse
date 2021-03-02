@@ -2,7 +2,7 @@ import axios from 'axios';
 import fs from 'fs';
 import path from 'path';
 
-import { makeTodayName, makeNum, logger, dd } from './utils.js'
+import { makeTodayName, makeMonthName, makeFileName, makeNum, logger, dd } from './utils.js'
 
 const fsp = fs.promises;
 
@@ -11,9 +11,9 @@ const fsp = fs.promises;
 
 const getImagesByTime = (settings) => {
 
-  const { jpegUrl, jpegInterval, startRecordTime, stopRecordTime, pathToImagesDir, pathToLogFile } = settings;
+  const { jpegUrl, jpegIntervalMonth, startRecordTime, stopRecordTime, pathToImagesDir, pathToLogFile } = settings;
 
-  setTimeout(() => getImgagesByTime(settings), jpegInterval);
+  setTimeout(() => getImgagesByTime(settings), jpegIntervalMonth);
 
   const time = new Date();
   const { hh, mm } = parseTime(time)
@@ -24,27 +24,28 @@ const getImagesByTime = (settings) => {
     return;
   } else {
 
-    const dirName = makeTodayName(time);
+    const dirName = makeMonthName(time);
     const pathToDir = path.join(pathToImagesDir, dirName);
 
-    let count = 0;
+    // let count = 0;
 
     fsp.readdir(pathToDir)
-      .then((files) => {
-        count = files.length ? files.length : 0;
-      })
+      // .then((files) => {
+      //   count = files.length ? files.length : 0;
+      // })
       .catch((e) => {
         logger(`catch read dir error: ${e.message}`, pathToLogFile);
         logger(`make dir: ${pathToDir}`, pathToLogFile);
 
-        count = 0;
+        // count = 0;
         return fsp.mkdir(pathToDir);
       })
       .then(() => {
         return axios.get(jpegUrl, { responseType: 'arraybuffer' })
       })
       .then((resp) => {
-        const fileName = `img-${makeNum(count)}.jpg`;
+        // const fileName = `img-${makeNum(count)}.jpg`;
+        const fileName = `img-${makeFileName(time)}.jpg`;
         const pathToFile = path.join(pathToDir, fileName);
 
         console.log(`write file: ${pathToFile}`);

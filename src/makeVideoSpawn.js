@@ -37,8 +37,10 @@ export default makeVideoFile;
 // import { cam1 } from './settings.js';
 
 // const { pathToImagesDir, pathToVideosDir, pathToLogFile } = cam1;
-// const fileName = '20210220';
 // const imagesDirName = '20210220';
-// const pathToImages = path.join(pathToImagesDir, imagesDirName);
 
-// makeVideoFile(pathToImages, pathToVideosDir, fileName, pathToLogFile)
+// const fileName = '20210220111';
+// const pathToImages = path.join('G:\\', 'timelapse', 'camera1', 'images', 'tmp')
+// const pathToVideosDir = path.join('G:\\', 'timelapse', 'camera1')
+
+// makeVideoFile(pathToImages, pathToVideosDir, fileName)

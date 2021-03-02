@@ -1,7 +1,5 @@
 import fs from 'fs';
 
-import { logger } from './utils.js';
-
 const fsp = fs.promises;
 
 const makeDir = (pathToDir) => {
@@ -24,9 +22,9 @@ const makeDirsForCamera = (settings) => {
 };
 
 
-export default makeDirsForCamera;
+export { makeDir, makeDirsForCamera };
 
 
-import { cam1 } from './settings.js';
+// import { cam1 } from './settings.js';
 
-makeDirsForCamera(cam1);
+// makeDirsForCamera(cam1);

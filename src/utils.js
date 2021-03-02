@@ -25,6 +25,18 @@ export const makeTodayName = (time) => {
 }
 
 
+export const makeMonthName = (time) => {
+  const { year, month } = parseTime(time);
+  return  `${year}-${dd(month + 1)}`;
+}
+
+
+export const makeFileName = (time) => {
+  const { year, month, date, hh, mm, ss } = parseTime(time);
+  return  `${year}-${dd(month + 1)}--${date}-${hh}-${mm}-${ss}`;
+}
+
+
 export const makeNum = (num) => {
   if (num < 10) {
     return `00000${num}`

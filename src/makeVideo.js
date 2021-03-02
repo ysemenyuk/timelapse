@@ -35,7 +35,7 @@ const makeVideoFile = (pathToImages, pathToVideosDir, videoFileName, pathToLogFi
 
 const makeVideoFileEveryDay = (settings) => {
 
-  setTimeout(() => makeVideoFileByTime(settings), 1000 * 60 * 60 * 24);
+  setTimeout(() => makeVideoFileEveryDay(settings), 1000 * 60 * 60 * 24);
 
   const { pathToImagesDir, pathToVideosDir, pathToLogFile } = settings;
 
@@ -76,7 +76,7 @@ const makeVideoForDays = async (settings) => {
 };
 
 
-export default startMakeVideoFileEveryDay;
+export { makeVideoFile, makeVideoForDays, startMakeVideoFileEveryDay };
 
 
 // import { cam1 } from './settings.js';
