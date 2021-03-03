@@ -2,8 +2,8 @@ import fs from 'fs';
 import path from 'path';
 
 import makeVideoSpawn from '../src/makeVideoSpawn.js';
-import copyFilesForVideo from '../src/copyFilesForVideo.js';
-import { makeDirsPaths, makeFilesPaths } from '../src/makePaths.js';
+import copySomeFiles from '../src/copySomeFiles.js';
+import renameFiles from '../src/renameFiles.js';
 
 const fsp = fs.promises;
 
@@ -12,16 +12,16 @@ import { cam1 } from '../settings.js';
 const { pathToImagesDir, pathToCamDir } = cam1;
 
 const pathToSrcDir = path.join(pathToImagesDir)
-const pathToTmpDir = path.join(pathToCamDir, 'tmp-for-TEST-video')
+const pathToTmpDir = path.join(pathToCamDir, 'tmp-for-111-video')
 
-const videoFileName = 'TEST-video';
+const videoFileName = '111-video';
 
-const time = 30
+const count = 10
 
 fsp.rmdir(pathToTmpDir, { recursive: true })
   .then(() => fsp.mkdir(pathToTmpDir))
-  .then(() => makeDirsPaths(pathToSrcDir))
-  .then((dirsPaths) => makeFilesPaths(dirsPaths))
-  .then((filesPaths) => copyFilesForVideo(filesPaths, pathToTmpDir, time))
+  .then(() => copySomeFiles(pathToSrcDir, pathToTmpDir, count))
+  .then(() => renameFiles(pathToTmpDir))
   .then(() => makeVideoSpawn(pathToTmpDir, pathToCamDir, videoFileName))
   .catch((e) => console.log(e.message))
+

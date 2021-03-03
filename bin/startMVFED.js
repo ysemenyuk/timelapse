@@ -2,9 +2,8 @@ import fs from 'fs';
 import path from 'path'
 
 import makeVideoSpawn from '../src/makeVideoSpawn.js';
-import copySomeFiles from '../src/copySomeFiles.js';
-import renameFiles from '../src/renameFiles.js';
 import { makeTodayName } from '../src/utils.js'
+import { makeFilesPaths } from '../src/makePaths.js';
 
 import { cam1 } from '../settings.js';
 
@@ -22,14 +21,14 @@ const makeVideoFileEveryDay = (settings) => {
   // const dirName = '2021-02-28';
   const videoFileName = `${dirName}-video`;
 
-  const pathToImages = path.join(pathToImagesDir, dirName);
+  const pathToTodayDir = path.join(pathToImagesDir, dirName);
   const pathToTmpDir = path.join(pathToCamDir, 'tmp-for-everyday-video')
   
 
-  return fsp.rmdir(pathToTmpDir, { recursive: true })
+  fsp.rmdir(pathToTmpDir, { recursive: true })
     .then(() => fsp.mkdir(pathToTmpDir))
-    .then(() => copySomeFiles(pathToImages, pathToTmpDir))
-    .then(() => renameFiles(pathToTmpDir))
+    .then(() => makeFilesPaths([pathToTodayDir]))
+    .then((filesPaths) => copyFilesForVideo(filesPaths, pathToTmpDir))
     .then(() => makeVideoSpawn(pathToTmpDir, pathToVideosDir, videoFileName))
     .catch((e) => console.log(e.message))
 

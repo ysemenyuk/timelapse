@@ -5,7 +5,7 @@ import copySomeFiles from './copySomeFiles.js';
 
 const fsp = fs.promises;
 
-const copySomeFiles2 = (pathToSrcDir, pathToOutDir, num = 1) => {
+const copySomeFilesFromDirs = (pathToSrcDir, pathToOutDir, num = 1) => {
   
  return fsp.readdir(pathToSrcDir)
   .then(dirs => {
@@ -21,7 +21,7 @@ const copySomeFiles2 = (pathToSrcDir, pathToOutDir, num = 1) => {
 
 };
 
-export default copySomeFiles2;
+export default copySomeFilesFromDirs;
 
 // const pathToSrcDir = path.join('G:\\', 'timelapse', 'camera1', 'images')
 // const pathToOutDir = path.join('G:\\', 'timelapse', 'camera1', 'images', 'tmp')
