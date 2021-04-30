@@ -33,7 +33,7 @@ export const makeMonthName = (time) => {
 
 export const makeFileName = (time) => {
   const { year, month, date, hh, mm, ss } = parseTime(time);
-  return  `${year}-${dd(month + 1)}--${date}-${hh}-${mm}-${ss}`;
+  return  `${year}-${dd(month + 1)}-${dd(date)}--${dd(hh)}-${dd(mm)}-${dd(ss)}`;
 }
 
 

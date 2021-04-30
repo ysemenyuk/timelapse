@@ -2,7 +2,7 @@ import axios from 'axios';
 import fs from 'fs';
 import path from 'path';
 
-import { makeMonthName, makeFileName, logger, dd } from './utils.js'
+import { parseTime, makeMonthName, makeFileName, logger, dd } from './utils.js'
 
 const fsp = fs.promises;
 

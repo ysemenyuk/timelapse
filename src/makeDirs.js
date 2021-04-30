@@ -13,10 +13,10 @@ const makeDir = (pathToDir) => {
 
 const makeDirsForCamera = (settings) => {
 
-  const { pathToCamDir, pathToimagesDir, pathToVideosDir } = settings;
+  const { pathToCamDir, pathToImagesDir, pathToVideosDir } = settings;
 
   return makeDir(pathToCamDir)
-    .then(() => makeDir(pathToimagesDir))
+    .then(() => makeDir(pathToImagesDir))
     .then(() => makeDir(pathToVideosDir))
 
 };
@@ -25,6 +25,6 @@ const makeDirsForCamera = (settings) => {
 export { makeDir, makeDirsForCamera };
 
 
-// import { cam1 } from './settings.js';
+import { cam1, cam2, cam3 } from '../settings.js';
 
-// makeDirsForCamera(cam1);
+makeDirsForCamera(cam2);

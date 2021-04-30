@@ -1,8 +1,9 @@
 import fs from 'fs';
 import path from 'path'
 
+import copyFilesForVideo from '../src/copyFilesForVideo.js';
 import makeVideoSpawn from '../src/makeVideoSpawn.js';
-import { makeTodayName } from '../src/utils.js'
+import { makeTodayName, parseTime } from '../src/utils.js'
 import { makeFilesPaths } from '../src/makePaths.js';
 
 import { cam1 } from '../settings.js';
@@ -18,7 +19,6 @@ const makeVideoFileEveryDay = (settings) => {
   const { pathToImagesDir, pathToVideosDir, pathToCamDir } = settings;
   
   const dirName = makeTodayName(new Date());
-  // const dirName = '2021-02-28';
   const videoFileName = `${dirName}-video`;
 
   const pathToTodayDir = path.join(pathToImagesDir, dirName);
@@ -43,8 +43,5 @@ const startMakeVideoFileEveryDay = (settings) => {
 
   setTimeout(() => makeVideoFileEveryDay(settings), startTime - currentTime);
 };
-
-
-// makeVideoFileEveryDay(cam1)
 
 startMakeVideoFileEveryDay(cam1);
