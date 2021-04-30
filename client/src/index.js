@@ -1,13 +1,16 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import bootstrap from 'bootstrap';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import '../assets/favicon.ico';
 import '../assets/style.css';
 
-import App from './App.jsx';
+import initApp from './initApp.jsx';
+import createStore from './store/index.js';
+
+const store = createStore();
 
 ReactDOM.render(
-  <App />,
-  document.getElementById('root')
+  initApp(store),
+  document.getElementById('root'),
 );

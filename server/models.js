@@ -5,9 +5,9 @@ const fsp = fs.promises;
 
 const read = async () => {
   const pathToCamerasFile = path.resolve('server', 'settings.json');
-  console.log(pathToCamerasFile);
+  // console.log(pathToCamerasFile);
   const cameras = await fsp.readFile(pathToCamerasFile);
-  console.log(cameras);
+  // console.log(cameras);
 
   return cameras;
 }
