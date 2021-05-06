@@ -1,6 +1,6 @@
-import fs from 'fs';
-import path from 'path';
-import { exec } from "child_process";
+// import fs from 'fs';
+// import path from 'path';
+import { exec } from 'child_process';
 import util from 'util';
 
 const execp = util.promisify(exec);
@@ -8,17 +8,14 @@ const execp = util.promisify(exec);
 // ускорение видео в два раза
 // ffmpeg -i timelapse.mp4 -filter:v "setpts=0.5*PTS" -vcodec libx264 timelapse-2.mp4
 
-const accVideoFile = (pathToInputVideo, pathToOutputVideo, times) => {
-  
-  return execp(`ffmpeg -i ${pathToInputVideo} -filter:v "setpts=${1 / times}*PTS" -vcodec libx264 ${pathToOutputVideo}`)
-    .then(({ stdout, stderr }) => {
-      console.log('stdout:', stdout);
-      console.log('stderr:', stderr);
-    })
-    .catch((e) => {
-      console.lod('error:', e.message)
-    })
-}
+const accVideoFile = (pathToInputVideo, pathToOutputVideo, times) => execp(`ffmpeg -i ${pathToInputVideo} -filter:v "setpts=${1 / times}*PTS" -vcodec libx264 ${pathToOutputVideo}`)
+  .then(({ stdout, stderr }) => {
+    console.log('stdout:', stdout);
+    console.log('stderr:', stderr);
+  })
+  .catch((e) => {
+    console.lod('error:', e.message);
+  });
 
 export default accVideoFile;
 

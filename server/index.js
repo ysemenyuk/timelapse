@@ -3,7 +3,18 @@ import express from 'express';
 import dotenv from 'dotenv';
 import morgan from 'morgan';
 
-import camRoutes from './routes/cameraRoutes.js';
+import cameraRoutes from './routes/cameraRoutes.js';
+import { errorHandler } from './middleware/errorHandlerMiddleware.js';
+
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+
+export const __filename = fileURLToPath(import.meta.url);
+export const __dirname = dirname(__filename);
+
+console.log('__filename - ', __filename);
+console.log('__dirname - ', __dirname);
+console.log('path.resolve() - ', path.resolve());
 
 dotenv.config();
 
@@ -15,20 +26,24 @@ if (process.env.NODE_ENV === 'development') {
 
 app.use(express.json());
 
-app.get('/api', (req, res) => {
-  res.send('API is running....');
-});
-
-app.use('/api/cameras', camRoutes);
+app.use('/api/cameras', cameraRoutes);
 
 if (process.env.NODE_ENV === 'production') {
-  app.use('/', express.static(path.join(path.resolve(), '/client/public')));
-  app.get('/', (req, res) => res.sendFile(path.resolve(path.resolve(), 'client', 'public', 'index.html')));
+  app.use(express.static(path.join(__dirname, 'client', 'public')));
+  app.get('*', (req, res) =>
+    res.sendFile(path.resolve('client', 'public', 'index.html'))
+  );
+} else {
+  app.get('/', (req, res) => {
+    res.send('API is running....');
+  });
 }
+
+app.use(errorHandler);
 
 const PORT = process.env.PORT || 4000;
 
 app.listen(
   PORT,
-  console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`),
+  console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`)
 );

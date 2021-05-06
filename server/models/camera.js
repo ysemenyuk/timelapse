@@ -2,8 +2,6 @@ import path from 'path';
 import fs from 'fs';
 // import { v4 as uuidv4 } from 'uuid';
 
-import makeDirsForCamera from '../funcs/makeDirs.js';
-
 const fsp = fs.promises;
 
 const pathToApp = path.resolve('cameras');
@@ -48,32 +46,33 @@ const getNextId = async () => {
 
 class Camera {
   constructor({
-    name, rtspLink, jpegLink, jpegCreateInterval, jpegCreateStartTime, jpegCreateStopTime,
+    name,
+    description,
+    rtspLink,
+    jpegLink,
+    jpegCreateInterval,
+    jpegCreateStartTime,
+    jpegCreateStopTime,
   }) {
     this.id = null;
     this.name = name;
-    this.rtspLink = rtspLink || null;
-    this.jpegLink = jpegLink || null;
-    this.jpegCreateInterval = jpegCreateInterval || null;
-    this.jpegCreateStartTime = jpegCreateStartTime || null;
-    this.jpegCreateStopTime = jpegCreateStopTime || null;
+    this.description = description;
+    this.rtspLink = rtspLink;
+    this.jpegLink = jpegLink;
+    this.jpegCreateInterval = jpegCreateInterval;
+    this.jpegCreateStartTime = jpegCreateStartTime;
+    this.jpegCreateStopTime = jpegCreateStopTime;
   }
 
   async saveOne() {
     try {
       this.id = await getNextId();
-      this.pathToCamDir = path.join(pathToApp, this.id);
-      this.pathToImagesDir = path.join(this.pathToCamDir, 'images');
-      this.pathToVideosDir = path.join(this.pathToCamDir, 'videos');
-      this.pathToLogFile = path.join(this.pathToCamDir, `${this.id}-log.txt`);
-
       const cameras = await readDataFile();
       cameras.push(this);
       await writeDataFile(cameras);
-      await makeDirsForCamera(this);
       return this;
     } catch (error) {
-      // console.log('camera model saveOne error -', error);
+      console.log('camera model saveOne error -', error);
       throw new Error(error);
     }
   }
@@ -102,11 +101,12 @@ class Camera {
     }
   }
 
-  static async updateOne(id, updatedData) {
+  static async updateOne(id, newData) {
     try {
-      const cameras = Camera.getAll();
-      const camera = Camera.findById(id);
-      const updatedCamera = { ...camera, ...updatedData };
+      const cameras = await Camera.getAll();
+      const camera = await Camera.findOneById(id);
+      const updatedCamera = { ...camera, ...newData };
+      console.log(cameras);
       const updatedCameraIndex = cameras.findIndex((item) => item.id === id);
       cameras[updatedCameraIndex] = updatedCamera;
       await writeDataFile(cameras);

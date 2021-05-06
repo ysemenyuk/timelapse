@@ -1,0 +1,39 @@
+[
+	{
+		"id": "camera_4",
+		"name": "camera name",
+		"rtspLink": "camera rtsp link",
+		"jpegLink": "",
+		"jpegCreateInterval": "",
+		"jpegCreateStartTime": "",
+		"jpegCreateStopTime": ""
+	},
+	{
+		"id": "camera_5",
+		"name": "camera name",
+		"rtspLink": "camera rtsp link",
+		"jpegLink": "",
+		"jpegCreateInterval": "",
+		"jpegCreateStartTime": "",
+		"jpegCreateStopTime": ""
+	},
+	{
+		"id": "camera_6",
+		"name": "sfdf",
+		"rtspLink": "",
+		"jpegLink": "",
+		"jpegCreateInterval": "",
+		"jpegCreateStartTime": "",
+		"jpegCreateStopTime": ""
+	},
+	{
+		"id": "camera_9",
+		"name": "234243424",
+		"description": "sdffd",
+		"rtspLink": "",
+		"jpegLink": "",
+		"jpegCreateInterval": "",
+		"jpegCreateStartTime": "",
+		"jpegCreateStopTime": ""
+	}
+]

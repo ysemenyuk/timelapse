@@ -3,7 +3,7 @@ import fs from 'fs';
 import path from 'path';
 
 import {
-  parseTime, makeTodayName, makeFileName, logger, dd,
+  parseTime, makeMonthName, makeFileName, logger, dd,
 } from './utils.js';
 
 const fsp = fs.promises;
@@ -12,10 +12,10 @@ const fsp = fs.promises;
 
 const getImagesByTime = (settings) => {
   const {
-    jpegUrl, jpegIntervalDay, startRecordTime, stopRecordTime, pathToImagesDir, pathToLogFile,
+    jpegUrl, jpegIntervalMonth, startRecordTime, stopRecordTime, pathToImagesDir, pathToLogFile,
   } = settings;
 
-  setTimeout(() => getImagesByTime(settings), jpegIntervalDay);
+  setTimeout(() => getImagesByTime(settings), jpegIntervalMonth);
 
   const time = new Date();
   const { hh, mm } = parseTime(time);
@@ -26,7 +26,7 @@ const getImagesByTime = (settings) => {
     return;
   }
 
-  const dirName = makeTodayName(time);
+  const dirName = makeMonthName(time);
   const pathToDir = path.join(pathToImagesDir, dirName);
 
   fsp.readdir(pathToDir)
@@ -41,11 +41,7 @@ const getImagesByTime = (settings) => {
       const pathToFile = path.join(pathToDir, fileName);
 
       console.log(`write file: ${pathToFile}`);
-      console.log(`start write file: ${new Date().toString()}`);
       return fsp.writeFile(pathToFile, resp.data);
-    })
-    .then(() => {
-      console.log(`end write file: ${new Date().toString()}`);
     })
     .catch((e) => {
       if (e.isAxiosError) {
@@ -57,3 +53,6 @@ const getImagesByTime = (settings) => {
 };
 
 export default getImagesByTime;
+
+// import { cam1 } from './settings.js';
+// getImagesByTime(cam1);

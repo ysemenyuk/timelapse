@@ -1,8 +1,10 @@
-import Camera from '../models/Camera.js';
+import Camera from '../models/camera.js';
+
+import { makeDirsForCamera } from '../services/makeDirs.js';
+import { getCameraPaths } from '../services/getPaths.js';
 
 const getAll = async (req, res) => {
-  console.log('controller getAll req.body', req.body);
-  console.log('controller getAll req.params - ', req.params);
+  // console.log('controller getAll req', req);
   try {
     const cameras = await Camera.getAll();
     res.status(200).send(cameras);
@@ -13,8 +15,7 @@ const getAll = async (req, res) => {
 };
 
 const getOne = async (req, res) => {
-  console.log('controller getOne req.body - ', req.body);
-  console.log('controller getOne req.params - ', req.params);
+  // console.log('controller getOne req - ', req);
   const { id } = req.params;
   try {
     const camera = await Camera.findOneById(id);
@@ -26,11 +27,12 @@ const getOne = async (req, res) => {
 };
 
 const createOne = async (req, res) => {
-  console.log('controller createOne req.body - ', req.body);
-  console.log('controller createOne req.params - ', req.params);
+  console.log('controller createOne req - ', req.body);
   try {
     const camera = new Camera(req.body);
     const savedCamera = await camera.saveOne();
+    const cameraPaths = getCameraPaths(savedCamera);
+    await makeDirsForCamera(cameraPaths);
     res.status(201).send(savedCamera);
   } catch (e) {
     console.log('controller createOne error - ', e);
@@ -39,11 +41,8 @@ const createOne = async (req, res) => {
 };
 
 const updateOne = async (req, res) => {
-  console.log('controller updateOne req.body - ', req.body);
-  console.log('controller updateOne req.params - ', req.params);
-
+  // console.log('controller updateOne req - ', req);
   const { id } = req.params;
-
   try {
     const camera = await Camera.updateOne(id, req.body);
     res.status(201).send(camera);
@@ -54,11 +53,8 @@ const updateOne = async (req, res) => {
 };
 
 const deleteOne = async (req, res) => {
-  console.log('controller deleteOne req.body - ', req.body);
-  console.log('controller deleteOne req.params - ', req.params);
-
+  // console.log('controller deleteOne req - ', req);
   const { id } = req.params;
-
   try {
     await Camera.deleteOne(id);
     res.status(204).send();
@@ -69,5 +65,9 @@ const deleteOne = async (req, res) => {
 };
 
 export default {
-  getAll, getOne, createOne, updateOne, deleteOne,
+  getAll,
+  getOne,
+  createOne,
+  updateOne,
+  deleteOne,
 };

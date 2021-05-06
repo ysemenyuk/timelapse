@@ -1,7 +1,8 @@
-import { exec } from "child_process";
+// import { exec } from 'child_process';
 import util from 'util';
 
-// exec("ffmpeg -r 25 -i G:/0217/img-%06d.jpg -vcodec libx264 G:/output.mp4", (error, stdout, stderr) => {
+// exec("ffmpeg -r 25 -i G:/0217/img-%06d.jpg -vcodec libx264 G:/output.mp4",
+//   (error, stdout, stderr) => {
 //     if (error) {
 //         console.log(`error: ${error.message}`);
 //         return;
@@ -13,16 +14,13 @@ import util from 'util';
 //     console.log(`stdout: ${stdout}`);
 // });
 
+const execp = util.promisify(require('child_process').exec);
 
-
-const exec = util.promisify(require('child_process').exec);
-
-exec("ffmpeg -r 25 -i G:/0217/img-%06d.jpg -vcodec libx264 G:/output.mp4")
+execp('ffmpeg -r 25 -i G:/0217/img-%06d.jpg -vcodec libx264 G:/output.mp4')
   .then(({ stdout, stderr }) => {
     console.log('stdout:', stdout);
     console.error('stderr:', stderr);
   })
   .catch((e) => {
-    console.log('error:', e.message)
-  })
-
+    console.log('error:', e.message);
+  });

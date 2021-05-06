@@ -5,21 +5,17 @@ import copySomeFiles from './copySomeFiles.js';
 
 const fsp = fs.promises;
 
-const copySomeFilesFromDirs = (pathToSrcDir, pathToOutDir, num = 1) => {
-  
- return fsp.readdir(pathToSrcDir)
-  .then(dirs => {
-    const dirsArray = dirs.map(dir => {
-      const pathToDir = path.join(pathToSrcDir, dir)
-      return copySomeFiles(pathToDir, pathToOutDir, num)
-    })
+const copySomeFilesFromDirs = (pathToSrcDir, pathToOutDir, num = 1) => fsp.readdir(pathToSrcDir)
+  .then((dirs) => {
+    const dirsArray = dirs.map((dir) => {
+      const pathToDir = path.join(pathToSrcDir, dir);
+      return copySomeFiles(pathToDir, pathToOutDir, num);
+    });
     return Promise.all(dirsArray);
   })
   .catch((e) => {
-    console.log('catch err:', e.message)
-  })
-
-};
+    console.log('catch err:', e.message);
+  });
 
 export default copySomeFilesFromDirs;
 

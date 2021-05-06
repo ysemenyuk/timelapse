@@ -4,7 +4,7 @@ import path from 'path';
 import copyFilesForVideo from '../funcs/copyFilesForVideo.js';
 import makeVideoSpawn from '../funcs/makeVideoSpawn.js';
 import { makeTodayName, parseTime } from '../funcs/utils.js';
-import { makeFilesPaths } from '../funcs/makePaths.js';
+import { makeFilesPathsFromManyDirs } from '../funcs/makePaths.js';
 
 import { cam1 } from '../cameras.js';
 
@@ -25,7 +25,7 @@ const makeVideoFileEveryDay = (settings) => {
 
   fsp.rmdir(pathToTmpDir, { recursive: true })
     .then(() => fsp.mkdir(pathToTmpDir))
-    .then(() => makeFilesPaths([pathToTodayDir]))
+    .then(() => makeFilesPathsFromManyDirs([pathToTodayDir]))
     .then((filesPaths) => copyFilesForVideo(filesPaths, pathToTmpDir))
     .then(() => makeVideoSpawn(pathToTmpDir, pathToVideosDir, videoFileName))
     .catch((e) => console.log(e.message));
