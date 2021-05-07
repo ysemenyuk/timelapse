@@ -3,38 +3,39 @@ import { useSelector, useDispatch } from 'react-redux';
 
 import { camerasActions, formActions } from '../store/index.js';
 
-const Sidebar = () => {
+const CameraSidebar = () => {
   const dispatch = useDispatch();
   const cameras = useSelector((state) => state.cameras.allItems);
   const selectedCamera = useSelector((state) => state.cameras.selectedItem);
-  const formType = useSelector((state) => state.form.type);
+  const form = useSelector((state) => state.form);
 
   console.log('Sidebar cameras', cameras);
 
-  const handleAddItem = (e) => {
-    e.preventDefault();
-    dispatch(formActions.setType('add'));
+  const handleAddItem = () => {
+    dispatch(formActions.set({ show: true, type: 'add' }));
     dispatch(camerasActions.selectItem(null));
   };
 
   const handleSelectItem = (item) => () => {
     dispatch(camerasActions.selectItem(item));
-    if (formType !== 'read') {
-      dispatch(formActions.setType('read'));
+    if (form.show) {
+      dispatch(formActions.set({ show: false, type: null }));
     }
   };
 
   return (
     <>
       <div className='mb-3'>Sidebar</div>
-      <div className='list-group mb-3'>
-        {cameras.length
-          ? cameras.map((camera) => {
-              const activeClass = selectedCamera?.id === camera.id && 'active';
+      {cameras.length ? (
+        <>
+          <div className='list-group mb-3'>
+            {cameras.map((camera) => {
+              const activeClass =
+                selectedCamera?._id === camera._id && 'active';
               return (
                 <button
                   onClick={handleSelectItem(camera)}
-                  key={camera.id}
+                  key={camera._id}
                   type='button'
                   className={`list-group-item list-group-item-action ${activeClass}`}
                   aria-current='true'
@@ -42,20 +43,23 @@ const Sidebar = () => {
                   {camera.name}
                 </button>
               );
-            })
-          : null}
-      </div>
-      <div className='d-grid gap-2'>
-        <button
-          className='btn btn-primary'
-          type='button'
-          onClick={handleAddItem}
-        >
-          Add New Camera
-        </button>
-      </div>
+            })}
+          </div>
+          <div>
+            <button
+              className='btn btn-primary'
+              type='button'
+              onClick={handleAddItem}
+            >
+              Add New Camera
+            </button>
+          </div>
+        </>
+      ) : (
+        <div>No cameras.</div>
+      )}
     </>
   );
 };
 
-export default Sidebar;
+export default CameraSidebar;

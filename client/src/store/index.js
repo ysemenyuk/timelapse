@@ -3,12 +3,14 @@ import { createSlice, configureStore } from '@reduxjs/toolkit';
 const formSlice = createSlice({
   name: 'form',
   initialState: {
-    type: 'read',
+    show: false,
+    type: null,
   },
   reducers: {
-    setType: (state, action) => {
+    set: (state, action) => {
       console.log('action', action);
-      state.type = action.payload;
+      state.show = action.payload.show;
+      state.type = action.payload.type;
     },
   },
 });
@@ -29,7 +31,7 @@ const camerasSlice = createSlice({
       // console.log('action addOne -', action);
       const updatedItem = action.payload;
       const updatedItemIndex = state.allItems.findIndex(
-        (item) => item.id === updatedItem.id
+        (item) => item._id === updatedItem._id
       );
       state.allItems[updatedItemIndex] = updatedItem;
       state.selectedItem = updatedItem;
@@ -43,7 +45,7 @@ const camerasSlice = createSlice({
       // console.log('action addOne -', action);
       const deletedItem = action.payload;
       state.allItems = state.allItems.filter(
-        (item) => item.id !== deletedItem.id
+        (item) => item._id !== deletedItem._id
       );
       if (state.allItems.length === 0) {
         state.selectedItem = null;

@@ -1,17 +1,32 @@
-import React, { useEffect } from 'react';
-// import { useSelector, useDispatch } from 'react-redux';
+import React, { useEffect, useMemo } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { useFormik } from 'formik';
-// import axios from 'axios';
+import axios from 'axios';
 import * as Yup from 'yup';
 
-// import { camerasActions, formActions } from '../store/index.js';
-// import useFormState from '../hooks/useFormState.js';
+import { camerasActions, formActions } from '../store/index.js';
+import useFormType from '../hooks/useFormType2.js';
 
 const validationSchema = Yup.object({
   name: Yup.string().required().min(3).max(20),
+  description: Yup.string().required().min(3).max(20),
 });
 
-const CameraForm = ({ selectedCamera, onSubmit }) => {
+const CameraForm = () => {
+  const dispatch = useDispatch();
+  const cameras = useSelector((state) => state.cameras.allItems);
+  const selectedCamera = useSelector((state) => state.cameras.selectedItem);
+
+  const { onSubmit } = useFormType(selectedCamera);
+  // const { cameraAction, formAction, method, url } = useFormType();
+
+  const handleCancel = () => {
+    dispatch(formActions.set({ show: false, type: null }));
+    if (!selectedCamera && cameras.length > 0) {
+      dispatch(camerasActions.selectItem(cameras[0]));
+    }
+  };
+
   const formik = useFormik({
     initialValues: {
       name: '',
@@ -24,6 +39,20 @@ const CameraForm = ({ selectedCamera, onSubmit }) => {
     },
     validationSchema,
     onSubmit,
+    // onSubmit: async (values, { setSubmitting, resetForm, setFieldError }) => {
+    //   try {
+    //     const { data } = await axios({ method, url, data: values });
+    //     resetForm();
+    //     setSubmitting(false);
+    //     console.log('form onSubmit addOne resp data -', data);
+    //     dispatch(cameraAction(data));
+    //     dispatch(formAction({ show: false, type: null }));
+    //   } catch (err) {
+    //     setSubmitting(false);
+    //     setFieldError('networkError', 'networkError');
+    //     console.log('catch err -', err);
+    //   }
+    // },
   });
 
   useEffect(() => {
@@ -107,7 +136,15 @@ const CameraForm = ({ selectedCamera, onSubmit }) => {
             <div className='invalid-feedback'>{formik.errors?.jpegLink}</div>
           </div>
 
-          <div className='col-md-12'>
+          <div className='d-grid gap-2 d-flex justify-content-start'>
+            <button
+              className='btn btn-primary'
+              type='button'
+              onClick={handleCancel}
+              disabled={formik.isSubmitting}
+            >
+              Cancel
+            </button>
             <button
               className='btn btn-primary'
               type='submit'

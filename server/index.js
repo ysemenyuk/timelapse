@@ -2,6 +2,7 @@ import path from 'path';
 import express from 'express';
 import dotenv from 'dotenv';
 import morgan from 'morgan';
+import mongoose from 'mongoose';
 
 import cameraRoutes from './routes/cameraRoutes.js';
 import { errorHandler } from './middleware/errorHandlerMiddleware.js';
@@ -25,7 +26,6 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 app.use(express.json());
-
 app.use('/api/cameras', cameraRoutes);
 
 if (process.env.NODE_ENV === 'production') {
@@ -43,7 +43,24 @@ app.use(errorHandler);
 
 const PORT = process.env.PORT || 4000;
 
-app.listen(
-  PORT,
-  console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`)
-);
+const start = async () => {
+  try {
+    const conn = await mongoose.connect(process.env.MONGO_URI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+      useFindAndModify: false,
+    });
+    console.log(`MongoDB Connected: ${conn.connection.host}`);
+
+    app.listen(
+      PORT,
+      console.log(
+        `Server running in ${process.env.NODE_ENV} mode on port ${PORT}`
+      )
+    );
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+start();
