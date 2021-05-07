@@ -4,7 +4,7 @@ import {
   makeDirsForCamera,
   removeDirsForCamera,
 } from '../services/cameraDirs.js';
-import { getCameraPaths } from '../services/getPaths.js';
+import { getCameraPaths } from '../services/cameraPaths.js';
 
 const getAll = async (req, res) => {
   // console.log('controller getAll req', req);

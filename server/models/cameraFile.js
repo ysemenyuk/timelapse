@@ -64,6 +64,16 @@ class Camera {
     this.jpegCreateStopTime = jpegCreateStopTime;
   }
 
+  static async getAll() {
+    try {
+      const cameras = await readDataFile();
+      return cameras;
+    } catch (error) {
+      console.log('camera model getAll error -', error);
+      throw new Error(error);
+    }
+  }
+
   async saveOne() {
     try {
       this.id = await getNextId();
@@ -73,16 +83,6 @@ class Camera {
       return this;
     } catch (error) {
       console.log('camera model saveOne error -', error);
-      throw new Error(error);
-    }
-  }
-
-  static async getAll() {
-    try {
-      const cameras = await readDataFile();
-      return cameras;
-    } catch (error) {
-      console.log('camera model getAll error -', error);
       throw new Error(error);
     }
   }
@@ -106,7 +106,7 @@ class Camera {
       const cameras = await Camera.getAll();
       const camera = await Camera.findOneById(id);
       const updatedCamera = { ...camera, ...newData };
-      console.log(cameras);
+      // console.log(cameras);
       const updatedCameraIndex = cameras.findIndex((item) => item.id === id);
       cameras[updatedCameraIndex] = updatedCamera;
       await writeDataFile(cameras);

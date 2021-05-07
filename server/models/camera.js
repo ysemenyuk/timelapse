@@ -13,5 +13,3 @@ const cameraSchema = mongoose.Schema({
 const Camera = mongoose.model('Camera', cameraSchema);
 
 export default Camera;
-
-// description, rtspLink, jpegLink
