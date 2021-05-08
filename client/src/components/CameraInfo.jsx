@@ -1,31 +1,22 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import axios from 'axios';
 
-import { camerasActions, formActions } from '../store/index.js';
-import apiRoutes from '../apiRoutes.js';
+import { formActions } from '../store/index.js';
+import cameraThunks from '../thunks/cameraThunks.js';
 
 const CameraInfo = () => {
   const dispatch = useDispatch();
-  const selectedCamera = useSelector((state) => state.cameras.selectedItem);
+  const selectedCamera = useSelector((state) => state.camera.selectedItem);
   // const form = useSelector((state) => state.form);
 
-  console.log('CameraInfo selectedCamera -', selectedCamera);
+  // console.log('CameraInfo selectedCamera -', selectedCamera);
 
   if (selectedCamera === null) {
     return <div>No camera.</div>;
   }
 
   const handleDelete = async () => {
-    try {
-      const { data } = await axios.delete(
-        apiRoutes.cameraPath(selectedCamera._id)
-      );
-      console.log('form onSubmit resp data -', data);
-      dispatch(camerasActions.deleteOne(selectedCamera));
-    } catch (err) {
-      console.log('catch err -', err);
-    }
+    dispatch(cameraThunks.deleteOne(selectedCamera));
   };
 
   const handleEdit = () => {
@@ -95,28 +86,6 @@ const CameraInfo = () => {
           </div>
         </form>
       </div>
-      {/* <div>
-        <table className='table table-bordered'>
-          <thead>
-            <tr>
-              <th scope='col'>#</th>
-              <th scope='col'>Key</th>
-              <th scope='col'>Value</th>
-            </tr>
-          </thead>
-          <tbody>
-            {Object.entries(selectedCamera).map(([key, value], index) => {
-              return (
-                <tr key={key}>
-                  <th scope='row'>{index}</th>
-                  <td>{key}</td>
-                  <td>{value}</td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      </div> */}
 
       <div className='d-grid gap-2 d-flex justify-content-start'>
         <button className='btn btn-primary' onClick={handleDelete}>

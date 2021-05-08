@@ -1,12 +1,7 @@
-import React, { useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import axios from 'axios';
-
-import { camerasActions } from './store/index.js';
-import apiRoutes from './apiRoutes.js';
+import React from 'react';
 
 import Navbar from './components/Navbar.jsx';
-import CamerasPage from './pages/CamerasPage.jsx';
+import CameraListPage from './pages/CameraListPage.jsx';
 
 const App = () => {
   console.log('App');
@@ -14,7 +9,7 @@ const App = () => {
   return (
     <div className='container p-2'>
       <Navbar />
-      <CamerasPage />
+      <CameraListPage />
     </div>
   );
 };

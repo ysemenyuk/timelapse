@@ -1,23 +1,23 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { camerasActions, formActions } from '../store/index.js';
+import { cameraActions, formActions } from '../store/index.js';
 
 const CameraSidebar = () => {
   const dispatch = useDispatch();
-  const cameras = useSelector((state) => state.cameras.allItems);
-  const selectedCamera = useSelector((state) => state.cameras.selectedItem);
+  const cameras = useSelector((state) => state.camera.allItems);
+  const selectedCamera = useSelector((state) => state.camera.selectedItem);
   const form = useSelector((state) => state.form);
 
-  console.log('Sidebar cameras', cameras);
+  // console.log('Sidebar cameras', cameras);
 
   const handleAddItem = () => {
     dispatch(formActions.set({ show: true, type: 'add' }));
-    dispatch(camerasActions.selectItem(null));
+    dispatch(cameraActions.selectItem(null));
   };
 
   const handleSelectItem = (item) => () => {
-    dispatch(camerasActions.selectItem(item));
+    dispatch(cameraActions.selectItem(item));
     if (form.show) {
       dispatch(formActions.set({ show: false, type: null }));
     }

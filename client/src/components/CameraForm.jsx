@@ -1,11 +1,12 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useFormik } from 'formik';
-import axios from 'axios';
 import * as Yup from 'yup';
 
-import { camerasActions, formActions } from '../store/index.js';
-import useFormType from '../hooks/useFormType2.js';
+import { formActions, cameraActions } from '../store/index.js';
+import cameraThunks from '../thunks/cameraThunks.js';
+
+// import useFormType from '../hooks/useFormType.js';
 
 const validationSchema = Yup.object({
   name: Yup.string().required().min(3).max(20),
@@ -14,16 +15,15 @@ const validationSchema = Yup.object({
 
 const CameraForm = () => {
   const dispatch = useDispatch();
-  const cameras = useSelector((state) => state.cameras.allItems);
-  const selectedCamera = useSelector((state) => state.cameras.selectedItem);
+  const cameras = useSelector((state) => state.camera.allItems);
+  const selectedCamera = useSelector((state) => state.camera.selectedItem);
 
-  const { onSubmit } = useFormType(selectedCamera);
-  // const { cameraAction, formAction, method, url } = useFormType();
+  // const { onSubmit } = useFormType(selectedCamera);
 
   const handleCancel = () => {
     dispatch(formActions.set({ show: false, type: null }));
     if (!selectedCamera && cameras.length > 0) {
-      dispatch(camerasActions.selectItem(cameras[0]));
+      dispatch(cameraActions.selectItem(cameras[0]));
     }
   };
 
@@ -38,21 +38,13 @@ const CameraForm = () => {
       jpegCreateStopTime: '',
     },
     validationSchema,
-    onSubmit,
-    // onSubmit: async (values, { setSubmitting, resetForm, setFieldError }) => {
-    //   try {
-    //     const { data } = await axios({ method, url, data: values });
-    //     resetForm();
-    //     setSubmitting(false);
-    //     console.log('form onSubmit addOne resp data -', data);
-    //     dispatch(cameraAction(data));
-    //     dispatch(formAction({ show: false, type: null }));
-    //   } catch (err) {
-    //     setSubmitting(false);
-    //     setFieldError('networkError', 'networkError');
-    //     console.log('catch err -', err);
-    //   }
-    // },
+    onSubmit: (values, formikHelpers) => {
+      if (selectedCamera) {
+        dispatch(cameraThunks.updateOne(values, formikHelpers));
+      } else {
+        dispatch(cameraThunks.createOne(values, formikHelpers));
+      }
+    },
   });
 
   useEffect(() => {
@@ -75,7 +67,6 @@ const CameraForm = () => {
             <input
               onChange={formik.handleChange}
               value={formik.values.name}
-              // readOnly={form.readOnly}
               id='name'
               name='name'
               type='text'
@@ -91,7 +82,6 @@ const CameraForm = () => {
             <input
               onChange={formik.handleChange}
               value={formik.values.description}
-              // readOnly={form.readOnly}
               id='description'
               name='description'
               type='text'

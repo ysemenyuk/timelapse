@@ -8,14 +8,13 @@ const formSlice = createSlice({
   },
   reducers: {
     set: (state, action) => {
-      console.log('action', action);
       state.show = action.payload.show;
       state.type = action.payload.type;
     },
   },
 });
 
-const camerasSlice = createSlice({
+const cameraSlice = createSlice({
   name: 'cameras',
   initialState: {
     allItems: [],
@@ -60,16 +59,16 @@ const camerasSlice = createSlice({
   },
 });
 
-export const camerasActions = camerasSlice.actions;
+export const cameraActions = cameraSlice.actions;
 export const formActions = formSlice.actions;
 
-export const camerasReducer = camerasSlice.reducer;
+export const cameraReducer = cameraSlice.reducer;
 export const formReducer = formSlice.reducer;
 
 export default () =>
   configureStore({
     reducer: {
-      cameras: camerasReducer,
+      camera: cameraReducer,
       form: formReducer,
     },
   });

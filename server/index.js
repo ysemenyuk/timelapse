@@ -13,7 +13,7 @@ import { dirname } from 'path';
 export const __filename = fileURLToPath(import.meta.url);
 export const __dirname = dirname(__filename);
 
-console.log('__filename - ', __filename);
+// console.log('__filename - ', __filename);
 console.log('__dirname - ', __dirname);
 console.log('path.resolve() - ', path.resolve());
 
@@ -28,16 +28,9 @@ if (process.env.NODE_ENV === 'development') {
 app.use(express.json());
 app.use('/api/cameras', cameraRoutes);
 
-if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.join(__dirname, 'client', 'public')));
-  app.get('*', (req, res) =>
-    res.sendFile(path.resolve('client', 'public', 'index.html'))
-  );
-} else {
-  app.get('/', (req, res) => {
-    res.send('API is running....');
-  });
-}
+app.get('/', (req, res) => {
+  res.send('API is running....');
+});
 
 app.use(errorHandler);
 

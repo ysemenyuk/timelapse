@@ -14,18 +14,6 @@ const getAll = async (req, res) => {
   }
 };
 
-const getOne = async (req, res) => {
-  // console.log('controller getOne req - ', req);
-  const { id } = req.params;
-  try {
-    const camera = await Camera.findOneById(id);
-    res.status(200).send(camera);
-  } catch (e) {
-    console.log('controller getOne error - ', e);
-    res.status(500).send(e.message);
-  }
-};
-
 const createOne = async (req, res) => {
   console.log('controller createOne req - ', req.body);
   try {
@@ -36,6 +24,18 @@ const createOne = async (req, res) => {
     res.status(201).send(savedCamera);
   } catch (e) {
     console.log('controller createOne error - ', e);
+    res.status(500).send(e.message);
+  }
+};
+
+const getOne = async (req, res) => {
+  // console.log('controller getOne req - ', req);
+  const { id } = req.params;
+  try {
+    const camera = await Camera.findOneById(id);
+    res.status(200).send(camera);
+  } catch (e) {
+    console.log('controller getOne error - ', e);
     res.status(500).send(e.message);
   }
 };
@@ -66,8 +66,8 @@ const deleteOne = async (req, res) => {
 
 export default {
   getAll,
-  getOne,
   createOne,
+  getOne,
   updateOne,
   deleteOne,
 };

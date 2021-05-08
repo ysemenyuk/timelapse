@@ -1,12 +1,10 @@
-import fs from 'fs';
 import path from 'path';
 
 import { __dirname } from '../index.js';
 
-const fsp = fs.promises;
-
 const getCameraPaths = (camera) => {
-  const pathToCamDir = path.join(__dirname, 'cameras', camera._id);
+  const pathToCamDir = path.join(__dirname, '..', 'cameras', camera.id);
+
   return {
     pathToCamDir,
     pathToImagesDir: path.join(pathToCamDir, 'images'),

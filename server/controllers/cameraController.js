@@ -58,6 +58,7 @@ const updateOne = async (req, res) => {
   try {
     // const camera = await Camera.findByIdAndUpdate(id, req.body);
     const camera = await Camera.findById(id);
+
     camera.name = name;
     camera.description = description;
     camera.rtspLink = rtspLink;
@@ -65,7 +66,7 @@ const updateOne = async (req, res) => {
     camera.jpegCreateInterval = jpegCreateInterval;
     camera.jpegCreateStartTime = jpegCreateStartTime;
     camera.jpegCreateStopTime = jpegCreateStopTime;
-    // console.log('updateOne camera', camera);
+
     await camera.save();
     res.status(201).send(camera);
   } catch (e) {
