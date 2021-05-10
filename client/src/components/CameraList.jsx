@@ -1,15 +1,19 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 
-import { cameraActions, formActions } from '../store/index.js';
+import { cameraActions } from '../store/cameraSlice.js';
+import { formActions } from '../store/formSlice.js';
 
-const CameraSidebar = () => {
+const CameraList = () => {
   const dispatch = useDispatch();
+  const history = useHistory();
+
   const cameras = useSelector((state) => state.camera.allItems);
   const selectedCamera = useSelector((state) => state.camera.selectedItem);
   const form = useSelector((state) => state.form);
 
-  // console.log('Sidebar cameras', cameras);
+  // console.log('CameraList cameras', cameras);
 
   const handleAddItem = () => {
     dispatch(formActions.set({ show: true, type: 'add' }));
@@ -25,7 +29,7 @@ const CameraSidebar = () => {
 
   return (
     <>
-      <div className='mb-3'>Sidebar</div>
+      <h6 className='mb-3'>List</h6>
       {cameras.length ? (
         <>
           <div className='list-group mb-3'>
@@ -40,7 +44,8 @@ const CameraSidebar = () => {
                   className={`list-group-item list-group-item-action ${activeClass}`}
                   aria-current='true'
                 >
-                  {camera.name}
+                  <div className='fw-bold'>{camera.name}</div>
+                  <small>{camera.description}</small>
                 </button>
               );
             })}
@@ -62,4 +67,4 @@ const CameraSidebar = () => {
   );
 };
 
-export default CameraSidebar;
+export default CameraList;

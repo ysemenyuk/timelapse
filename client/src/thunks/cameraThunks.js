@@ -1,31 +1,35 @@
-// import { createAsyncThunk } from '@reduxjs/toolkit';
+import { createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
-import { cameraActions, formActions } from '../store/index.js';
+import { cameraActions } from '../store/cameraSlice.js';
+import { formActions } from '../store/formSlice.js';
+
 import apiRoutes from '../apiRoutes.js';
 
-// export const fetchAll = createAsyncThunk('camera/fetchAll', async () => {
-//   try {
-//     const response = await axios.get(apiRoutes.cameras());
-//     console.log('fetchAll response.data', response.data);
-//     return response.data;
-//   } catch (e) {
-//     console.log('fetchAll error', e.message);
-//     throw e;
-//   }
-// });
+export const fetchAll = createAsyncThunk('camera/fetchAll', async () => {
+  try {
+    const response = await axios.get(apiRoutes.cameras());
+    console.log('fetchAll2 response.data -', response.data);
+    return response.data;
+  } catch (e) {
+    console.log('fetchAll2 error -', e.message);
+    throw e;
+  }
+});
 
-const fetchAll = () => {
-  return async (dispatch) => {
-    try {
-      const { data } = await axios.get(apiRoutes.cameras());
-      dispatch(cameraActions.fetchAll(data));
-    } catch (e) {
-      console.log('fetchAll error', e.message);
-      // alert(e.message);
-    }
-  };
-};
+console.log('thunks');
+
+// const fetchAll = () => {
+//   return async (dispatch) => {
+//     try {
+//       const { data } = await axios.get(apiRoutes.cameras());
+//       dispatch(cameraActions.fetchAll(data));
+//     } catch (e) {
+//       console.log('fetchAll error', e.message);
+//       // alert(e.message);
+//     }
+//   };
+// };
 
 const createOne = (values, { setSubmitting, resetForm, setFieldError }) => {
   return async (dispatch) => {
@@ -78,4 +82,4 @@ const deleteOne = (selectedCamera) => {
   };
 };
 
-export default { fetchAll, createOne, updateOne, deleteOne };
+export default { createOne, updateOne, deleteOne };

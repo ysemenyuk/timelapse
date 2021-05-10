@@ -14,17 +14,15 @@ const validationSchema = Yup.object({
   description: Yup.string().required().min(3).max(30),
 });
 
-const CameraForm = () => {
+const CameraFormEdit = () => {
   const dispatch = useDispatch();
 
-  const cameras = useSelector((state) => state.camera.allItems);
-  // const selectedCamera = useSelector((state) => state.camera.selectedItem);
+  // const cameras = useSelector((state) => state.camera.allItems);
+  const selectedCamera = useSelector((state) => state.camera.selectedItem);
+  const form = useSelector((state) => state.form);
 
   const handleCancel = () => {
-    if (cameras.length > 0) {
-      dispatch(formActions.set({ show: false, type: null }));
-      dispatch(cameraActions.selectItem(cameras[0]));
-    }
+    dispatch(formActions.set({ show: false, type: null }));
   };
 
   const formik = useFormik({
@@ -39,17 +37,21 @@ const CameraForm = () => {
     },
     validationSchema,
     onSubmit: (values, formikHelpers) => {
-      dispatch(cameraThunks.createOne(values, formikHelpers));
+      dispatch(cameraThunks.updateOne(values, formikHelpers));
     },
   });
+
+  useEffect(() => {
+    selectedCamera && formik.setValues(selectedCamera);
+  }, [selectedCamera]);
 
   // console.log('selectedCamera -', selectedCamera);
   // console.log('formik.errors -', formik.errors);
   // console.log('formik.values -', formik.values);
 
   return (
-    <div className='mb-3'>
-      <h6 className='mb-3'>Add new camera</h6>
+    <div className='col-12 px-3 mb-3'>
+      <h6 className='mb-1'>Edit camera settings</h6>
       <div>
         <form className='row g-3' onSubmit={formik.handleSubmit}>
           <div className='col-md-12'>
@@ -59,10 +61,13 @@ const CameraForm = () => {
             <input
               onChange={formik.handleChange}
               value={formik.values.name}
+              disabled={form.type === 'edit' ? false : true}
               id='name'
               name='name'
               type='text'
-              className={`form-control ${formik.errors?.name && 'is-invalid'}`}
+              className={`form-control ${
+                formik.errors?.name ? 'is-invalid' : ''
+              }`}
             ></input>
             <div className='invalid-feedback'>{formik.errors?.name}</div>
           </div>
@@ -74,6 +79,7 @@ const CameraForm = () => {
             <input
               onChange={formik.handleChange}
               value={formik.values.description}
+              disabled={form.type === 'edit' ? false : true}
               id='description'
               name='description'
               type='text'
@@ -86,21 +92,23 @@ const CameraForm = () => {
 
           <div className='col-md-12'>
             <label htmlFor='name' className='form-label'>
-              rtspLink
+              jpegLink
             </label>
             <div className='input-group'>
               <input
                 onChange={formik.handleChange}
-                value={formik.values.rtspLink}
-                name='rtspLink'
+                value={formik.values.jpegLink}
+                disabled={form.type === 'edit' ? false : true}
+                name='jpegLink'
                 type='text'
                 className={`form-control ${
-                  formik.errors?.rtspLink && 'is-invalid'
+                  formik.errors?.jpegLink && 'is-invalid'
                 }`}
               ></input>
-              <div className='invalid-feedback'>{formik.errors?.rtspLink}</div>
+              <div className='invalid-feedback'>{formik.errors?.jpegLink}</div>
               <button
                 className='btn btn-outline-secondary'
+                disabled={form.type === 'edit' ? false : true}
                 type='button'
                 id='button-addon2'
               >
@@ -111,21 +119,23 @@ const CameraForm = () => {
 
           <div className='col-md-12'>
             <label htmlFor='name' className='form-label'>
-              jpegLink
+              rtspLink
             </label>
             <div className='input-group'>
               <input
                 onChange={formik.handleChange}
-                value={formik.values.jpegLink}
-                name='jpegLink'
+                value={formik.values.rtspLink}
+                disabled={form.type === 'edit' ? false : true}
+                name='rtspLink'
                 type='text'
                 className={`form-control ${
-                  formik.errors?.jpegLink && 'is-invalid'
+                  formik.errors?.rtspLink && 'is-invalid'
                 }`}
               ></input>
-              <div className='invalid-feedback'>{formik.errors?.jpegLink}</div>
+              <div className='invalid-feedback'>{formik.errors?.rtspLink}</div>
               <button
                 className='btn btn-outline-secondary'
+                disabled={form.type === 'edit' ? false : true}
                 type='button'
                 id='button-addon2'
               >
@@ -141,6 +151,7 @@ const CameraForm = () => {
             <input
               onChange={formik.handleChange}
               value={formik.values.jpegCreateStartTime}
+              disabled={form.type === 'edit' ? false : true}
               id='jpegCreateStartTime'
               name='jpegCreateStartTime'
               type='text'
@@ -160,6 +171,7 @@ const CameraForm = () => {
             <input
               onChange={formik.handleChange}
               value={formik.values.jpegCreateStopTime}
+              disabled={form.type === 'edit' ? false : true}
               id='jpegCreateStopTime'
               name='jpegCreateStopTime'
               type='text'
@@ -179,6 +191,7 @@ const CameraForm = () => {
             <input
               onChange={formik.handleChange}
               value={formik.values.jpegCreateInterval}
+              disabled={form.type === 'edit' ? false : true}
               id='jpegCreateInterval'
               name='jpegCreateInterval'
               type='text'
@@ -214,4 +227,4 @@ const CameraForm = () => {
   );
 };
 
-export default CameraForm;
+export default CameraFormEdit;

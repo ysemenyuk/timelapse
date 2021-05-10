@@ -1,15 +1,20 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
+import { cameraActions } from '../store/cameraSlice.js';
+import { formActions } from '../store/formSlice.js';
 import cameraThunks from '../thunks/cameraThunks.js';
+import { fetchAll } from '../thunks/cameraThunks.js';
 
-import CameraSidebar from '../components/CameraSidebar.jsx';
+import CameraList from '../components/CameraList.jsx';
 import CameraInfo from '../components/CameraInfo.jsx';
+import CameraFormEdit from '../components/CameraFormEdit.jsx';
 import CameraForm from '../components/CameraForm.jsx';
+import CameraScreen from '../components/CameraScreen.jsx';
 
-const CameraListPage = () => {
+const CameraPage = () => {
   const dispatch = useDispatch();
-  const cameras = useSelector((state) => state.camera.allItems);
+  // const cameras = useSelector((state) => state.camera.allItems);
   const selectedCamera = useSelector((state) => state.camera.selectedItem);
   const form = useSelector((state) => state.form);
 
@@ -18,19 +23,33 @@ const CameraListPage = () => {
   // console.log('CamerasPage form -', form);
 
   useEffect(() => {
-    dispatch(cameraThunks.fetchAll());
+    dispatch(fetchAll());
   }, []);
 
   return (
-    <div className='row m-0'>
-      <div className='col-3 px-3'>
-        <CameraSidebar />
+    <>
+      <div className='row m-0'>
+        <div className='col-3 px-3'>
+          <CameraList />
+        </div>
+
+        {form.type === 'add' || !selectedCamera ? (
+          <div className='col-4 px-3'>
+            <CameraForm />
+          </div>
+        ) : (
+          <>
+            <div className='col-4 px-3'>
+              {form.type === 'edit' ? <CameraFormEdit /> : <CameraInfo />}
+            </div>
+            <div className='col-4 px-3'>
+              <CameraScreen />
+            </div>
+          </>
+        )}
       </div>
-      <div className='col-9 px-3'>
-        {form.show || !selectedCamera ? <CameraForm /> : <CameraInfo />}
-      </div>
-    </div>
+    </>
   );
 };
 
-export default CameraListPage;
+export default CameraPage;

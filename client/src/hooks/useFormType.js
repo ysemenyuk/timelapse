@@ -1,7 +1,7 @@
 import { useSelector, useDispatch } from 'react-redux';
 import axios from 'axios';
 
-import { formActions } from '../store/index.js';
+import { formActions } from '../store/formSlice.js';
 import cameraThunks from '../thunks/cameraThunks.js';
 import apiRoutes from '../apiRoutes.js';
 

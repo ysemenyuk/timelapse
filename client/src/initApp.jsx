@@ -3,10 +3,12 @@ import { Provider } from 'react-redux';
 
 import App from './App.jsx';
 
+console.log('initApp');
+
 const initApp = (store) => (
-    <Provider store={store}>
-      <App />
-    </Provider>
+  <Provider store={store}>
+    <App />
+  </Provider>
 );
 
 export default initApp;

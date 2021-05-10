@@ -6,6 +6,7 @@ import mongoose from 'mongoose';
 
 import cameraRoutes from './routes/cameraRoutes.js';
 import { errorHandler } from './middleware/errorHandlerMiddleware.js';
+import { corsMiddleware } from './middleware/corsMiddleware.js';
 
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
@@ -26,6 +27,11 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 app.use(express.json());
+
+app.use(corsMiddleware);
+
+app.use('/api/assets', express.static(path.join(__dirname, 'assets')));
+
 app.use('/api/cameras', cameraRoutes);
 
 app.get('/', (req, res) => {
@@ -34,7 +40,7 @@ app.get('/', (req, res) => {
 
 app.use(errorHandler);
 
-const PORT = process.env.PORT || 4000;
+const PORT = process.env.PORT || 2000;
 
 const start = async () => {
   try {
