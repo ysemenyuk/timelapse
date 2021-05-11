@@ -13,20 +13,24 @@ module.exports = {
     filename: 'main.js',
     path: path.join(__dirname, 'public'),
     clean: true,
-    // publicPath: '/assets/',
+    publicPath: '/public/',
   },
   devServer: {
     compress: true,
-    port: 9000,
+    hot: true,
+    port: 3000,
     host: 'localhost',
-    contentBase: './public',
-    contentBasePublicPath: '/assets',
-    // publicPath: '/assets/',
+    contentBase: path.join(__dirname, 'public'),
+    publicPath: '/public/',
     proxy: {
-      context: ['/auth', '/api'],
-      target: 'http://localhost:2000',
+      '/api': 'http://localhost:4000',
     },
+    // proxy: {
+    //   context: ['/auth', '/api'],
+    //   target: 'http://localhost:4000',
+    // },
     historyApiFallback: true,
+    open: true,
   },
   plugins: [
     new HtmlWebpackPlugin({
@@ -57,7 +61,6 @@ module.exports = {
             loader: 'file-loader',
             options: {
               name: '[name].[ext]',
-              // outputPath: "assets/"
             },
           },
         ],

@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "dev": "webpack serve",
-    "build": "NODE_ENV=production npx webpack"
+    "build": "npx webpack"
   },
   "author": "",
   "license": "ISC",

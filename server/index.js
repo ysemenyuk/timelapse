@@ -40,7 +40,7 @@ app.get('/', (req, res) => {
 
 app.use(errorHandler);
 
-const PORT = process.env.PORT || 2000;
+const PORT = process.env.PORT || 4000;
 
 const start = async () => {
   try {

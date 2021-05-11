@@ -20,8 +20,9 @@ const App = () => {
       <Router>
         <Navbar />
         <Switch>
-          <Route path='/login' component={LoginPage} />
+          <Route path='/login/login' component={LoginPage} />
           <Route path='/signup' component={SignupPage} />
+          <Route path='/form' component={SignupPage} />
           <Route path='/camera/:id' component={CameraPage} />
           <Route path='/' component={CameraListPage} />
           <Redirect to='/' />
