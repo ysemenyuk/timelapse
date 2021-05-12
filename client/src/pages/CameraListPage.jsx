@@ -1,15 +1,15 @@
-import React, { useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import React, { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 
-import { cameraActions } from '../store/cameraSlice.js';
+import { cameraActions } from "../store/cameraSlice.js";
 // import { formActions } from '../store/formSlice.js';
-import cameraThunks from '../thunks/cameraThunks.js';
+import cameraThunks from "../thunks/cameraThunks.js";
 
-import CameraList from '../components/CameraList.jsx';
+import CameraList from "../components/CameraList.jsx";
+import CameraFormEdit from "../components/CameraFormEdit.jsx";
+import CameraScreen from "../components/CameraScreen.jsx";
 // import CameraInfo from '../components/CameraInfo.jsx';
-import CameraFormEdit from '../components/CameraFormEdit.jsx';
 // import CameraStatus from '../components/CameraStatus.jsx';
-import CameraScreen from '../components/CameraScreen.jsx';
 
 const CameraListPage = () => {
   const dispatch = useDispatch();
@@ -32,16 +32,16 @@ const CameraListPage = () => {
 
   return (
     <>
-      <div className='row m-0'>
-        <div className='col-3 px-3'>
+      <div className="row">
+        <div className="col-3 px-3">
           <CameraList />
         </div>
 
-        <div className='col-6 px-3'>
+        <div className="col-6 px-3">
           {/* {form.type === 'edit' ? <CameraFormEdit /> : <CameraInfo />} */}
           <CameraFormEdit />
         </div>
-        <div className='col-3 px-3'>
+        <div className="col-3 px-3">
           {/* <CameraStatus /> */}
           <CameraScreen />
         </div>

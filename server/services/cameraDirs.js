@@ -1,12 +1,13 @@
-import fs from 'fs';
+import fs from "fs";
 
 const fsp = fs.promises;
 
 const makeDirsForCamera = (paths) => {
-  console.log('makeDirsForCamera - ', paths);
+  console.log("makeDirsForCamera - ", paths);
 
   const {
     pathToCamDir,
+    pathToScreenshotsDir,
     pathToImagesDir,
     pathToVideosDir,
     pathToLogFile,
@@ -14,14 +15,15 @@ const makeDirsForCamera = (paths) => {
 
   return fsp
     .mkdir(pathToCamDir)
+    .then(() => fsp.mkdir(pathToScreenshotsDir))
     .then(() => fsp.mkdir(pathToImagesDir))
     .then(() => fsp.mkdir(pathToVideosDir))
-    .then(() => fsp.writeFile(pathToLogFile, 'log file \n'))
+    .then(() => fsp.writeFile(pathToLogFile, "log file \n"))
     .catch((e) => console.log(`catch makeDirsForCamera error: ${e.message}`));
 };
 
 const removeDirsForCamera = (paths) => {
-  console.log('removeDirsForCamera - ', paths);
+  console.log("removeDirsForCamera - ", paths);
 
   const { pathToCamDir } = paths;
 
