@@ -1,13 +1,17 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useParams, useRouteMatch } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import { cameraActions } from '../store/cameraSlice.js';
 import { formActions } from '../store/formSlice.js';
 
+import { fetchAll } from '../thunks/cameraThunks.js';
+
 const CameraList = () => {
   const dispatch = useDispatch();
   const history = useHistory();
+  const match = useRouteMatch('/');
 
   const cameras = useSelector((state) => state.camera.allItems);
   const selectedCamera = useSelector((state) => state.camera.selectedItem);
@@ -15,15 +19,10 @@ const CameraList = () => {
 
   // console.log('CameraList cameras', cameras);
 
-  const handleAddItem = () => {
-    dispatch(formActions.set({ show: true, type: 'add' }));
-    dispatch(cameraActions.selectItem(null));
-  };
-
   const handleSelectItem = (item) => () => {
     dispatch(cameraActions.selectItem(item));
-    if (form.show) {
-      dispatch(formActions.set({ show: false, type: null }));
+    if (match.isExact === false) {
+      history.push('/');
     }
   };
 
@@ -51,13 +50,9 @@ const CameraList = () => {
             })}
           </div>
           <div>
-            <button
-              className='btn btn-primary'
-              type='button'
-              onClick={handleAddItem}
-            >
-              Add New Camera
-            </button>
+            <Link className='btn btn-primary' to='/form'>
+              Add camera
+            </Link>
           </div>
         </>
       ) : (

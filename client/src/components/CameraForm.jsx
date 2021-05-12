@@ -1,13 +1,12 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { useHistory, useParams } from 'react-router-dom';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 
 import { cameraActions } from '../store/cameraSlice.js';
 import { formActions } from '../store/formSlice.js';
 import cameraThunks from '../thunks/cameraThunks.js';
-
-// import useFormType from '../hooks/useFormType.js';
 
 const validationSchema = Yup.object({
   name: Yup.string().required().min(3).max(20),
@@ -16,14 +15,15 @@ const validationSchema = Yup.object({
 
 const CameraForm = () => {
   const dispatch = useDispatch();
+  const history = useHistory();
 
   const cameras = useSelector((state) => state.camera.allItems);
   // const selectedCamera = useSelector((state) => state.camera.selectedItem);
 
   const handleCancel = () => {
     if (cameras.length > 0) {
-      dispatch(formActions.set({ show: false, type: null }));
       dispatch(cameraActions.selectItem(cameras[0]));
+      history.push('/');
     }
   };
 
@@ -38,8 +38,18 @@ const CameraForm = () => {
       jpegCreateStopTime: '',
     },
     validationSchema,
-    onSubmit: (values, formikHelpers) => {
-      dispatch(cameraThunks.createOne(values, formikHelpers));
+    onSubmit: (values, { resetForm, setSubmitting, setFieldError }) => {
+      dispatch(cameraThunks.createOne(values))
+        .then(() => {
+          resetForm();
+          setSubmitting(false);
+          history.push('/');
+        })
+        .catch((e) => {
+          setSubmitting(false);
+          setFieldError('networkError', 'networkError');
+          console.log('catch formik err -', e);
+        });
     },
   });
 
@@ -48,7 +58,7 @@ const CameraForm = () => {
   // console.log('formik.values -', formik.values);
 
   return (
-    <div className='mb-3'>
+    <div className='col-12 px-3 mb-3'>
       <h6 className='mb-3'>Add new camera</h6>
       <div>
         <form className='row g-3' onSubmit={formik.handleSubmit}>

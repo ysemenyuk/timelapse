@@ -1,32 +1,31 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+// import { useHistory } from 'react-router-dom';
 
 import { cameraActions } from '../store/cameraSlice.js';
 // import { formActions } from '../store/formSlice.js';
 import cameraThunks from '../thunks/cameraThunks.js';
 
 import CameraList from '../components/CameraList.jsx';
-// import CameraInfo from '../components/CameraInfo.jsx';
-import CameraFormEdit from '../components/CameraFormEdit.jsx';
-// import CameraStatus from '../components/CameraStatus.jsx';
-import CameraScreen from '../components/CameraScreen.jsx';
+import CameraForm from '../components/CameraForm.jsx';
 
-const CameraListPage = () => {
+const CameraFormPage = () => {
   const dispatch = useDispatch();
+  // const history = useHistory();
 
   const cameras = useSelector((state) => state.camera.allItems);
   const selectedCamera = useSelector((state) => state.camera.selectedItem);
   // const form = useSelector((state) => state.form);
 
   useEffect(() => {
-    if (selectedCamera === null && cameras.length !== 0) {
-      dispatch(cameraActions.selectItem(cameras[0]));
+    if (cameras.length === 0) {
+      dispatch(cameraThunks.fetchAll());
     }
   }, []);
 
   useEffect(() => {
-    if (cameras.length === 0) {
-      dispatch(cameraThunks.fetchAll());
+    if (selectedCamera !== null) {
+      dispatch(cameraActions.selectItem(null));
     }
   }, []);
 
@@ -36,18 +35,12 @@ const CameraListPage = () => {
         <div className='col-3 px-3'>
           <CameraList />
         </div>
-
         <div className='col-6 px-3'>
-          {/* {form.type === 'edit' ? <CameraFormEdit /> : <CameraInfo />} */}
-          <CameraFormEdit />
-        </div>
-        <div className='col-3 px-3'>
-          {/* <CameraStatus /> */}
-          <CameraScreen />
+          <CameraForm />
         </div>
       </div>
     </>
   );
 };
 
-export default CameraListPage;
+export default CameraFormPage;

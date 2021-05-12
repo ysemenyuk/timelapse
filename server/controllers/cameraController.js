@@ -76,7 +76,7 @@ const updateOne = async (req, res) => {
 };
 
 const deleteOne = async (req, res) => {
-  // console.log('controller deleteOne req - ', req);
+  console.log('controller deleteOne req.params - ', req.params);
   const { id } = req.params;
   try {
     const camera = await Camera.findById(id);

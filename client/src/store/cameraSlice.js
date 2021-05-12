@@ -1,34 +1,40 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
+
+import cameraThunks from '../thunks/cameraThunks.js';
+
+const { fetchAll, fetchOne, createOne, updateOne, deleteOne } = cameraThunks;
 
 console.log('cameraSlice');
 
-const fetchAll = createAsyncThunk('camera/fetchAll', async () => {
-  try {
-    const response = await axios.get(apiRoutes.cameras());
-    console.log('fetchAll2 response.data -', response.data);
-    return response.data;
-  } catch (e) {
-    console.log('fetchAll2 error -', e.message);
-    throw e;
-  }
-});
-
 const cameraSlice = createSlice({
-  name: 'cameras',
+  name: 'camera',
   initialState: {
     allItems: [],
     selectedItem: null,
   },
   reducers: {
-    fetchAll: (state, action) => {
+    selectItem: (state, action) => {
       // console.log('action', action);
-      state.allItems = action.payload;
-      state.selectedItem = action.payload[0];
+      state.selectedItem = action.payload;
     },
-    updateOne: (state, action) => {
-      // console.log('action addOne -', action);
+  },
+  extraReducers: {
+    [fetchAll.fulfilled]: (state, action) => {
+      state.allItems = action.payload;
+      if (state.selectedItem === null && action.payload.length !== 0) {
+        state.selectedItem = action.payload[0];
+      }
+    },
+    [fetchOne.fulfilled]: (state, action) => {
+      state.selectedItem = action.payload;
+    },
+    [createOne.fulfilled]: (state, action) => {
+      // console.log('action createOne -', action);
+      state.allItems.push(action.payload);
+      state.selectedItem = action.payload;
+    },
+    [updateOne.fulfilled]: (state, action) => {
+      // console.log('action updateOne -', action);
       const updatedItem = action.payload;
       const updatedItemIndex = state.allItems.findIndex(
         (item) => item._id === updatedItem._id
@@ -36,13 +42,8 @@ const cameraSlice = createSlice({
       state.allItems[updatedItemIndex] = updatedItem;
       state.selectedItem = updatedItem;
     },
-    addOne: (state, action) => {
-      // console.log('action addOne -', action);
-      state.allItems.push(action.payload);
-      state.selectedItem = action.payload;
-    },
-    deleteOne: (state, action) => {
-      // console.log('action addOne -', action);
+    [deleteOne.fulfilled]: (state, action) => {
+      // console.log('action deleteOne -', action);
       const deletedItem = action.payload;
       state.allItems = state.allItems.filter(
         (item) => item._id !== deletedItem._id
@@ -52,16 +53,6 @@ const cameraSlice = createSlice({
       } else {
         state.selectedItem = state.allItems[0];
       }
-    },
-    selectItem: (state, action) => {
-      // console.log('action', action);
-      state.selectedItem = action.payload;
-    },
-  },
-  extraReducers: {
-    [fetchAll.fulfilled]: (state, action) => {
-      state.allItems = action.payload;
-      state.selectedItem = action.payload[0];
     },
   },
 });

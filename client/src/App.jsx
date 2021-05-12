@@ -12,6 +12,7 @@ import LoginPage from './pages/LoginPage.jsx';
 import SignupPage from './pages/SignupPage.jsx';
 import CameraListPage from './pages/CameraListPage.jsx';
 import CameraPage from './pages/CameraPage.jsx';
+import CameraFormPage from './pages/CameraFormPage.jsx';
 
 const App = () => {
   console.log('App');
@@ -20,11 +21,11 @@ const App = () => {
       <Router>
         <Navbar />
         <Switch>
-          <Route path='/login/login' component={LoginPage} />
+          <Route path='/login' component={LoginPage} />
           <Route path='/signup' component={SignupPage} />
-          <Route path='/form' component={SignupPage} />
+          <Route path='/form' component={CameraFormPage} />
           <Route path='/camera/:id' component={CameraPage} />
-          <Route path='/' component={CameraListPage} />
+          <Route exact path='/' component={CameraListPage} />
           <Redirect to='/' />
         </Switch>
       </Router>

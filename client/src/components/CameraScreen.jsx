@@ -16,16 +16,16 @@ const CameraScreen = () => {
 
   return (
     <div className='col-12 px-3 mb-4'>
-      <h6 className='mb-3'>Camera screenshot</h6>
+      <h6 className='mb-3'>Screenshot</h6>
       <div className='mb-4'>
         <img
           src='/api/assets/no_image.png'
           className='file_screenshot img-thumbnail'
         />
       </div>
-      <div className='mb-4'>
-        <button className='btn btn-primary'>Create screenshot</button>
-      </div>
+      {/* <div className='mb-4'>
+        <button className='btn btn-primary'>Screenshot</button>
+      </div> */}
 
       <h6 className='mb-3'>Last screenshots</h6>
       <div className='mb-4'>
@@ -37,7 +37,7 @@ const CameraScreen = () => {
       </div>
       <div className='mb-4'>
         <button className='btn btn-primary' onClick={handleEdit}>
-          Camera files
+          All files
         </button>
       </div>
     </div>

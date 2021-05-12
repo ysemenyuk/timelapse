@@ -3,11 +3,9 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 
-import { cameraActions } from '../store/cameraSlice.js';
+// import { cameraActions } from '../store/cameraSlice.js';
 import { formActions } from '../store/formSlice.js';
 import cameraThunks from '../thunks/cameraThunks.js';
-
-// import useFormType from '../hooks/useFormType.js';
 
 const validationSchema = Yup.object({
   name: Yup.string().required().min(3).max(20),
@@ -20,9 +18,20 @@ const CameraFormEdit = () => {
   // const cameras = useSelector((state) => state.camera.allItems);
   const selectedCamera = useSelector((state) => state.camera.selectedItem);
   const form = useSelector((state) => state.form);
+  // console.log('CameraInfo selectedCamera -', selectedCamera);
 
   const handleCancel = () => {
     dispatch(formActions.set({ show: false, type: null }));
+  };
+
+  const handleDelete = (e) => {
+    e.preventDefault();
+    dispatch(cameraThunks.deleteOne(selectedCamera));
+  };
+
+  const handleEdit = (e) => {
+    e.preventDefault();
+    dispatch(formActions.set({ show: true, type: 'edit' }));
   };
 
   const formik = useFormik({
@@ -36,8 +45,18 @@ const CameraFormEdit = () => {
       jpegCreateStopTime: '',
     },
     validationSchema,
-    onSubmit: (values, formikHelpers) => {
-      dispatch(cameraThunks.updateOne(values, formikHelpers));
+    onSubmit: (values, { resetForm, setSubmitting, setFieldError }) => {
+      dispatch(cameraThunks.updateOne(values))
+        .then(() => {
+          resetForm();
+          setSubmitting(false);
+          dispatch(formActions.set({ show: false, type: null }));
+        })
+        .catch((err) => {
+          setSubmitting(false);
+          setFieldError('networkError', 'networkError');
+          console.log('catch formik err -', err);
+        });
     },
   });
 
@@ -51,7 +70,7 @@ const CameraFormEdit = () => {
 
   return (
     <div className='col-12 px-3 mb-3'>
-      <h6 className='mb-1'>Edit camera settings</h6>
+      <h6 className='mb-3'>Settings</h6>
       <div>
         <form className='row g-3' onSubmit={formik.handleSubmit}>
           <div className='col-md-12'>
@@ -108,7 +127,7 @@ const CameraFormEdit = () => {
               <div className='invalid-feedback'>{formik.errors?.jpegLink}</div>
               <button
                 className='btn btn-outline-secondary'
-                disabled={form.type === 'edit' ? false : true}
+                // disabled={form.type === 'edit' ? false : true}
                 type='button'
                 id='button-addon2'
               >
@@ -135,7 +154,7 @@ const CameraFormEdit = () => {
               <div className='invalid-feedback'>{formik.errors?.rtspLink}</div>
               <button
                 className='btn btn-outline-secondary'
-                disabled={form.type === 'edit' ? false : true}
+                // disabled={form.type === 'edit' ? false : true}
                 type='button'
                 id='button-addon2'
               >
@@ -204,23 +223,42 @@ const CameraFormEdit = () => {
             </div>
           </div>
 
-          <div className='d-grid gap-2 d-flex justify-content-start'>
-            <button
-              className='btn btn-primary'
-              type='button'
-              onClick={handleCancel}
-              disabled={formik.isSubmitting}
-            >
-              Cancel
-            </button>
-            <button
-              className='btn btn-primary'
-              type='submit'
-              disabled={formik.isSubmitting}
-            >
-              Submit
-            </button>
-          </div>
+          {form.type === 'edit' ? (
+            <div className='d-grid gap-2 d-flex justify-content-start'>
+              <button
+                className='btn btn-primary'
+                type='button'
+                onClick={handleCancel}
+                disabled={formik.isSubmitting}
+              >
+                Cancel
+              </button>
+              <button
+                className='btn btn-primary'
+                type='submit'
+                disabled={formik.isSubmitting}
+              >
+                Submit
+              </button>
+            </div>
+          ) : (
+            <div className='d-grid gap-2 d-flex justify-content-start'>
+              <button
+                type='button'
+                className='btn btn-primary'
+                onClick={handleDelete}
+              >
+                Delete camera
+              </button>
+              <button
+                type='button'
+                className='btn btn-primary'
+                onClick={handleEdit}
+              >
+                Edit settings
+              </button>
+            </div>
+          )}
         </form>
       </div>
     </div>
