@@ -1,10 +1,9 @@
 import Camera from '../models/camera.js';
+import File from '../models/file.js';
+import { getCameraPaths, getCameraNames } from '../services/cameraPaths.js';
+import { makeDir, writeFile, removeDir } from '../services/cameraDirs.js';
 
-import {
-  makeDirsForCamera,
-  removeDirsForCamera,
-} from '../services/cameraDirs.js';
-import { getCameraPaths } from '../services/cameraPaths.js';
+console.log('cameraController');
 
 const getAll = async (req, res) => {
   // console.log('controller getAll req', req);
@@ -21,9 +20,65 @@ const createOne = async (req, res) => {
   // console.log('controller createOne req - ', req.body);
   try {
     const camera = new Camera(req.body);
-    const cameraPaths = getCameraPaths(camera);
-    await makeDirsForCamera(cameraPaths);
+    const names = getCameraNames(camera);
+    const paths = getCameraPaths(names);
+
+    const cameraDir = new File({
+      name: names.cameraDir,
+      path: paths.pathToCameraDir,
+      camera: camera._id,
+      type: 'dir',
+    });
+
+    await makeDir(paths.pathToCameraDir);
+    await cameraDir.save();
+
+    const screenshotsDir = new File({
+      name: names.screenshotsDir,
+      path: paths.pathToScreenshotsDir,
+      camera: camera._id,
+      type: 'dir',
+      parent: cameraDir._id,
+    });
+
+    await makeDir(paths.pathToScreenshotsDir);
+    await screenshotsDir.save();
+
+    const imagesDir = new File({
+      name: names.imagesDir,
+      path: paths.pathToImagesDir,
+      camera: camera._id,
+      type: 'dir',
+      parent: cameraDir._id,
+    });
+
+    await makeDir(paths.pathToImagesDir);
+    await imagesDir.save();
+
+    const videosDir = new File({
+      name: names.videosDir,
+      path: paths.pathToVideosDir,
+      camera: camera._id,
+      type: 'dir',
+      parent: cameraDir._id,
+    });
+
+    await makeDir(paths.pathToVideosDir);
+    await videosDir.save();
+
+    const logFile = new File({
+      name: names.logFile,
+      path: paths.pathToLogFile,
+      camera: camera._id,
+      type: 'txt',
+      parent: cameraDir._id,
+    });
+
+    await writeFile(paths.pathToLogFile, 'log file \n');
+    await logFile.save();
+
     await camera.save();
+
     res.status(201).send(camera);
   } catch (e) {
     console.log('controller createOne error - ', e);
@@ -76,12 +131,12 @@ const updateOne = async (req, res) => {
 };
 
 const deleteOne = async (req, res) => {
-  console.log('controller deleteOne req.params - ', req.params);
+  // console.log('controller deleteOne req.params - ', req.params);
   const { id } = req.params;
   try {
     const camera = await Camera.findById(id);
-    const cameraPaths = getCameraPaths(camera);
-    await removeDirsForCamera(cameraPaths);
+    // const cameraPaths = getCameraPaths(camera);
+    // await removeDirsForCamera(cameraPaths);
     camera.remove();
     res.status(204).send();
   } catch (e) {

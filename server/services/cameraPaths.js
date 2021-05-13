@@ -1,17 +1,32 @@
-import path from "path";
+import path from 'path';
 
-import { __dirname } from "../index.js";
+console.log('cameraPaths');
 
-const getCameraPaths = (camera) => {
-  const pathToCamDir = path.join(__dirname, "..", "cameras", camera.id);
+// import { __dirname } from '../index.js';
 
+const getCameraNames = (camera) => {
+  const cameraDir = camera._id.toString();
+  console.log('getCameraNames cameraDir-', cameraDir);
   return {
-    pathToCamDir,
-    pathToScreenshotsDir: path.join(pathToCamDir, "screenshots"),
-    pathToImagesDir: path.join(pathToCamDir, "images"),
-    pathToVideosDir: path.join(pathToCamDir, "videos"),
-    pathToLogFile: path.join(pathToCamDir, `${camera.id}-camera-log.txt`),
+    cameraDir,
+    screenshotsDir: 'screenshots',
+    imagesDir: 'images',
+    videosDir: 'videos',
+    logFile: `${cameraDir}-camera-log.txt`,
   };
 };
 
-export { getCameraPaths };
+const getCameraPaths = (names) => {
+  const { cameraDir, screenshotsDir, imagesDir, videosDir, logFile } = names;
+  const pathToCameraDir = path.join(cameraDir);
+  console.log('getCameraPaths pathToCameraDir -', pathToCameraDir);
+  return {
+    pathToCameraDir,
+    pathToScreenshotsDir: path.join(pathToCameraDir, screenshotsDir),
+    pathToImagesDir: path.join(pathToCameraDir, imagesDir),
+    pathToVideosDir: path.join(pathToCameraDir, videosDir),
+    pathToLogFile: path.join(pathToCameraDir, logFile),
+  };
+};
+
+export { getCameraPaths, getCameraNames };

@@ -1,13 +1,12 @@
 import express from 'express';
 
-import CameraController from '../controllers/cameraController.js';
+import fileController from '../controllers/fileController.js';
 
 const router = express.Router();
 
-router.get('/', CameraController.getAll);
-router.get('/:id', CameraController.getOne);
-router.post('/', CameraController.createOne);
-router.put('/:id', CameraController.updateOne);
-router.delete('/:id', CameraController.deleteOne);
+router.post('/', fileController.createOne);
+
+router.get('/', fileController.getMany);
+router.get('/:id', fileController.getOne);
 
 export default router;
