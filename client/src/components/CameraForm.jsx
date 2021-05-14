@@ -17,7 +17,7 @@ const CameraForm = () => {
   const dispatch = useDispatch();
   const history = useHistory();
 
-  const cameras = useSelector((state) => state.camera.allItems);
+  const cameras = useSelector((state) => state.camera.allCameras);
   // const selectedCamera = useSelector((state) => state.camera.selectedItem);
 
   const handleCancel = () => {

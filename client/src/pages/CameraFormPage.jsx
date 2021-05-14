@@ -13,13 +13,13 @@ const CameraFormPage = () => {
   const dispatch = useDispatch();
   // const history = useHistory();
 
-  const cameras = useSelector((state) => state.camera.allItems);
-  const selectedCamera = useSelector((state) => state.camera.selectedItem);
-  // const form = useSelector((state) => state.form);
+  const cameras = useSelector((state) => state.camera.allCameras);
+  const selectedCamera = useSelector((state) => state.camera.selectedCamera);
 
-  useEffect(() => {
+  useEffect(async () => {
     if (cameras.length === 0) {
-      dispatch(cameraThunks.fetchAll());
+      await dispatch(cameraThunks.fetchAll());
+      dispatch(cameraActions.selectItem(null));
     }
   }, []);
 

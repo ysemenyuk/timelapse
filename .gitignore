@@ -3,7 +3,6 @@ node_modules
 client/node_modules
 server/node_modules
 local/node_modules
-cameras
 .env
 server/.env
 client/.env

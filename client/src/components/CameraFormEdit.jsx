@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { useHistory, useRouteMatch } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 
@@ -15,23 +16,29 @@ const validationSchema = Yup.object({
 const CameraFormEdit = () => {
   const dispatch = useDispatch();
 
-  // const cameras = useSelector((state) => state.camera.allItems);
-  const selectedCamera = useSelector((state) => state.camera.selectedItem);
+  const history = useHistory();
+  const match = useRouteMatch("/");
+
+  const selectedCamera = useSelector((state) => state.camera.selectedCamera);
   const form = useSelector((state) => state.form);
+
   // console.log('CameraInfo selectedCamera -', selectedCamera);
 
   const handleCancel = () => {
     dispatch(formActions.set({ show: false, type: null }));
   };
 
-  const handleDelete = (e) => {
+  const handleDelete = async (e) => {
     e.preventDefault();
-    dispatch(cameraThunks.deleteOne(selectedCamera));
+    await dispatch(cameraThunks.deleteOne(selectedCamera));
+    if (match.isExact === false) {
+      history.push("/");
+    }
   };
 
-  const handleEdit = (e) => {
+  const handleEdit = async (e) => {
     e.preventDefault();
-    dispatch(formActions.set({ show: true, type: "edit" }));
+    await dispatch(formActions.set({ show: true, type: "edit" }));
   };
 
   const formik = useFormik({

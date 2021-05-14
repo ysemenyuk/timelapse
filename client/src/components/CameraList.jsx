@@ -11,8 +11,8 @@ const CameraList = () => {
   const history = useHistory();
   const match = useRouteMatch("/");
 
-  const cameras = useSelector((state) => state.camera.allItems);
-  const selectedCamera = useSelector((state) => state.camera.selectedItem);
+  const cameras = useSelector((state) => state.camera.allCameras);
+  const selectedCamera = useSelector((state) => state.camera.selectedCamera);
   const form = useSelector((state) => state.form);
 
   // console.log('CameraList cameras', cameras);
