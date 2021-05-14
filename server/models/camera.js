@@ -4,6 +4,8 @@ console.log('cameraModel');
 
 const CameraSchema = mongoose.Schema({
   files: [{ type: mongoose.ObjectId, ref: 'File' }],
+  dir: { type: mongoose.ObjectId, ref: 'File' },
+  user: { type: mongoose.ObjectId, ref: 'User' },
   name: { type: String, required: true },
   description: { type: String, required: true },
   rtspLink: { type: String, default: '' },

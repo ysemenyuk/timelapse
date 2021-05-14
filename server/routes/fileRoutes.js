@@ -4,9 +4,10 @@ import fileController from '../controllers/fileController.js';
 
 const router = express.Router();
 
-router.post('/', fileController.createOne);
+router.post('/dir', fileController.createDir);
+router.post('/file', fileController.createDir);
 
-router.get('/', fileController.getMany);
-router.get('/:id', fileController.getOne);
+router.get('/', fileController.getFiles);
+router.get('/:id', fileController.getFile);
 
 export default router;

@@ -30,7 +30,7 @@ app.use(express.json());
 
 app.use(corsMiddleware);
 
-app.use('/assets', express.static(path.join(__dirname, 'assets')));
+app.use('/files/assets', express.static(path.join(__dirname, 'assets')));
 app.use('/files', express.static(path.join(__dirname, '..', 'cameras')));
 
 app.use('/api/cameras', cameraRoutes);

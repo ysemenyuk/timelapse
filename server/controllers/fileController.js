@@ -1,17 +1,22 @@
+import path from 'path';
+
+import Camera from '../models/camera.js';
 import File from '../models/file.js';
 
 import { getCameraPaths, getCameraNames } from '../services/cameraPaths.js';
 import { makeDir, writeFile, removeDir } from '../services/cameraDirs.js';
 
-const getMany = async (req, res) => {
+console.log('fileController');
+
+const getFiles = async (req, res) => {
   console.log('File controller getMany req.query', req.query);
   console.log('File controller getMany req.body', req.body);
 
-  const { cameraId } = req.query;
+  const { parentId } = req.query;
 
   try {
     const files = await File.find({
-      camera: cameraId,
+      parent: parentId,
     });
     res.status(200).send(files);
   } catch (e) {
@@ -20,26 +25,70 @@ const getMany = async (req, res) => {
   }
 };
 
-const createOne = async (req, res) => {
+const createFile = async (req, res) => {
   console.log('File controller createOne req - ', req.body);
+  const { parentId, cameraId } = req.body;
+
+  const parent = await File.findOne({ _id: parentId });
+  const camera = await Camera.findOne({ _id: cameraId });
+
+  const pathToFile = path.join(parent.path, 'file1.txt');
+
   try {
-    // const file = new File(req.body);
-    // await file.save();
-    // res.status(201).send(file);
+    const file = new File({
+      name: 'file1.txt',
+      path: pathToFile,
+      camera: camera._id,
+      type: 'txt',
+      parent: parentId,
+    });
+
+    await writeFile(pathToFile, 'file1 \n');
+    await file.save();
+
+    res.status(201).send(file);
   } catch (e) {
     console.log('File controller createOne error - ', e);
     res.status(500).send(e.message);
   }
 };
 
-const getOne = async (req, res) => {
-  console.log('File controller getOne req.body - ', req);
+const createDir = async (req, res) => {
+  console.log('File controller createDir req - ', req.body);
+  const { parentId, cameraId } = req.body;
+
+  const parent = await File.findOne({ _id: parentId });
+  const camera = await Camera.findOne({ _id: cameraId });
+
+  const pathToDir = path.join(parent.path, 'dirname');
+
+  try {
+    const file = new File({
+      name: 'dirname',
+      path: pathToDir,
+      camera: camera._id,
+      type: 'dir',
+      parent: parentId,
+    });
+
+    await makeDir(pathToDir);
+    await file.save();
+
+    res.status(201).send(file);
+  } catch (e) {
+    console.log('File controller createOne error - ', e);
+    res.status(500).send(e.message);
+  }
+};
+
+const getFile = async (req, res) => {
+  console.log('File controller getFile req.body - ', req);
   const { id } = req.params;
   try {
     const file = await File.findById(id);
     res.status(200).send(file);
   } catch (e) {
-    console.log('File controller getOne error - ', e);
+    console.log('File controller getFile error - ', e);
     res.status(500).send(e.message);
   }
 };
@@ -92,9 +141,10 @@ const getOne = async (req, res) => {
 // };
 
 export default {
-  getMany,
-  createOne,
-  getOne,
+  getFiles,
+  createFile,
+  createDir,
+  getFile,
   // updateOne,
   // deleteOne,
 };

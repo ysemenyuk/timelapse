@@ -1,5 +1,6 @@
 import Camera from '../models/camera.js';
 import File from '../models/file.js';
+
 import { getCameraPaths, getCameraNames } from '../services/cameraPaths.js';
 import { makeDir, writeFile, removeDir } from '../services/cameraDirs.js';
 
@@ -77,6 +78,7 @@ const createOne = async (req, res) => {
     await writeFile(paths.pathToLogFile, 'log file \n');
     await logFile.save();
 
+    camera.dir = cameraDir._id;
     await camera.save();
 
     res.status(201).send(camera);

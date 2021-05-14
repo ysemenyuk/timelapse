@@ -14,9 +14,9 @@ const CameraStatus = () => {
   }
 
   return (
-    <div className='col-12 px-3 mb-4'>
-      <h6 className='mb-1'>Status</h6>
-      <div className='mb-4'>
+    <div className='col-12 mb-3'>
+      <h6 className='mb-3'>Status</h6>
+      <div className='mb-3'>
         <ul className='list-group list-group-flush'>
           <li className='list-group-item d-flex justify-content-between align-items-start'>
             <div>rtspLink</div>
