@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-console.log('formSlice');
+// console.log('formSlice');
 
 const formSlice = createSlice({
   name: 'form',

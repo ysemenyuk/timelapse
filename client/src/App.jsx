@@ -15,7 +15,7 @@ import CameraPage from './pages/CameraPage.jsx';
 import CameraFormPage from './pages/CameraFormPage.jsx';
 
 const App = () => {
-  console.log('App');
+  // console.log('App');
   return (
     <div className='container p-2'>
       <Router>

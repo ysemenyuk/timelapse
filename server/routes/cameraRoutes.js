@@ -2,7 +2,7 @@ import express from 'express';
 
 import CameraController from '../controllers/cameraController.js';
 
-console.log('cameraRouter');
+// console.log('cameraRouter');
 
 const router = express.Router();
 

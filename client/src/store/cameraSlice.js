@@ -1,13 +1,13 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from '@reduxjs/toolkit';
 
-import cameraThunks from "../thunks/cameraThunks.js";
+import cameraThunks from '../thunks/cameraThunks.js';
 
 const { fetchAll, fetchOne, createOne, updateOne, deleteOne } = cameraThunks;
 
-console.log("cameraSlice");
+// console.log("cameraSlice");
 
 const cameraSlice = createSlice({
-  name: "camera",
+  name: 'camera',
   initialState: {
     allCameras: [],
     selectedCamera: null,
