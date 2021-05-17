@@ -7,7 +7,10 @@ import useThunkStatus from '../hooks/useThunkStatus.js';
 
 import CameraFormEdit from '../components/CameraFormEdit.jsx';
 import CameraFiles from '../components/CameraFiles.jsx';
-// import CameraStatus from '../components/CameraStatus.jsx';
+import CameraStatus from '../components/CameraStatus.jsx';
+
+import Spinner from '../components/Spinner.jsx';
+import Error from '../components/Error.jsx';
 
 const CameraPage = () => {
   const dispatch = useDispatch();
@@ -22,23 +25,21 @@ const CameraPage = () => {
     }
   }, []);
 
-  return fetchCamera.isPending ? (
-    <div className='d-flex justify-content-center'>
-      <div className='spinner-border' role='status'>
-        <span className='visually-hidden'>Loading...</span>
-      </div>
-    </div>
-  ) : (
+  return selectedCamera !== null ? (
     <div className='row'>
       <div className='col-3 px-3'>
-        {/* <CameraStatus /> */}
-        <CameraFormEdit />
+        <CameraStatus />
+        <CameraFormEdit selectedCamera={selectedCamera} />
       </div>
       <div className='col-9 px-3'>
-        <CameraFiles />
+        <CameraFiles selectedCamera={selectedCamera} />
       </div>
     </div>
-  );
+  ) : fetchCamera.isLoading ? (
+    <Spinner />
+  ) : fetchCamera.isError ? (
+    <Error />
+  ) : null;
 };
 
 export default CameraPage;

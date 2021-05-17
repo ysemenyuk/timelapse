@@ -13,7 +13,7 @@ const cameraSlice = createSlice({
     selectedCamera: null,
   },
   reducers: {
-    selectItem: (state, action) => {
+    selectCamera: (state, action) => {
       // console.log('action', action);
       state.selectedCamera = action.payload;
     },

@@ -1,14 +1,13 @@
 import React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+// import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 
-// import "./camera.css";
+// import { formActions } from '../store/formSlice.js';
+// import cameraThunks from '../thunks/cameraThunks.js';
 
-const CameraScreen = () => {
-  const dispatch = useDispatch();
+const CameraScreen = ({ selectedCamera }) => {
+  // const dispatch = useDispatch();
   const history = useHistory();
-
-  const selectedCamera = useSelector((state) => state.camera.selectedCamera);
 
   const handleEdit = () => {
     history.push(`/camera/${selectedCamera._id}`);

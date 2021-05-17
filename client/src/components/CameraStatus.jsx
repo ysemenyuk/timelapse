@@ -1,16 +1,19 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
+// import {useSelector, useDispatch } from 'react-redux';
 
 // import { formActions } from '../store/formSlice.js';
 // import cameraThunks from '../thunks/cameraThunks.js';
 
-const CameraStatus = () => {
-  const selectedCamera = useSelector((state) => state.camera.selectedItem);
-
-  // console.log('CameraStatus selectedCamera -', selectedCamera);
+const CameraStatus = ({ selectedCamera }) => {
+  // const dispatch = useDispatch();
 
   if (selectedCamera === null) {
-    return <div>No selected camera.</div>;
+    return (
+      <div className='col-12 mb-3'>
+        <h6 className='mb-3'>Status</h6>
+        <div>No selected camera.</div>
+      </div>
+    );
   }
 
   return (

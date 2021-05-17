@@ -1,19 +1,19 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from '@reduxjs/toolkit';
 
-import fileThunks from "../thunks/fileThunks.js";
+import fileThunks from '../thunks/fileThunks.js';
 
 const { fetchAll, fetchOne, createOne, updateOne, deleteOne } = fileThunks;
 
-console.log("fileSlice");
+// console.log("fileSlice");
 
 const fileSlice = createSlice({
-  name: "file",
+  name: 'file',
   initialState: {
     allItems: [],
     selectedFile: null,
     currentDir: null,
     dirStack: [],
-    view: "plate",
+    view: 'plate',
   },
   reducers: {
     selectFile: (state, action) => {
@@ -40,12 +40,11 @@ const fileSlice = createSlice({
       state.allItems = action.payload;
     },
     [fetchOne.fulfilled]: (state, action) => {
-      // state.selectedItem = action.payload;
+      state.selectedFile = action.payload;
     },
     [createOne.fulfilled]: (state, action) => {
       // console.log('action createOne -', action);
       // state.allItems.push(action.payload);
-      // state.selectedItem = action.payload;
     },
     [updateOne.fulfilled]: (state, action) => {
       // console.log('action updateOne -', action);
@@ -54,7 +53,6 @@ const fileSlice = createSlice({
       //   (item) => item._id === updatedItem._id
       // );
       // state.allItems[updatedItemIndex] = updatedItem;
-      // state.selectedItem = updatedItem;
     },
     [deleteOne.fulfilled]: (state, action) => {
       // console.log('action deleteOne -', action);

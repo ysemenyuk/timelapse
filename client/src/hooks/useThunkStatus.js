@@ -1,10 +1,11 @@
 import { useSelector } from 'react-redux';
 
 export default (thunk) => {
-  const status = useSelector((state) => state.thunk[thunk.typePrefix]);
-  const isPending = status === 'pending';
-  const isFulfilled = status === 'fulfilled';
-  const isRejected = status === 'rejected';
+  const thunkStatus =
+    useSelector((state) => state.thunk[thunk.typePrefix]) || 'uninitialized';
+  const isLoading = thunkStatus === 'pending';
+  const isSuccess = thunkStatus === 'fulfilled';
+  const isError = thunkStatus === 'rejected';
 
-  return { status, isPending, isFulfilled, isRejected };
+  return { thunkStatus, isLoading, isSuccess, isError };
 };

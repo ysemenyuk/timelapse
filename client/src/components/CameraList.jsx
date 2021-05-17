@@ -4,52 +4,70 @@ import { useHistory, useRouteMatch } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 
 import { cameraActions } from '../store/cameraSlice.js';
+import cameraThunks from '../thunks/cameraThunks.js';
+import useThunkStatus from '../hooks/useThunkStatus.js';
 
-const CameraList = () => {
+import Spinner from './Spinner.jsx';
+import Error from './Error.jsx';
+
+const List = ({ cameras, selectedCamera, onSelectItem }) => {
+  if (cameras.length === 0) {
+    return <div>No cameras.</div>;
+  }
+
+  return cameras.map((camera) => {
+    const activeClass = selectedCamera?._id === camera._id && 'active';
+    return (
+      <button
+        onClick={onSelectItem(camera)}
+        key={camera._id}
+        type='button'
+        className={`list-group-item list-group-item-action ${activeClass}`}
+        aria-current='true'
+      >
+        <div className='fw-bold'>{camera.name}</div>
+        <small>{camera.description}</small>
+      </button>
+    );
+  });
+};
+
+const CameraList = ({ selectedCamera }) => {
   const dispatch = useDispatch();
   const history = useHistory();
   const match = useRouteMatch('/');
+  const fetchAllCameras = useThunkStatus(cameraThunks.fetchAll);
 
   const cameras = useSelector((state) => state.camera.allCameras);
-  const selectedCamera = useSelector((state) => state.camera.selectedCamera);
 
-  // console.log('CameraList cameras', cameras);
+  useEffect(() => {
+    if (cameras.length === 0) {
+      dispatch(cameraThunks.fetchAll());
+    }
+  }, []);
 
   const handleSelectItem = (item) => () => {
-    dispatch(cameraActions.selectItem(item));
+    dispatch(cameraActions.selectCamera(item));
     if (match.isExact === false) {
       history.push('/');
     }
   };
 
-  if (cameras.length === 0) {
-    return (
-      <div className='col-12 mb-3'>
-        <h6 className='mb-3'>List</h6>
-        <div>No cameras.</div>
-      </div>
-    );
-  }
-
   return (
     <div className='col-12 mb-3'>
       <h6 className='mb-3'>List</h6>
       <div className='list-group mb-3'>
-        {cameras.map((camera) => {
-          const activeClass = selectedCamera?._id === camera._id && 'active';
-          return (
-            <button
-              onClick={handleSelectItem(camera)}
-              key={camera._id}
-              type='button'
-              className={`list-group-item list-group-item-action ${activeClass}`}
-              aria-current='true'
-            >
-              <div className='fw-bold'>{camera.name}</div>
-              <small>{camera.description}</small>
-            </button>
-          );
-        })}
+        {fetchAllCameras.isSuccess ? (
+          <List
+            cameras={cameras}
+            selectedCamera={selectedCamera}
+            onSelectItem={handleSelectItem}
+          />
+        ) : fetchAllCameras.isLoading ? (
+          <Spinner />
+        ) : fetchAllCameras.isError ? (
+          <Error />
+        ) : null}
       </div>
       <div>
         <Link className='btn btn-primary' to='/form'>

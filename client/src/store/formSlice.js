@@ -14,6 +14,12 @@ const formSlice = createSlice({
       state.type = action.payload.type;
     },
   },
+  extraReducers: {
+    [fetchAll.fulfilledupdateOne.fulfilled]: (state, action) => {
+      state.show = false;
+      state.type = null;
+    },
+  },
 });
 
 export const formActions = formSlice.actions;

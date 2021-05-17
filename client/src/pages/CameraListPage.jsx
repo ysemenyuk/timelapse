@@ -1,9 +1,7 @@
-import React, { useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import React from 'react';
+import { useSelector } from 'react-redux';
 
-import { cameraActions } from '../store/cameraSlice.js';
-import cameraThunks from '../thunks/cameraThunks.js';
-import useThunkStatus from '../hooks/useThunkStatus.js';
+// import { cameraActions } from '../store/cameraSlice.js';
 
 import CameraList from '../components/CameraList.jsx';
 import CameraFormEdit from '../components/CameraFormEdit.jsx';
@@ -12,41 +10,21 @@ import CameraScreen from '../components/CameraScreen.jsx';
 // import CameraInfo from '../components/CameraInfo.jsx';
 
 const CameraListPage = () => {
-  const dispatch = useDispatch();
-  const fetchAllCameras = useThunkStatus(cameraThunks.fetchAll);
+  // const dispatch = useDispatch();
 
-  const cameras = useSelector((state) => state.camera.allCameras);
   const selectedCamera = useSelector((state) => state.camera.selectedCamera);
 
-  useEffect(() => {
-    if (cameras.length === 0) {
-      dispatch(cameraThunks.fetchAll());
-    }
-  }, []);
-
-  useEffect(() => {
-    if (cameras.length !== 0 && selectedCamera === null) {
-      dispatch(cameraActions.selectItem(cameras[0]));
-    }
-  }, []);
-
-  return fetchAllCameras.isPending ? (
-    <div className='d-flex justify-content-center'>
-      <div className='spinner-border' role='status'>
-        <span className='visually-hidden'>Loading...</span>
-      </div>
-    </div>
-  ) : (
+  return (
     <div className='row'>
       <div className='col-3 px-3'>
-        <CameraList />
+        <CameraList selectedCamera={selectedCamera} />
       </div>
       <div className='col-6 px-3'>
-        <CameraFormEdit />
+        <CameraFormEdit selectedCamera={selectedCamera} />
       </div>
       <div className='col-3 px-3'>
-        <CameraScreen />
-        {/* <CameraStatus /> */}
+        <CameraScreen selectedCamera={selectedCamera} />
+        {/* <CameraStatus selectedCamera={selectedCamera} /> */}
       </div>
     </div>
   );
