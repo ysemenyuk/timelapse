@@ -25,7 +25,7 @@ const CameraPage = () => {
     }
   }, []);
 
-  return selectedCamera !== null ? (
+  return fetchCamera.isSuccess || selectedCamera !== null ? (
     <div className='row'>
       <div className='col-3 px-3'>
         <CameraStatus />
