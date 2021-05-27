@@ -1,5 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit';
 
+import cameraThunks from '../thunks/cameraThunks.js';
+
+const { updateOne } = cameraThunks;
+
 // console.log('formSlice');
 
 const formSlice = createSlice({
@@ -15,7 +19,7 @@ const formSlice = createSlice({
     },
   },
   extraReducers: {
-    [fetchAll.fulfilledupdateOne.fulfilled]: (state, action) => {
+    [updateOne.fulfilled]: (state, action) => {
       state.show = false;
       state.type = null;
     },
