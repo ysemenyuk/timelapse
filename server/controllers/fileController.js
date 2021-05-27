@@ -1,9 +1,10 @@
 import path from 'path';
 
-import Camera from '../models/camera.js';
+// import Camera from '../models/camera.js';
 import File from '../models/file.js';
 
-import { getCameraPaths, getCameraNames } from '../services/cameraPaths.js';
+// import { getCameraPaths, getCameraNames } from '../services/cameraPaths.js';
+
 import {
   makeDir,
   writeFile,
@@ -14,8 +15,8 @@ import {
 // console.log('fileController');
 
 const getFiles = async (req, res) => {
-  // console.log("File controller getMany req.query", req.query);
-  // console.log("File controller getMany req.body", req.body);
+  // console.log("File controller getMany req.query -", req.query);
+  // console.log("File controller getMany req.body -", req.body);
 
   const { parentId } = req.query;
 
@@ -31,7 +32,8 @@ const getFiles = async (req, res) => {
 };
 
 const createFile = async (req, res) => {
-  // console.log("File controller createOne req - ", req.body);
+  // console.log("File controller createOne req.body -", req.body);
+  // console.log("File controller createOne req.query -", req.query);
 
   const { parentId } = req.query;
 
@@ -58,13 +60,14 @@ const createFile = async (req, res) => {
 };
 
 const createDir = async (req, res) => {
-  // console.log("File controller createDir req - ", req.body);
+  // console.log("File controller createDir req.body -", req.body);
+  // console.log("File controller createDir req.query -", req.query);
 
   const { parentId } = req.query;
-  console.log(parentId);
 
   const parent = await File.findOne({ _id: parentId });
-  console.log(parent);
+  // console.log(parent);
+
   const pathToDir = path.join(parent.path, 'new-dir');
 
   try {
@@ -87,13 +90,13 @@ const createDir = async (req, res) => {
 };
 
 const getFile = async (req, res) => {
-  // console.log("File controller getFile req.body - ", req);
+  // console.log("File controller getFile req.params -", req.params);
+  // console.log("File controller getFile req.query -", req.query);
 
   const { id } = req.params;
 
   try {
     const file = await File.findById(id);
-
     res.status(200).send(file);
   } catch (e) {
     console.log('File controller getFile error - ', e);
@@ -102,7 +105,8 @@ const getFile = async (req, res) => {
 };
 
 const deleteOne = async (req, res) => {
-  // console.log("controller deleteOne req.params - ", req.params);
+  // console.log("File controller deleteOne req.params -", req.params);
+  // console.log("File controller deleteOne req.query -", req.query);
 
   const { id } = req.params;
 

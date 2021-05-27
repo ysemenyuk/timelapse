@@ -6,6 +6,8 @@ import mongoose from 'mongoose';
 
 import cameraRoutes from './routes/cameraRoutes.js';
 import fileRoutes from './routes/fileRoutes.js';
+import userRoutes from './routes/userRoutes.js';
+
 import { errorHandlerMiddleware } from './middleware/errorHandlerMiddleware.js';
 import { corsMiddleware } from './middleware/corsMiddleware.js';
 
@@ -27,7 +29,6 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 app.use(express.json());
-
 app.use(corsMiddleware);
 
 app.use('/files/assets', express.static(path.join(__dirname, 'assets')));
@@ -35,6 +36,7 @@ app.use('/files', express.static(path.join(__dirname, '..', 'cameras')));
 
 app.use('/api/cameras', cameraRoutes);
 app.use('/api/files', fileRoutes);
+app.use('/api/user', userRoutes);
 
 app.get('/', (req, res) => {
   res.send('API is running....');

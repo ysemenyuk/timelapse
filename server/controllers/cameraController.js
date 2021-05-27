@@ -8,9 +8,8 @@ import { makeDir, writeFile, removeDir } from '../services/cameraDirs.js';
 
 const getAll = async (req, res) => {
   // console.log('controller getAll req', req);
-
   try {
-    const cameras = await Camera.find();
+    const cameras = await Camera.find({ user: req.user.id });
     res.status(200).send(cameras);
   } catch (e) {
     console.log('controller getAll error - ', e);
@@ -19,10 +18,13 @@ const getAll = async (req, res) => {
 };
 
 const createOne = async (req, res) => {
-  // console.log('controller createOne req - ', req.body);
+  // console.log('- controller createOne req.body - ', req.body);
+  // console.log('- controller createOne req.user - ', req.user);
+
+  // validating req.body
 
   try {
-    const camera = new Camera(req.body);
+    const camera = new Camera({ ...req.body, user: req.user.id });
 
     const names = getCameraNames(camera);
     const paths = getCameraPaths(names);
@@ -92,12 +94,15 @@ const createOne = async (req, res) => {
 };
 
 const getOne = async (req, res) => {
-  // console.log('controller getOne req.body - ', req.body);
-
-  const { id } = req.params;
-
+  // console.log('- controller getOne req.params - ', req.params);
+  // console.log('- controller getOne req.user - ', req.user);
   try {
-    const camera = await Camera.findById(id);
+    const camera = await Camera.findOne({
+      user: req.user.id,
+      _id: req.params.id,
+    });
+
+    // console.log('---camera---', camera);
     res.status(200).send(camera);
   } catch (e) {
     console.log('controller getOne error - ', e);
@@ -108,33 +113,24 @@ const getOne = async (req, res) => {
 const updateOne = async (req, res) => {
   // console.log('controller updateOne req.body - ', req.body);
 
-  const { id } = req.params;
-
-  const {
-    name,
-    description,
-    rtspLink,
-    jpegLink,
-    jpegCreateInterval,
-    jpegCreateStartTime,
-    jpegCreateStopTime,
-  } = req.body;
+  // validating req.body;
 
   try {
-    // const camera = await Camera.findByIdAndUpdate(id, req.body);
-    const camera = await Camera.findById(id);
+    await Camera.findOneAndUpdate(
+      {
+        user: req.user.id,
+        _id: req.params.id,
+      },
+      req.body
+    );
 
-    camera.name = name;
-    camera.description = description;
-    camera.rtspLink = rtspLink;
-    camera.jpegLink = jpegLink;
-    camera.jpegCreateInterval = jpegCreateInterval;
-    camera.jpegCreateStartTime = jpegCreateStartTime;
-    camera.jpegCreateStopTime = jpegCreateStopTime;
+    const updatedCamera = await Camera.findOne({
+      user: req.user.id,
+      _id: req.params.id,
+    });
 
-    await camera.save();
-
-    res.status(201).send(camera);
+    // console.log('--updatedCamera--', updatedCamera);
+    res.status(201).send(updatedCamera);
   } catch (e) {
     console.log('controller updateOne error - ', e);
     res.status(500).send(e.message);
@@ -143,16 +139,21 @@ const updateOne = async (req, res) => {
 
 const deleteOne = async (req, res) => {
   // console.log('controller deleteOne req.params - ', req.params);
-
-  const { id } = req.params;
-
   try {
-    const camera = await Camera.findById(id);
+    const camera = await Camera.findOne({
+      user: req.user.id,
+      _id: req.params.id,
+    });
+
     const cameraDir = await File.find({ camera: camera._id });
 
     await removeDir(cameraDir.path);
 
-    await Camera.deleteOne({ _id: id });
+    await Camera.deleteOne({
+      user: req.user.id,
+      _id: req.params.id,
+    });
+
     await File.deleteMany({ camera: camera._id });
 
     res.status(200).send({ message: `${camera.name} was removed.` });
