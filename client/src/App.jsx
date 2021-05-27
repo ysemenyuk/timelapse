@@ -1,4 +1,5 @@
-import React, { useContext } from 'react';
+import React, { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import {
   BrowserRouter as Router,
   Switch,
@@ -14,8 +15,19 @@ import CameraListPage from './pages/CameraListPage.jsx';
 import CameraPage from './pages/CameraPage.jsx';
 import CameraFormPage from './pages/CameraFormPage.jsx';
 
+import userThunks from './thunks/userThunks.js';
+
 const App = () => {
   // console.log('App');
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.user);
+
+  console.log('app user', user);
+
+  useEffect(() => {
+    dispatch(userThunks.auth());
+  }, []);
+
   return (
     <div className='container p-2'>
       <Router>

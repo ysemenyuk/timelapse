@@ -1,11 +1,15 @@
 import React, { useEffect, useRef, useContext } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { useLocation, useHistory, Link } from 'react-router-dom';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 
 // import UserContext from '../context/UserContext.js';
+import userThunks from '../thunks/userThunks.js';
 
 const LoginPage = () => {
+  const dispatch = useDispatch();
+  const history = useHistory();
   // const user = useContext(UserContext);
   // const inputRef = useRef();
   // const location = useLocation();
@@ -24,12 +28,23 @@ const LoginPage = () => {
       email: Yup.string().required().email(),
       password: Yup.string().required().min(6),
     }),
-    onSubmit: (values) => {
-      console.log('formik.values -', values);
+    onSubmit: (values, { resetForm, setSubmitting, setFieldError }) => {
+      dispatch(userThunks.login(values))
+        .then(() => {
+          resetForm();
+          setSubmitting(false);
+          history.push('/');
+        })
+        .catch((e) => {
+          setSubmitting(false);
+          setFieldError('network', e.message);
+          console.log('catch formik err -', e);
+        });
     },
   });
 
-  // console.log("formik.errors -", formik.errors);
+  console.log('formik.values -', formik.values);
+  console.log('formik.errors -', formik.errors);
 
   return (
     <div className='container-fluid'>

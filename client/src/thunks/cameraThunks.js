@@ -5,9 +5,22 @@ import apiRoutes from '../apiRoutes.js';
 
 // console.log('thunks');
 
+const getAuthHeader = () => {
+  const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+  // console.log('userInfo', userInfo);
+
+  if (userInfo && userInfo.token) {
+    return { Authorization: `Bearer ${userInfo.token}` };
+  }
+
+  return {};
+};
+
 const fetchAll = createAsyncThunk('camera/fetchAll', async () => {
   try {
-    const response = await axios.get(apiRoutes.cameras());
+    const response = await axios.get(apiRoutes.cameras(), {
+      headers: getAuthHeader(),
+    });
     console.log('fetchAll response.data -', response.data);
     return response.data;
   } catch (e) {
@@ -29,7 +42,9 @@ const fetchOne = createAsyncThunk('camera/fetchOne', async (id) => {
 
 const createOne = createAsyncThunk('camera/createOne', async (values) => {
   try {
-    const response = await axios.post(apiRoutes.cameras(), values);
+    const response = await axios.post(apiRoutes.cameras(), values, {
+      headers: getAuthHeader(),
+    });
     console.log('createOne response.data -', response.data);
     return response.data;
   } catch (e) {
