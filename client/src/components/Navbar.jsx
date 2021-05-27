@@ -1,7 +1,13 @@
 import React from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 
+import { userActions } from '../store/userSlice.js';
+
 const Navbar = () => {
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.user);
+
   return (
     <nav className='navbar navbar-expand-lg navbar-light bg-light mb-4'>
       <div className='container-fluid px-3'>
@@ -12,26 +18,33 @@ const Navbar = () => {
           <ul className='navbar-nav'>
             <li className='nav-item'>
               <Link className='nav-link' to='/'>
-                Cameras
+                All cameras
               </Link>
             </li>
             <li className='nav-item'>
               <Link className='nav-link' to='/form'>
-                Add camera
-              </Link>
-            </li>
-            <li className='nav-item'>
-              <Link className='nav-link' to='/login'>
-                Login
-              </Link>
-            </li>
-            <li className='nav-item'>
-              <Link className='nav-link' to='/signup'>
-                Signup
+                Add new camera
               </Link>
             </li>
           </ul>
         </div>
+        {user.isLogin === true ? (
+          <button
+            onClick={() => dispatch(userActions.logout())}
+            className='btn btn-link'
+          >
+            LogOut
+          </button>
+        ) : user.isLogin === false ? (
+          <>
+            <Link className='me-3' to='/login'>
+              LogIn
+            </Link>
+            <Link className='me-3' to='/signup'>
+              Signup
+            </Link>
+          </>
+        ) : null}
       </div>
     </nav>
   );

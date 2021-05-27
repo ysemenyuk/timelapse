@@ -13,7 +13,7 @@ router.post(
   '/registration',
   [
     check('email', 'Uncorrect email').isEmail(),
-    check('password', 'Uncorrect password').isLength({ min: 3, max: 12 }),
+    check('password', 'Uncorrect password').isLength({ min: 6, max: 12 }),
   ],
   async (req, res) => {
     try {
@@ -33,6 +33,7 @@ router.post(
       const hashPassword = await bcrypt.hash(password, 8);
       const user = new User({ email, password: hashPassword, cameras: [] });
       await user.save();
+
       res.json({ message: 'User was created' });
     } catch (e) {
       console.log(e);
@@ -49,22 +50,19 @@ router.post('/login', async (req, res) => {
 
     const user = await User.findOne({ email });
     if (!user) {
-      return res.status(404).json({ message: 'User not found' });
+      return res.status(401).send({ message: 'User not found' });
     }
 
     const isPassValid = bcrypt.compareSync(password, user.password);
     if (!isPassValid) {
-      return res.status(400).json({ message: 'Invalid password' });
+      return res.status(401).json({ message: 'Invalid password' });
     }
 
     const token = jwt.sign({ id: user._id }, process.env.SECRET_KEY, {
       expiresIn: '1h',
     });
 
-    return res.json({
-      token,
-      user,
-    });
+    return res.json({ token, user });
   } catch (e) {
     console.log(e);
     res.send({ message: 'Server error' });
@@ -76,8 +74,6 @@ router.get('/auth', authMiddleware, async (req, res) => {
   console.log('- /auth req.user - ', req.user);
 
   try {
-    // validation
-
     const user = await User.findOne({ _id: req.user.id });
     if (!user) {
       return res.status(404).json({ message: 'User not found' });

@@ -2,19 +2,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
 import apiRoutes from '../apiRoutes.js';
-
-// console.log('thunks');
-
-const getAuthHeader = () => {
-  const userInfo = JSON.parse(localStorage.getItem('userInfo'));
-  // console.log('userInfo', userInfo);
-
-  if (userInfo && userInfo.token) {
-    return { Authorization: `Bearer ${userInfo.token}` };
-  }
-
-  return {};
-};
+import { getAuthHeader } from './helpers.js';
 
 const fetchAll = createAsyncThunk('camera/fetchAll', async () => {
   try {
@@ -31,7 +19,9 @@ const fetchAll = createAsyncThunk('camera/fetchAll', async () => {
 
 const fetchOne = createAsyncThunk('camera/fetchOne', async (id) => {
   try {
-    const response = await axios.get(apiRoutes.cameraPath(id));
+    const response = await axios.get(apiRoutes.cameraPath(id), {
+      headers: getAuthHeader(),
+    });
     console.log('fetchOne response.data -', response.data);
     return response.data;
   } catch (e) {
@@ -56,7 +46,9 @@ const createOne = createAsyncThunk('camera/createOne', async (values) => {
 const updateOne = createAsyncThunk('camera/updateOne', async (values) => {
   try {
     console.log('updateOne values -', values);
-    const response = await axios.put(apiRoutes.cameraPath(values._id), values);
+    const response = await axios.put(apiRoutes.cameraPath(values._id), values, {
+      headers: getAuthHeader(),
+    });
     console.log('updateOne response.data -', response.data);
     return response.data;
   } catch (e) {
@@ -67,7 +59,9 @@ const updateOne = createAsyncThunk('camera/updateOne', async (values) => {
 
 const deleteOne = createAsyncThunk('camera/deleteOne', async (camera) => {
   try {
-    const response = await axios.delete(apiRoutes.cameraPath(camera._id));
+    const response = await axios.delete(apiRoutes.cameraPath(camera._id), {
+      headers: getAuthHeader(),
+    });
     console.log('deleteOne response -', response);
     return camera;
   } catch (e) {

@@ -1,23 +1,15 @@
-import React, { useEffect, useRef, useContext } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import React from 'react';
+import { useDispatch } from 'react-redux';
 import { unwrapResult } from '@reduxjs/toolkit';
-import { useLocation, useHistory, Link } from 'react-router-dom';
+import { useHistory, Link } from 'react-router-dom';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 
-// import UserContext from '../context/UserContext.js';
 import userThunks from '../thunks/userThunks.js';
 
 const LoginPage = () => {
   const dispatch = useDispatch();
   const history = useHistory();
-  // const user = useContext(UserContext);
-  // const inputRef = useRef();
-  // const location = useLocation();
-
-  // useEffect(() => {
-  //   inputRef.current.focus();
-  // }, []);
 
   const formik = useFormik({
     initialValues: {
@@ -42,14 +34,14 @@ const LoginPage = () => {
         })
         .catch((e) => {
           setSubmitting(false);
-          setFieldError('network', e.message);
+          setFieldError('auth', e.message);
           console.log('catch formik err -', e);
         });
     },
   });
 
-  console.log('formik.values -', formik.values);
-  console.log('formik.errors -', formik.errors);
+  // console.log('formik.values -', formik.values);
+  // console.log('formik.errors -', formik.errors);
 
   return (
     <div className='container-fluid'>
@@ -110,7 +102,7 @@ const LoginPage = () => {
                 id='confirmPassword'
                 autoComplete='current-password'
                 className={
-                  formik.errors.confirmPassword
+                  formik.errors.confirmPassword || formik.errors.auth
                     ? 'form-control is-invalid'
                     : 'form-control'
                 }
@@ -120,6 +112,7 @@ const LoginPage = () => {
               ></input>
               <div className='invalid-feedback'>
                 {formik.errors.confirmPassword}
+                {formik.errors.auth}
               </div>
             </div>
 

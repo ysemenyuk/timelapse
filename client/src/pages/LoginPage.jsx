@@ -1,23 +1,15 @@
-import React, { useEffect, useRef, useContext } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { useLocation, useHistory, Link } from 'react-router-dom';
+import React from 'react';
+import { useDispatch } from 'react-redux';
+import { unwrapResult } from '@reduxjs/toolkit';
+import { useHistory, Link } from 'react-router-dom';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 
-// import UserContext from '../context/UserContext.js';
 import userThunks from '../thunks/userThunks.js';
 
 const LoginPage = () => {
   const dispatch = useDispatch();
   const history = useHistory();
-  // const user = useContext(UserContext);
-  // const inputRef = useRef();
-  // const location = useLocation();
-  // const history = useHistory();
-
-  // useEffect(() => {
-  //   inputRef.current.focus();
-  // }, []);
 
   const formik = useFormik({
     initialValues: {
@@ -30,21 +22,22 @@ const LoginPage = () => {
     }),
     onSubmit: (values, { resetForm, setSubmitting, setFieldError }) => {
       dispatch(userThunks.login(values))
-        .then(() => {
+        .then((resp) => {
+          unwrapResult(resp);
           resetForm();
           setSubmitting(false);
           history.push('/');
         })
         .catch((e) => {
           setSubmitting(false);
-          setFieldError('network', e.message);
+          setFieldError('auth', e.message);
           console.log('catch formik err -', e);
         });
     },
   });
 
-  console.log('formik.values -', formik.values);
-  console.log('formik.errors -', formik.errors);
+  // console.log('formik.values -', formik.values);
+  // console.log('formik.errors -', formik.errors);
 
   return (
     <div className='container-fluid'>

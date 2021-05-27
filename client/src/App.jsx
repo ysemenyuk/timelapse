@@ -8,6 +8,8 @@ import {
 } from 'react-router-dom';
 
 import Navbar from './components/Navbar.jsx';
+import Spinner from './components/Spinner.jsx';
+import Error from './components/Error.jsx';
 
 import LoginPage from './pages/LoginPage.jsx';
 import SignupPage from './pages/SignupPage.jsx';
@@ -16,6 +18,7 @@ import CameraPage from './pages/CameraPage.jsx';
 import CameraFormPage from './pages/CameraFormPage.jsx';
 
 import userThunks from './thunks/userThunks.js';
+import { userActions } from './store/userSlice.js';
 
 const App = () => {
   // console.log('App');
@@ -25,21 +28,34 @@ const App = () => {
   console.log('app user', user);
 
   useEffect(() => {
-    dispatch(userThunks.auth());
+    const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+    userInfo?.token && user.isLogin !== true
+      ? dispatch(userThunks.auth())
+      : dispatch(userActions.logout());
   }, []);
 
   return (
     <div className='container p-2'>
       <Router>
         <Navbar />
-        <Switch>
-          <Route path='/login' component={LoginPage} />
-          <Route path='/signup' component={SignupPage} />
-          <Route path='/form' component={CameraFormPage} />
-          <Route path='/camera/:id' component={CameraPage} />
-          <Route exact path='/' component={CameraListPage} />
-          <Redirect to='/' />
-        </Switch>
+        {user.isLogin === true ? (
+          <Switch>
+            <Route path='/login' component={LoginPage} />
+            <Route path='/signup' component={SignupPage} />
+            <Route path='/form' component={CameraFormPage} />
+            <Route path='/camera/:id' component={CameraPage} />
+            <Route exact path='/' component={CameraListPage} />
+            <Redirect to='/' />
+          </Switch>
+        ) : user.isLogin === false ? (
+          <Switch>
+            <Route path='/login' component={LoginPage} />
+            <Route path='/signup' component={SignupPage} />
+            <Redirect to='/login' />
+          </Switch>
+        ) : (
+          <Spinner />
+        )}
       </Router>
     </div>
   );
