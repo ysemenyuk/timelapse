@@ -15,8 +15,8 @@ import Error from '../components/Error.jsx';
 const CameraPage = () => {
   const dispatch = useDispatch();
   const { id } = useParams();
-  const fetchCamera = useThunkStatus(cameraThunks.fetchOne);
 
+  const fetchCamera = useThunkStatus(cameraThunks.fetchOne);
   const selectedCamera = useSelector((state) => state.camera.selectedCamera);
 
   useEffect(() => {

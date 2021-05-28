@@ -5,8 +5,6 @@ import { useHistory } from 'react-router-dom';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 
-// import { cameraActions } from '../store/cameraSlice.js';
-// import { formActions } from '../store/formSlice.js';
 import cameraThunks from '../thunks/cameraThunks.js';
 
 const validationSchema = Yup.object({

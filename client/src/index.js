@@ -16,8 +16,8 @@ if (process.env.NODE_ENV !== 'production') {
   localStorage.debug = 'app:*';
 }
 
-// const userToken = JSON.parse(localStorage.getItem('userToken'));
-// console.log('userToken', userToken);
+// const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+// console.log('userInfo', userToken);
 
 const store = createStore();
 

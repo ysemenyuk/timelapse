@@ -4,17 +4,22 @@ import userThunks from '../thunks/userThunks.js';
 
 const { login, auth } = userThunks;
 
+const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+
+const initialState =
+  userInfo && userInfo.userId && userInfo.token
+    ? { isLoggedIn: true, userId: userInfo.userId }
+    : { isLoggedIn: false, userId: null };
+
 const userSlice = createSlice({
   name: 'user',
-  initialState: {
-    user: null,
-    isLogin: null,
-  },
+  initialState,
   reducers: {
     logout: (state, action) => {
       localStorage.removeItem('userInfo');
-      state.isLogin = false;
-      state.user = null;
+
+      state.isLoggedIn = false;
+      state.userId = null;
     },
   },
   extraReducers: {
@@ -26,8 +31,8 @@ const userSlice = createSlice({
 
       localStorage.setItem('userInfo', JSON.stringify(userInfo));
 
-      state.isLogin = true;
-      state.user = action.payload.user;
+      state.isLoggedIn = true;
+      state.userId = action.payload.user._id;
     },
     [auth.fulfilled]: (state, action) => {
       const userInfo = {
@@ -37,13 +42,14 @@ const userSlice = createSlice({
 
       localStorage.setItem('userInfo', JSON.stringify(userInfo));
 
-      state.isLogin = true;
-      state.user = action.payload.user;
+      state.isLoggedIn = true;
+      state.userId = action.payload.user._id;
     },
     [auth.rejected]: (state, action) => {
       localStorage.removeItem('userInfo');
-      state.isLogin = false;
-      state.user = null;
+
+      state.isLoggedIn = false;
+      state.userId = null;
     },
   },
 });

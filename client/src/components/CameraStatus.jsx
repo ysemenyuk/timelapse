@@ -8,12 +8,7 @@ const CameraStatus = ({ selectedCamera }) => {
   // const dispatch = useDispatch();
 
   if (selectedCamera === null) {
-    return (
-      <div className='col-12 mb-3'>
-        <h6 className='mb-3'>Status</h6>
-        <div>No selected camera.</div>
-      </div>
-    );
+    return null;
   }
 
   return (

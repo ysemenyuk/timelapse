@@ -2,7 +2,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
 import apiRoutes from '../apiRoutes.js';
-import { getAuthHeader } from './helpers.js';
+import getAuthHeader from './authHeader.js';
 
 const fetchAll = createAsyncThunk('camera/fetchAll', async () => {
   try {

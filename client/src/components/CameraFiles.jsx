@@ -15,6 +15,7 @@ const Files = ({ files, onOpenFile }) => {
   if (files.length === 0) {
     return <div>No files.</div>;
   }
+
   return files.map((file) => (
     <div
       key={file._id}
@@ -70,12 +71,7 @@ const CameraFiles = () => {
   };
 
   if (selectedCamera === null) {
-    return (
-      <div className='col-12 mb-3'>
-        <h6 className='mb-3'>Files</h6>
-        <div>No selected camera.</div>
-      </div>
-    );
+    return null;
   }
 
   return (

@@ -8,4 +8,4 @@ const getAuthHeader = () => {
   return {};
 };
 
-export { getAuthHeader };
+export default getAuthHeader;

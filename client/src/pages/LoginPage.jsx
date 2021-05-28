@@ -1,7 +1,7 @@
 import React from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { unwrapResult } from '@reduxjs/toolkit';
-import { useHistory, Link } from 'react-router-dom';
+import { useHistory, Link, Redirect } from 'react-router-dom';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 
@@ -10,6 +10,8 @@ import userThunks from '../thunks/userThunks.js';
 const LoginPage = () => {
   const dispatch = useDispatch();
   const history = useHistory();
+
+  const { isLoggedIn } = useSelector((state) => state.user);
 
   const formik = useFormik({
     initialValues: {
@@ -38,6 +40,10 @@ const LoginPage = () => {
 
   // console.log('formik.values -', formik.values);
   // console.log('formik.errors -', formik.errors);
+
+  if (isLoggedIn) {
+    return <Redirect to='/' />;
+  }
 
   return (
     <div className='container-fluid'>
