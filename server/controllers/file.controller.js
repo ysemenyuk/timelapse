@@ -3,8 +3,6 @@ import path from 'path';
 // import Camera from '../models/camera.js';
 import File from '../models/file.js';
 
-// import { getCameraPaths, getCameraNames } from '../services/cameraPaths.js';
-
 import {
   makeDir,
   writeFile,

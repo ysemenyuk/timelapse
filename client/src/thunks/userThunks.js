@@ -4,13 +4,13 @@ import axios from 'axios';
 import apiRoutes from '../apiRoutes.js';
 import getAuthHeader from './authHeader.js';
 
-const registration = createAsyncThunk('user/registration', async (values) => {
+const singup = createAsyncThunk('user/singup', async (values) => {
   try {
-    const response = await axios.post(apiRoutes.registrationPath(), values);
-    console.log('user/registration response.data -', response.data);
+    const response = await axios.post(apiRoutes.singupPath(), values);
+    console.log('user/singup response.data -', response.data);
     return response.data;
   } catch (e) {
-    console.log('user/registration error -', e.response.data);
+    console.log('user/singup error -', e.response.data);
     throw e.response.data;
   }
 });
@@ -39,4 +39,4 @@ const auth = createAsyncThunk('user/auth', async () => {
   }
 });
 
-export default { registration, login, auth };
+export default { singup, login, auth };

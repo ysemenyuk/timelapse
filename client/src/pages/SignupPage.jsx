@@ -27,7 +27,7 @@ const LoginPage = () => {
         .oneOf([Yup.ref('password')]),
     }),
     onSubmit: (values, { resetForm, setSubmitting, setFieldError }) => {
-      dispatch(userThunks.registration(values))
+      dispatch(userThunks.singup(values))
         .then((resp) => {
           unwrapResult(resp);
           resetForm();

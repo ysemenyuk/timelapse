@@ -44,22 +44,12 @@ const fileSlice = createSlice({
     },
     [createOne.fulfilled]: (state, action) => {
       // console.log('action createOne -', action);
-      // state.allItems.push(action.payload);
     },
     [updateOne.fulfilled]: (state, action) => {
       // console.log('action updateOne -', action);
-      // const updatedItem = action.payload;
-      // const updatedItemIndex = state.allItems.findIndex(
-      //   (item) => item._id === updatedItem._id
-      // );
-      // state.allItems[updatedItemIndex] = updatedItem;
     },
     [deleteOne.fulfilled]: (state, action) => {
       // console.log('action deleteOne -', action);
-      // const deletedItem = action.payload;
-      // state.allItems = state.allItems.filter(
-      //   (item) => item._id !== deletedItem._id
-      // );
     },
   },
 });

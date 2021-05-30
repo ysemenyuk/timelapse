@@ -30,6 +30,9 @@ const Navbar = () => {
                 </li>
               </ul>
             </div>
+            <Link className='' to='/user'>
+              Profile
+            </Link>
             <button
               onClick={() => dispatch(userActions.logout())}
               className='btn btn-link'

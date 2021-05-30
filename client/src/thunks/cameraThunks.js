@@ -6,7 +6,7 @@ import getAuthHeader from './authHeader.js';
 
 const fetchAll = createAsyncThunk('camera/fetchAll', async () => {
   try {
-    const response = await axios.get(apiRoutes.cameras(), {
+    const response = await axios.get(apiRoutes.camerasPath(), {
       headers: getAuthHeader(),
     });
     console.log('fetchAll response.data -', response.data);

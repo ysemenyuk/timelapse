@@ -1,6 +1,6 @@
 import express from 'express';
 
-import CameraController from '../controllers/cameraController.js';
+import CameraController from '../controllers/camera.controller.js';
 import authMiddleware from '../middleware/authMiddleware.js';
 
 // console.log('cameraRouter');
@@ -13,6 +13,7 @@ router.get('/:id', authMiddleware, CameraController.getOne);
 router.post('/', authMiddleware, CameraController.createOne);
 
 router.put('/:id', authMiddleware, CameraController.updateOne);
+
 router.delete('/:id', authMiddleware, CameraController.deleteOne);
 
 export default router;

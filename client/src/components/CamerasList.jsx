@@ -32,7 +32,7 @@ const List = ({ cameras, selectedCamera, onSelectItem }) => {
   });
 };
 
-const CameraList = ({ selectedCamera }) => {
+const CamerasList = ({ selectedCamera }) => {
   const dispatch = useDispatch();
   const history = useHistory();
   const match = useRouteMatch('/');
@@ -78,4 +78,4 @@ const CameraList = ({ selectedCamera }) => {
   );
 };
 
-export default CameraList;
+export default CamerasList;

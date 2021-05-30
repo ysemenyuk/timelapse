@@ -1,6 +1,6 @@
 import express from 'express';
 
-import fileController from '../controllers/fileController.js';
+import fileController from '../controllers/file.controller.js';
 
 const router = express.Router();
 

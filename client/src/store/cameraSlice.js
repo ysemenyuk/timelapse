@@ -3,6 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import cameraThunks from '../thunks/cameraThunks.js';
 
 const { fetchAll, fetchOne, createOne, updateOne, deleteOne } = cameraThunks;
+import { userActions } from './userSlice.js';
 
 // console.log("cameraSlice");
 
@@ -19,6 +20,10 @@ const cameraSlice = createSlice({
     },
   },
   extraReducers: {
+    [userActions.logout]: (state, action) => {
+      state.allCameras = [];
+      state.selectedCamera = null;
+    },
     [fetchAll.fulfilled]: (state, action) => {
       state.allCameras = action.payload;
       if (state.selectedCamera === null && action.payload.length !== 0) {

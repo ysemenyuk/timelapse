@@ -4,12 +4,12 @@ import dotenv from 'dotenv';
 import morgan from 'morgan';
 import mongoose from 'mongoose';
 
-import cameraRoutes from './routes/cameraRoutes.js';
-import fileRoutes from './routes/fileRoutes.js';
-import userRoutes from './routes/userRoutes.js';
+import cameraRoutes from './routes/camera.routes.js';
+import fileRoutes from './routes/file.routes.js';
+import userRoutes from './routes/user.routes.js';
 
 import { errorHandlerMiddleware } from './middleware/errorHandlerMiddleware.js';
-import { corsMiddleware } from './middleware/corsMiddleware.js';
+// import { corsMiddleware } from './middleware/corsMiddleware.js';
 
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
@@ -29,7 +29,7 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 app.use(express.json());
-app.use(corsMiddleware);
+// app.use(corsMiddleware);
 
 app.use('/files/assets', express.static(path.join(__dirname, 'assets')));
 app.use('/files', express.static(path.join(__dirname, '..', 'cameras')));

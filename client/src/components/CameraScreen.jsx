@@ -1,16 +1,13 @@
 import React from 'react';
 // import { useSelector, useDispatch } from 'react-redux';
-import { useHistory } from 'react-router-dom';
 
-// import { formActions } from '../store/formSlice.js';
 // import cameraThunks from '../thunks/cameraThunks.js';
 
 const CameraScreen = ({ selectedCamera }) => {
   // const dispatch = useDispatch();
-  const history = useHistory();
 
-  const handleEdit = () => {
-    history.push(`/camera/${selectedCamera._id}`);
+  const handleGetScreenshot = () => {
+    console.log('handleGetScreenshot');
   };
 
   if (selectedCamera === null) {
@@ -29,7 +26,7 @@ const CameraScreen = ({ selectedCamera }) => {
         />
       </div>
 
-      <h6 className='mb-3'>Last screenshots</h6>
+      {/* <h6 className='mb-3'>Last screenshots</h6>
       <div className='mb-3'>
         <ul className='list-group list-group-flush'>
           <li className='list-group-item'>img--2021-05-01--10-26.jpg</li>
@@ -39,10 +36,10 @@ const CameraScreen = ({ selectedCamera }) => {
       </div>
 
       <div className='mb-3'>
-        <button className='btn btn-primary' onClick={handleEdit}>
-          All files
+        <button className='btn btn-primary' onClick={handleGetScreenshot}>
+          Get screenshot
         </button>
-      </div>
+      </div> */}
     </div>
   );
 };

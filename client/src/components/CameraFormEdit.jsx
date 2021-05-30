@@ -39,6 +39,10 @@ const CameraFormEdit = ({ selectedCamera }) => {
     await dispatch(formActions.set({ show: true, type: 'edit' }));
   };
 
+  const handleCameraPage = () => {
+    history.push(`/cameras/${selectedCamera._id}`);
+  };
+
   const formik = useFormik({
     initialValues: {
       name: '',
@@ -258,14 +262,17 @@ const CameraFormEdit = ({ selectedCamera }) => {
                 className='btn btn-primary'
                 onClick={handleDelete}
               >
-                Delete camera
+                Delete
               </button>
               <button
                 type='button'
                 className='btn btn-primary'
                 onClick={handleEdit}
               >
-                Edit settings
+                Edit
+              </button>
+              <button className='btn btn-primary' onClick={handleCameraPage}>
+                Camera page
               </button>
             </div>
           )}

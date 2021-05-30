@@ -8,8 +8,8 @@ const userInfo = JSON.parse(localStorage.getItem('userInfo'));
 
 const initialState =
   userInfo && userInfo.userId && userInfo.token
-    ? { isLoggedIn: true, userId: userInfo.userId }
-    : { isLoggedIn: false, userId: null };
+    ? { isLoggedIn: 'checkToken', user: null }
+    : { isLoggedIn: false, user: null };
 
 const userSlice = createSlice({
   name: 'user',
@@ -19,7 +19,7 @@ const userSlice = createSlice({
       localStorage.removeItem('userInfo');
 
       state.isLoggedIn = false;
-      state.userId = null;
+      state.user = null;
     },
   },
   extraReducers: {
@@ -32,7 +32,7 @@ const userSlice = createSlice({
       localStorage.setItem('userInfo', JSON.stringify(userInfo));
 
       state.isLoggedIn = true;
-      state.userId = action.payload.user._id;
+      state.user = action.payload.user;
     },
     [auth.fulfilled]: (state, action) => {
       const userInfo = {
@@ -43,13 +43,13 @@ const userSlice = createSlice({
       localStorage.setItem('userInfo', JSON.stringify(userInfo));
 
       state.isLoggedIn = true;
-      state.userId = action.payload.user._id;
+      state.user = action.payload.user;
     },
     [auth.rejected]: (state, action) => {
       localStorage.removeItem('userInfo');
 
       state.isLoggedIn = false;
-      state.userId = null;
+      state.user = null;
     },
   },
 });

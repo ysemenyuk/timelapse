@@ -28,7 +28,7 @@ const CameraPage = () => {
   return fetchCamera.isSuccess || selectedCamera !== null ? (
     <div className='row'>
       <div className='col-3 px-3'>
-        <CameraStatus />
+        <CameraStatus selectedCamera={selectedCamera} />
         <CameraFormEdit selectedCamera={selectedCamera} />
       </div>
       <div className='col-9 px-3'>
