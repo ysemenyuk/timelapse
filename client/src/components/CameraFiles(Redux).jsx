@@ -1,66 +1,52 @@
 import React, { useEffect, useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import axios from 'axios';
+
+import { fileActions } from '../store/fileSlice.js';
+import fileThunks from '../thunks/fileThunks.js';
+import useThunkStatus from '../hooks/useThunkStatus.js';
 
 import FilesList from './FilesList.jsx';
 import Spinner from './Spinner.jsx';
 import Error from './Error.jsx';
 
-const filesStates = {
-  idle: 'idle',
-  loading: 'loading',
-  error: 'error',
-};
-
 const CameraFiles = ({ selectedCamera }) => {
-  // console.log('camera files');
+  const dispatch = useDispatch();
+  const fetchAllFiles = useThunkStatus(fileThunks.fetchAll);
+
+  const currentDir = useSelector((state) => state.file.currentDir);
+  const dirStack = useSelector((state) => state.file.dirStack);
+  const files = useSelector((state) => state.file.allItems);
 
   const [currentDir, setCurrentDir] = useState(null);
   const [dirStack, setDirStack] = useState([]);
-
-  const [state, setState] = useState(filesStates.idle);
   const [files, setFiles] = useState([]);
 
   useEffect(() => {
     if (selectedCamera !== null) {
-      const selectedCameraDir = {
-        _id: selectedCamera.dir,
-        name: selectedCamera.name,
-      };
-      setCurrentDir(selectedCameraDir);
-      setDirStack((prevState) => [...prevState, selectedCameraDir]);
+      dispatch(fileActions.setCurrentDir(selectedCamera.dir));
     }
   }, [selectedCamera]);
 
-  useEffect(async () => {
+  useEffect(() => {
     if (currentDir !== null) {
-      try {
-        setState(filesStates.loading);
-        const { data } = await axios.get(
-          `/api/files?parentId=${currentDir._id}`
-        );
-        // console.log(data);
-        setFiles(data);
-        setState(filesStates.idle);
-      } catch (err) {
-        // console.log(err);
-        setState(filesStates.error);
-      }
+      dispatch(fileThunks.fetchAll(currentDir));
     }
   }, [currentDir]);
 
   const clickFileHandler = (file) => {
     if (file.type === 'dir') {
-      setCurrentDir(file);
-      setDirStack((prevState) => [...prevState, file]);
+      // dispatch(fileActions.setCurrentDir(file._id));
+      dispatch(fileActions.pushToDirStack({ currentDir, file }));
     } else {
       console.log('not dir');
     }
   };
 
   const backClickHandler = () => {
-    const backDir = dirStack[dirStack.length - 2];
-    setCurrentDir(backDir);
-    setDirStack((prevState) => prevState.slice(0, -1));
+    // const backDirId = dirStack[dirStack.length - 1];
+    // dispatch(fileActions.setCurrentDir(backDirId));
+    dispatch(fileActions.popFromDirStack());
   };
 
   if (selectedCamera === null) {
@@ -72,8 +58,9 @@ const CameraFiles = ({ selectedCamera }) => {
       <h6 className='mb-3'>Files</h6>
 
       <div className='mb-3'>
+        {'home /'}
         {dirStack.map((dir) => (
-          <span key={dir._id}>{` ${dir.name} /`}</span>
+          <span key={dir}>{` ${dir} /`}</span>
         ))}
       </div>
 
@@ -82,7 +69,7 @@ const CameraFiles = ({ selectedCamera }) => {
           type='button'
           className='btn btn-sm btn-primary'
           onClick={backClickHandler}
-          disabled={state === filesStates.loading || dirStack.length === 1}
+          disabled={fetchAllFiles.isLoading || dirStack.length === 0}
         >
           Back
         </button>
@@ -92,11 +79,11 @@ const CameraFiles = ({ selectedCamera }) => {
       </div>
 
       <div className='vh-100 d-flex flex-wrap p-3 border rounded overflow-auto'>
-        {state === filesStates.idle ? (
-          <FilesList files={files} onClickFile={clickFileHandler} />
-        ) : state === filesStates.loading ? (
+        {fetchAllFiles.isSuccess ? (
+          <FilesList files={files} onClick={clickFileHandler} />
+        ) : fetchAllFiles.isLoading ? (
           <Spinner />
-        ) : state === filesStates.error ? (
+        ) : fetchAllFiles.isError ? (
           <Error />
         ) : null}
       </div>
