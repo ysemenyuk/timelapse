@@ -4,21 +4,13 @@ import axios from 'axios';
 import FilesList from './FilesList.jsx';
 import Spinner from './Spinner.jsx';
 import Error from './Error.jsx';
-
-const filesStates = {
-  idle: 'idle',
-  loading: 'loading',
-  error: 'error',
-};
+import useFilesRequest from '../hooks/useFilesRequest.js';
 
 const CameraFiles = ({ selectedCamera }) => {
   // console.log('camera files');
 
   const [currentDir, setCurrentDir] = useState(null);
   const [dirStack, setDirStack] = useState([]);
-
-  const [state, setState] = useState(filesStates.idle);
-  const [files, setFiles] = useState([]);
 
   useEffect(() => {
     if (selectedCamera !== null) {
@@ -27,26 +19,11 @@ const CameraFiles = ({ selectedCamera }) => {
         name: selectedCamera.name,
       };
       setCurrentDir(selectedCameraDir);
-      setDirStack((prevState) => [...prevState, selectedCameraDir]);
+      setDirStack([selectedCameraDir]);
     }
   }, [selectedCamera]);
 
-  useEffect(async () => {
-    if (currentDir !== null) {
-      try {
-        setState(filesStates.loading);
-        const { data } = await axios.get(
-          `/api/files?parentId=${currentDir._id}`
-        );
-        // console.log(data);
-        setFiles(data);
-        setState(filesStates.idle);
-      } catch (err) {
-        // console.log(err);
-        setState(filesStates.error);
-      }
-    }
-  }, [currentDir]);
+  const filesRequest = useFilesRequest(currentDir);
 
   const clickFileHandler = (file) => {
     if (file.type === 'dir') {
@@ -82,7 +59,7 @@ const CameraFiles = ({ selectedCamera }) => {
           type='button'
           className='btn btn-sm btn-primary'
           onClick={backClickHandler}
-          disabled={state === filesStates.loading || dirStack.length === 1}
+          disabled={filesRequest.isLoading || dirStack.length === 1}
         >
           Back
         </button>
@@ -92,12 +69,12 @@ const CameraFiles = ({ selectedCamera }) => {
       </div>
 
       <div className='vh-100 d-flex flex-wrap p-3 border rounded overflow-auto'>
-        {state === filesStates.idle ? (
-          <FilesList files={files} onClickFile={clickFileHandler} />
-        ) : state === filesStates.loading ? (
+        {filesRequest.isSuccess ? (
+          <FilesList files={filesRequest.data} onClickFile={clickFileHandler} />
+        ) : filesRequest.isLoading ? (
           <Spinner />
-        ) : state === filesStates.error ? (
-          <Error />
+        ) : filesRequest.isError ? (
+          <Error message={filesRequest.error} />
         ) : null}
       </div>
     </div>

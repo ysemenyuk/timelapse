@@ -5,9 +5,11 @@ import { useParams } from 'react-router-dom';
 import cameraThunks from '../thunks/cameraThunks.js';
 import useThunkStatus from '../hooks/useThunkStatus.js';
 
-import CameraFormEdit from '../components/CameraFormEdit.jsx';
+// import CameraFormEdit from '../components/CameraFormEdit.jsx';
 import CameraFiles from '../components/CameraFiles.jsx';
 import CameraStatus from '../components/CameraStatus.jsx';
+// import CameraScreen from '../components/CameraScreen.jsx';
+import CameraInfo from '../components/CameraInfo.jsx';
 
 import Spinner from '../components/Spinner.jsx';
 import Error from '../components/Error.jsx';
@@ -28,8 +30,10 @@ const CameraPage = () => {
   return fetchCamera.isSuccess || selectedCamera !== null ? (
     <div className='row'>
       <div className='col-3 px-3'>
+        {/* <CameraScreen selectedCamera={selectedCamera} /> */}
         <CameraStatus selectedCamera={selectedCamera} />
-        <CameraFormEdit selectedCamera={selectedCamera} />
+        {/* <CameraFormEdit selectedCamera={selectedCamera} /> */}
+        <CameraInfo selectedCamera={selectedCamera} />
       </div>
       <div className='col-9 px-3'>
         <CameraFiles selectedCamera={selectedCamera} />

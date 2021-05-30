@@ -4,7 +4,7 @@ const dirLogo = '/files/assets/folder-img.png';
 const fileLogo = '/files/assets/file-img.png';
 
 const FilesList = ({ files, onClickFile }) => {
-  if (files.length === 0) {
+  if (files?.length === 0) {
     return <div>No files.</div>;
   }
 

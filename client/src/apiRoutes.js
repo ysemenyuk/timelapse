@@ -7,4 +7,5 @@ export default {
   loginPath: () => [host, prefix, 'user', 'login'].join('/'),
   singupPath: () => [host, prefix, 'user', 'singup'].join('/'),
   authPath: () => [host, prefix, 'user', 'auth'].join('/'),
+  filesPath: (id) => [host, prefix, 'files', `?parentId=${id}`].join('/'),
 };

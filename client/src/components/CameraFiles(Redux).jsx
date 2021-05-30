@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import axios from 'axios';
 
 import { fileActions } from '../store/fileSlice.js';
 import fileThunks from '../thunks/fileThunks.js';
@@ -18,10 +17,6 @@ const CameraFiles = ({ selectedCamera }) => {
   const dirStack = useSelector((state) => state.file.dirStack);
   const files = useSelector((state) => state.file.allItems);
 
-  const [currentDir, setCurrentDir] = useState(null);
-  const [dirStack, setDirStack] = useState([]);
-  const [files, setFiles] = useState([]);
-
   useEffect(() => {
     if (selectedCamera !== null) {
       dispatch(fileActions.setCurrentDir(selectedCamera.dir));
@@ -36,7 +31,7 @@ const CameraFiles = ({ selectedCamera }) => {
 
   const clickFileHandler = (file) => {
     if (file.type === 'dir') {
-      // dispatch(fileActions.setCurrentDir(file._id));
+      dispatch(fileActions.setCurrentDir(file._id));
       dispatch(fileActions.pushToDirStack({ currentDir, file }));
     } else {
       console.log('not dir');
@@ -44,8 +39,8 @@ const CameraFiles = ({ selectedCamera }) => {
   };
 
   const backClickHandler = () => {
-    // const backDirId = dirStack[dirStack.length - 1];
-    // dispatch(fileActions.setCurrentDir(backDirId));
+    const backDirId = dirStack[dirStack.length - 1];
+    dispatch(fileActions.setCurrentDir(backDirId));
     dispatch(fileActions.popFromDirStack());
   };
 

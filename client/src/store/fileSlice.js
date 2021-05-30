@@ -17,22 +17,16 @@ const fileSlice = createSlice({
   },
   reducers: {
     selectFile: (state, action) => {
-      // console.log('action', action);
       state.selectedFile = action.payload;
     },
     setCurrentDir: (state, action) => {
-      // console.log('action', action);
       state.currentDir = action.payload;
     },
     pushToDirStack: (state, action) => {
-      // console.log("action", action);
       state.dirStack.push(action.payload.currentDir);
-      state.currentDir = action.payload.file._id;
     },
     popFromDirStack: (state, action) => {
-      // console.log('action', action);
-      const pop = state.dirStack.pop();
-      state.currentDir = pop;
+      state.dirStack.pop();
     },
   },
   extraReducers: {
