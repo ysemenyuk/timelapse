@@ -4,16 +4,15 @@ import File from '../models/file.js';
 import { getCameraPaths, getCameraNames } from '../services/cameraPaths.js';
 import { makeDir, writeFile, removeDir } from '../services/cameraDirs.js';
 
-// console.log("cameraController");
-
 const getAll = async (req, res) => {
   // console.log('controller getAll req', req);
+
   try {
     const cameras = await Camera.find({ user: req.user.id });
     res.status(200).send(cameras);
   } catch (e) {
     console.log('controller getAll error - ', e);
-    res.status(500).json(e.message);
+    res.status(500).send(e.message);
   }
 };
 
@@ -101,8 +100,6 @@ const getOne = async (req, res) => {
       user: req.user.id,
       _id: req.params.id,
     });
-
-    // console.log('---camera---', camera);
     res.status(200).send(camera);
   } catch (e) {
     console.log('controller getOne error - ', e);
@@ -129,7 +126,6 @@ const updateOne = async (req, res) => {
       _id: req.params.id,
     });
 
-    // console.log('--updatedCamera--', updatedCamera);
     res.status(201).send(updatedCamera);
   } catch (e) {
     console.log('controller updateOne error - ', e);

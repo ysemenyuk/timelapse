@@ -13,9 +13,7 @@ import {
 // console.log('fileController');
 
 const getFiles = async (req, res) => {
-  // console.log("File controller getMany req.query -", req.query);
-  // console.log("File controller getMany req.body -", req.body);
-
+  // console.log("File controller getFiles req.query -", req.query);\
   const { parentId } = req.query;
 
   try {
@@ -32,22 +30,23 @@ const getFiles = async (req, res) => {
 const createFile = async (req, res) => {
   // console.log("File controller createOne req.body -", req.body);
   // console.log("File controller createOne req.query -", req.query);
-
-  const { parentId } = req.query;
+  const { parentId, fileName, fileData } = req.body;
 
   const parent = await File.findOne({ _id: parentId });
-  const pathToFile = path.join(parent.path, 'new-file.txt');
+
+  const fileType = fileName.split('.').pop();
+  const pathToFile = path.join(parent.path, fileName);
 
   try {
     const file = new File({
-      name: 'new-file.txt',
+      name: fileName,
       path: pathToFile,
       camera: parent.camera,
-      type: 'txt',
+      type: fileType,
       parent: parent._id,
     });
 
-    await writeFile(pathToFile, 'new-file \n');
+    await writeFile(pathToFile, fileData);
     await file.save();
 
     res.status(201).send(file);
@@ -60,17 +59,15 @@ const createFile = async (req, res) => {
 const createDir = async (req, res) => {
   // console.log("File controller createDir req.body -", req.body);
   // console.log("File controller createDir req.query -", req.query);
-
-  const { parentId } = req.query;
+  const { parentId, dirName } = req.body;
 
   const parent = await File.findOne({ _id: parentId });
-  // console.log(parent);
 
-  const pathToDir = path.join(parent.path, 'new-dir');
+  const pathToDir = path.join(parent.path, dirName);
 
   try {
     const file = new File({
-      name: 'new-dir',
+      name: dirName,
       path: pathToDir,
       camera: parent.camera,
       type: 'dir',
@@ -90,7 +87,6 @@ const createDir = async (req, res) => {
 const getFile = async (req, res) => {
   // console.log("File controller getFile req.params -", req.params);
   // console.log("File controller getFile req.query -", req.query);
-
   const { id } = req.params;
 
   try {
@@ -105,7 +101,6 @@ const getFile = async (req, res) => {
 const deleteOne = async (req, res) => {
   // console.log("File controller deleteOne req.params -", req.params);
   // console.log("File controller deleteOne req.query -", req.query);
-
   const { id } = req.params;
 
   try {

@@ -8,13 +8,8 @@ const singup = async (req, res) => {
   // console.log('- /singup req.body - ', req.body);
 
   try {
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ message: 'Uncorrect request', errors });
-    }
-
     const { email, password } = req.body;
+    // validation
 
     const candidate = await User.findOne({ email });
 
@@ -40,7 +35,6 @@ const login = async (req, res) => {
 
   try {
     const { email, password } = req.body;
-
     // validation
 
     const user = await User.findOne({ email });
@@ -102,8 +96,43 @@ const auth = async (req, res) => {
   }
 };
 
+const getOne = async (req, res) => {
+  // console.log('- /getOne req.body - ', req.body);
+  // console.log('- /getOne req.user - ', req.user);
+
+  try {
+    const user = await User.findOne({ _id: req.user.id });
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    return res.json({
+      user: {
+        _id: user._id,
+        email: user.email,
+        username: user.username,
+      },
+    });
+  } catch (e) {
+    console.log(e);
+    res.send({ message: 'Server error' });
+  }
+};
+
+const updateOne = async (req, res) => {
+  // console.log('- /getOne updateOne.body - ', req.body);
+};
+
+const deleteOne = async (req, res) => {
+  // console.log('- /deleteOne req.params - ', req.params);
+};
+
 export default {
   singup,
   login,
   auth,
+  getOne,
+  updateOne,
+  deleteOne,
 };
