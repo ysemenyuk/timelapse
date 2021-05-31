@@ -3,13 +3,12 @@ import path from 'path';
 
 const fsp = fs.promises;
 
-// console.log("cameraDirs");
+console.log('cameraDirs');
 
-// import { __dirname } from '../index.js';
-// const mainPath = path.join(__dirname, '..', 'cameras');
+import { __dirname } from '../initDirname.js';
 
-const mainPath = path.join(path.resolve(), '..', 'cameras');
-// console.log('cameraDirs mainPath - ', mainPath);
+const mainPath = path.join(__dirname, '..', 'cameras');
+// const mainPath = path.join(path.resolve(), '..', 'cameras');
 
 const makeDir = (pathToDir) => {
   console.log('makeDir pathToDir - ', pathToDir);

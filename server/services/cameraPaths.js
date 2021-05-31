@@ -1,6 +1,6 @@
 import path from 'path';
 
-// console.log('cameraPaths');
+console.log('cameraPaths');
 
 const getCameraNames = (camera) => {
   const cameraDir = camera._id.toString();

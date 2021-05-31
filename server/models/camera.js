@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-// console.log('cameraModel');
+console.log('cameraModel');
 
 const CameraSchema = mongoose.Schema({
   files: [{ type: mongoose.ObjectId, ref: 'File' }],

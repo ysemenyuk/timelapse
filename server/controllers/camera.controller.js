@@ -4,6 +4,8 @@ import File from '../models/file.js';
 import { getCameraPaths, getCameraNames } from '../services/cameraPaths.js';
 import { makeDir, writeFile, removeDir } from '../services/cameraDirs.js';
 
+console.log('cameraController');
+
 const getAll = async (req, res) => {
   // console.log('controller getAll req', req);
 

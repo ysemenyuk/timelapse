@@ -11,16 +11,20 @@ import userRoutes from './routes/user.routes.js';
 // import { errorHandlerMiddleware } from './middleware/errorHandlerMiddleware.js';
 // import { corsMiddleware } from './middleware/corsMiddleware.js';
 
-import { fileURLToPath } from 'url';
-import { dirname } from 'path';
+import { __dirname } from './initDirname.js';
 
-export const __filename = fileURLToPath(import.meta.url);
-export const __dirname = dirname(__filename);
+// import { fileURLToPath } from 'url';
+// import { dirname } from 'path';
 
-console.log('__dirname - ', __dirname);
-console.log('path.resolve() - ', path.resolve());
+// export const __filename = fileURLToPath(import.meta.url);
+// export const __dirname = dirname(__filename);
 
-dotenv.config();
+console.log('index');
+
+console.log('index __dirname - ', __dirname);
+console.log('index path.resolve() - ', path.resolve());
+
+dotenv.config({ path: path.join(__dirname, '.env') });
 
 const app = express();
 

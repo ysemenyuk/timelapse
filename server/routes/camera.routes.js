@@ -3,7 +3,7 @@ import express from 'express';
 import CameraController from '../controllers/camera.controller.js';
 import authMiddleware from '../middleware/authMiddleware.js';
 
-// console.log('cameraRouter');
+console.log('cameraRouter');
 
 const router = express.Router();
 
