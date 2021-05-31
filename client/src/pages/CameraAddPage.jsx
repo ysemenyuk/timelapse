@@ -3,7 +3,7 @@ import React from 'react';
 // import { Redirect } from 'react-router-dom';
 
 import CamerasList from '../components/CamerasList.jsx';
-import CameraAddForm from '../components/CameraForm.jsx';
+import FormAddCamera from '../components/FormAddCamera.jsx';
 
 const CameraFormPage = () => {
   return (
@@ -11,8 +11,8 @@ const CameraFormPage = () => {
       <div className='col-3 px-3'>
         <CamerasList selectedCamera={null} />
       </div>
-      <div className='col-6 px-3'>
-        <CameraAddForm />
+      <div className='col-5 px-3'>
+        <FormAddCamera />
       </div>
     </div>
   );

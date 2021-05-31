@@ -11,13 +11,10 @@ const UserProfilePage = () => {
 
   return (
     <div className='row'>
-      <div className='col-3 px-3'>
-        <CameraList selectedCamera={selectedCamera} />
-      </div>
-      <div className='col-3 px-3'>
+      <div className='col-5 px-3'>
         <h6 className='mb-3'>User Profile</h6>
         <div className='mb-3'>
-          <ul className='list-group list-group-flush'>
+          <ul className='list-group'>
             <li className='list-group-item'>
               <span className='fw-bold'>username:</span> {user.username}
             </li>
@@ -28,8 +25,8 @@ const UserProfilePage = () => {
         </div>
 
         <div className='d-grid gap-2 d-flex justify-content-start'>
-          <button className='btn btn-primary'>Delete</button>
-          <button className='btn btn-primary'>Edit</button>
+          <button className='btn btn-sm btn-primary'>Delete</button>
+          <button className='btn btn-sm btn-primary'>Edit</button>
         </div>
       </div>
     </div>

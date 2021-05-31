@@ -25,13 +25,13 @@ const Navbar = () => {
                 </li>
                 <li className='nav-item'>
                   <Link className='nav-link' to='/form'>
-                    Add new camera
+                    Add camera
                   </Link>
                 </li>
               </ul>
             </div>
             <Link className='' to='/user'>
-              Profile
+              User
             </Link>
             <button
               onClick={() => dispatch(userActions.logout())}
@@ -46,7 +46,7 @@ const Navbar = () => {
               LogIn
             </Link>
             <Link className='me-3' to='/signup'>
-              Signup
+              SignUp
             </Link>
           </div>
         )}

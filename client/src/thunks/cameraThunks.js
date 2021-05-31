@@ -32,7 +32,7 @@ const fetchOne = createAsyncThunk('camera/fetchOne', async (id) => {
 
 const createOne = createAsyncThunk('camera/createOne', async (values) => {
   try {
-    const response = await axios.post(apiRoutes.cameras(), values, {
+    const response = await axios.post(apiRoutes.camerasPath(), values, {
       headers: getAuthHeader(),
     });
     console.log('createOne response.data -', response.data);

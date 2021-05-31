@@ -143,7 +143,8 @@ const deleteOne = async (req, res) => {
       _id: req.params.id,
     });
 
-    const cameraDir = await File.find({ camera: camera._id });
+    const cameraDir = await File.findOne({ name: camera._id });
+    console.log(111, cameraDir);
 
     await removeDir(cameraDir.path);
 

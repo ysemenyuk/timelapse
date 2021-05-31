@@ -48,12 +48,6 @@ const CameraFiles = ({ selectedCamera }) => {
     <div className='col-12 mb-3'>
       <h6 className='mb-3'>Files</h6>
 
-      <div className='mb-3'>
-        {dirStack.map((dir) => (
-          <span key={dir._id}>{` ${dir.name} /`}</span>
-        ))}
-      </div>
-
       <div className='mb-3 d-grid gap-2 d-flex justify-content-start'>
         <button
           type='button'
@@ -66,6 +60,12 @@ const CameraFiles = ({ selectedCamera }) => {
         <button type='button' className='btn btn-sm btn-primary' disabled>
           Button
         </button>
+      </div>
+
+      <div className='mb-3'>
+        {dirStack.map((dir) => (
+          <span key={dir._id}>{` ${dir.name} /`}</span>
+        ))}
       </div>
 
       <div className='vh-100 d-flex flex-wrap p-3 border rounded overflow-auto'>

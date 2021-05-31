@@ -22,11 +22,14 @@ const List = ({ cameras, selectedCamera, onSelectItem }) => {
         onClick={onSelectItem(camera)}
         key={camera._id}
         type='button'
-        className={`list-group-item list-group-item-action ${activeClass}`}
+        className={`list-group-item list-group-item-action d-flex justify-content-between align-items-start ${activeClass}`}
         aria-current='true'
       >
-        <div className='fw-bold'>{camera.name}</div>
-        <small>{camera.description}</small>
+        <div className='ms-2'>
+          <div className='fw-bold'>{camera.name}</div>
+          <div className='small'>{camera.description}</div>
+        </div>
+        <span className='badge bg-success'>online</span>
       </button>
     );
   });
@@ -70,7 +73,7 @@ const CamerasList = ({ selectedCamera }) => {
         ) : null}
       </div>
       <div>
-        <Link className='btn btn-primary' to='/form'>
+        <Link className='btn btn-sm btn-primary' to='/form'>
           Add camera
         </Link>
       </div>

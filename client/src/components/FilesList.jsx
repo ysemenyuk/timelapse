@@ -12,13 +12,14 @@ const FilesList = ({ files, onClickFile }) => {
     <div
       key={file._id}
       className='m-3'
+      display='block'
       role='button'
       onClick={() => onClickFile(file)}
     >
       <img
         src={file.type === 'dir' ? dirLogo : fileLogo}
-        width='80px'
-        height='80px'
+        width='60px'
+        height='60px'
         className='img-thumbnail'
       />
       <div>{file.name}</div>
