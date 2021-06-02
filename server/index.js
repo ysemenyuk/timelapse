@@ -8,18 +8,16 @@ import cameraRoutes from './routes/camera.routes.js';
 import fileRoutes from './routes/file.routes.js';
 import userRoutes from './routes/user.routes.js';
 
-// import { errorHandlerMiddleware } from './middleware/errorHandlerMiddleware.js';
 // import { corsMiddleware } from './middleware/corsMiddleware.js';
+import { errorHandlerMiddleware } from './middleware/errorHandlerMiddleware.js';
 
-import { __dirname } from './initDirname.js';
+import __dirname from './initDirname.js';
 
 // import { fileURLToPath } from 'url';
 // import { dirname } from 'path';
 
-// export const __filename = fileURLToPath(import.meta.url);
+// const __filename = fileURLToPath(import.meta.url);
 // export const __dirname = dirname(__filename);
-
-console.log('index');
 
 console.log('index __dirname - ', __dirname);
 console.log('index path.resolve() - ', path.resolve());
@@ -46,7 +44,7 @@ app.get('/', (req, res) => {
   res.send('API is running....');
 });
 
-// app.use(errorHandlerMiddleware);
+app.use(errorHandlerMiddleware);
 
 const PORT = process.env.PORT || 4000;
 

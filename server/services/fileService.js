@@ -3,9 +3,9 @@ import path from 'path';
 
 const fsp = fs.promises;
 
-console.log('cameraDirs');
+// console.log('cameraDirs');
 
-import { __dirname } from '../initDirname.js';
+import __dirname from '../initDirname.js';
 
 const mainPath = path.join(__dirname, '..', 'cameras');
 // const mainPath = path.join(path.resolve(), '..', 'cameras');
@@ -13,13 +13,19 @@ const mainPath = path.join(__dirname, '..', 'cameras');
 const makeDir = (pathToDir) => {
   console.log('makeDir pathToDir - ', pathToDir);
   const fullPath = path.join(mainPath, pathToDir);
-  return fsp.mkdir(fullPath);
+  return fsp
+    .mkdir(fullPath)
+    .catch((e) => console.log(`catch makeDir pathToDir error: ${e.message}`));
 };
 
 const writeFile = (pathToFile, data = '') => {
   console.log('writeFile pathToFile - ', pathToFile);
   const fullPath = path.join(mainPath, pathToFile);
-  return fsp.writeFile(fullPath, data);
+  return fsp
+    .writeFile(fullPath, data)
+    .catch((e) =>
+      console.log(`catch writeFile pathToFile error: ${e.message}`)
+    );
 };
 
 const removeDir = (pathToDir) => {

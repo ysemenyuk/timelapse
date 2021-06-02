@@ -1,6 +1,8 @@
 import jwt from 'jsonwebtoken';
 
-export default (req, res, next) => {
+import User from '../models/user.js';
+
+export default async (req, res, next) => {
   if (req.method === 'OPTIONS') {
     return next();
   }
@@ -13,7 +15,9 @@ export default (req, res, next) => {
     }
 
     const decoded = jwt.verify(token, process.env.SECRET_KEY);
-    req.user = decoded;
+    console.log('- decoded -', decoded);
+
+    req.user = await User.findById(decoded.id).select('-password');
     next();
   } catch (e) {
     return res.status(401).json({ message: 'Auth error' });

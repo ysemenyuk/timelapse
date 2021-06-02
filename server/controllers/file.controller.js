@@ -8,7 +8,7 @@ import {
   writeFile,
   removeDir,
   removeFile,
-} from '../services/cameraDirs.js';
+} from '../services/fileService.js';
 
 // console.log('fileController');
 
