@@ -72,7 +72,7 @@ const auth = async (req, res) => {
   // console.log('- /auth req.user - ', req.user);
 
   try {
-    const user = await User.findOne({ _id: req.user.id });
+    const user = await User.findOne({ _id: req.user._id });
 
     if (!user) {
       return res.status(404).json({ message: 'User not found' });

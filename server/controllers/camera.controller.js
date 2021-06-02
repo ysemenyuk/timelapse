@@ -1,9 +1,7 @@
-import Camera from '../models/camera.js';
-import File from '../models/file.js';
 import cameraActions from '../actions/camera.actions.js';
 
-import { getDirsPaths, getDirsNames } from '../utils/camera.utils.js';
-import { makeDir, writeFile, removeDir } from '../services/fileService.js';
+// import { getDirsPaths, getDirsNames } from '../utils/camera.utils.js';
+// import { makeDir, writeFile, removeDir } from '../services/fileService.js';
 
 // console.log('cameraController');
 

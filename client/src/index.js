@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-// import 'core-js/stable/index.js';
+import 'core-js/stable/index.js';
 import 'regenerator-runtime/runtime.js';
 
 import 'bootstrap/dist/css/bootstrap.min.css';

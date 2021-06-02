@@ -1,6 +1,6 @@
 const errorHandlerMiddleware = (err, req, res, next) => {
   console.log('- errorHandler -', err);
-  return res.status(500).send(err.message);
+  return res.status(500).send({ message: err.message });
 };
 
 export { errorHandlerMiddleware };

@@ -1,8 +1,9 @@
 import express from 'express';
 import asyncHandler from 'express-async-handler';
 
-import cameraController from '../controllers/camera.controller.js';
 import authMiddleware from '../middleware/authMiddleware.js';
+import cameraValidator from '../validators/camera.validators.validator.js';
+import cameraController from '../controllers/camera.controller.js';
 
 console.log('cameraRouter');
 
@@ -16,12 +17,13 @@ router.get(
     console.log('- userRouter / req.user -', req.user);
 
     const cameras = await cameraController.getAll({ userId: req.user._id });
-    res.status(201).send(cameras);
+    res.status(200).send(cameras);
   })
 );
 
 router.get(
   '/:id',
+  cameraValidator.getOne,
   asyncHandler(async (req, res) => {
     console.log('- userRouter /:id req.user -', req.user);
     console.log('- userRouter /:id req.params -', req.params);
@@ -31,12 +33,13 @@ router.get(
       cameraId: req.params.id,
     });
 
-    res.status(201).send(camera);
+    res.status(200).send(camera);
   })
 );
 
 router.post(
   '/',
+  cameraValidator.createOne,
   asyncHandler(async (req, res) => {
     console.log('- userRouter post / req.user -', req.user);
     console.log('- userRouter post / req.body -', req.body);
@@ -50,9 +53,36 @@ router.post(
   })
 );
 
+router.put(
+  '/:id',
+  asyncHandler(async (req, res) => {
+    console.log('- userRouter put /:id req.user -', req.user);
+    console.log('- userRouter put /:id req.params -', req.params);
+    console.log('- userRouter put /:id req.body -', req.body);
 
-// router.put('/:id', authMiddleware, CameraController.updateOne);
+    const camera = await cameraController.updateOne({
+      userId: req.user._id,
+      cameraId: req.params.id,
+      payload: req.body,
+    });
 
-// router.delete('/:id', authMiddleware, CameraController.deleteOne);
+    res.status(201).send(camera);
+  })
+);
+
+router.delete(
+  '/:id',
+  asyncHandler(async (req, res) => {
+    // console.log('- userRouter delete /:id req.user -', req.user);
+    // console.log('- userRouter delete /:id req.params -', req.params);
+
+    await cameraController.deleteOne({
+      userId: req.user._id,
+      cameraId: req.params.id,
+    });
+
+    return res.status(204).send();
+  })
+);
 
 export default router;

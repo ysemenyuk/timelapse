@@ -4,23 +4,15 @@ import dotenv from 'dotenv';
 import morgan from 'morgan';
 import mongoose from 'mongoose';
 
-import cameraRoutes from './routes/camera.routes.js';
-import fileRoutes from './routes/file.routes.js';
 import userRoutes from './routes/user.routes.js';
+import cameraRoutes from './routes/camera.routes.js';
 
-// import { corsMiddleware } from './middleware/corsMiddleware.js';
 import { errorHandlerMiddleware } from './middleware/errorHandlerMiddleware.js';
 
 import __dirname from './initDirname.js';
 
-// import { fileURLToPath } from 'url';
-// import { dirname } from 'path';
-
-// const __filename = fileURLToPath(import.meta.url);
-// export const __dirname = dirname(__filename);
-
-console.log('index __dirname - ', __dirname);
-console.log('index path.resolve() - ', path.resolve());
+console.log('- index __dirname -', __dirname);
+console.log('- index path.resolve() -', path.resolve());
 
 dotenv.config({ path: path.join(__dirname, '.env') });
 
@@ -31,14 +23,12 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 app.use(express.json());
-// app.use(corsMiddleware);
 
 app.use('/files/assets', express.static(path.join(__dirname, 'assets')));
 app.use('/files', express.static(path.join(__dirname, '..', 'cameras')));
 
-app.use('/api/cameras', cameraRoutes);
-app.use('/api/files', fileRoutes);
 app.use('/api/user', userRoutes);
+app.use('/api/cameras', cameraRoutes);
 
 app.get('/', (req, res) => {
   res.send('API is running....');
