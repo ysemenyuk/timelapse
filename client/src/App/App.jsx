@@ -1,25 +1,20 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Redirect,
-} from 'react-router-dom';
+import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
 
-import userThunks from './thunks/userThunks.js';
+import userThunks from '../thunks/userThunks.js';
 
-import Navbar from './components/Navbar.jsx';
-import Spinner from './components/Spinner.jsx';
+import Navbar from '../components/Navbar.jsx';
+import Spinner from '../components/Spinner.jsx';
 // import Error from './components/Error.jsx';
 
-import LoginPage from './pages/LoginPage.jsx';
-import SignupPage from './pages/SignupPage.jsx';
-import UserProfilePage from './pages/UserProfilePage.jsx';
+import LoginPage from '../pages/LoginPage.jsx';
+import SignupPage from '../pages/SignupPage.jsx';
+import UserProfilePage from '../pages/UserProfilePage.jsx';
 
-import CameraListPage from './pages/CameraListPage.jsx';
-import CameraPage from './pages/CameraPage.jsx';
-import CameraAddPage from './pages/CameraAddPage.jsx';
+import CameraListPage from '../pages/CameraListPage.jsx';
+import CameraPage from '../pages/CameraPage.jsx';
+import CameraAddPage from '../pages/CameraAddPage.jsx';
 
 const App = () => {
   // console.log('App');
@@ -34,10 +29,7 @@ const App = () => {
 
   const PrivateRoute = ({ children, ...rest }) => {
     return (
-      <Route
-        {...rest}
-        render={() => (user.isLoggedIn ? children : <Redirect to={'/login'} />)}
-      />
+      <Route {...rest} render={() => (user.isLoggedIn ? children : <Redirect to={'/login'} />)} />
     );
   };
 
@@ -55,11 +47,7 @@ const App = () => {
               <Route exact path='/user' component={UserProfilePage} />
               <Route exact path='/form' component={CameraAddPage} />
               <Route exact path='/cameras/:id' component={CameraPage} />
-              <Route
-                exact
-                path={['/', '/cameras']}
-                component={CameraListPage}
-              />
+              <Route exact path={['/', '/cameras']} component={CameraListPage} />
             </PrivateRoute>
             <Redirect to='/' />
           </Switch>

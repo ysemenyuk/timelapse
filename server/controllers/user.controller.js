@@ -3,21 +3,21 @@ import jwt from 'jsonwebtoken';
 import _ from 'lodash';
 
 import { BadRequestError } from '../middleware/errorHandlerMiddleware.js';
-import userActions from '../actions/user.actions.js';
+import userRepository from '../repositories/user.repository.js';
 
 const singUp = async ({ payload }) => {
   // console.log('- user.controller singup payload -', payload);
 
   const { email, password } = payload;
 
-  const user = await userActions.getOne({ email });
+  const user = await userRepository.getOne({ email });
 
   if (user) {
     throw new BadRequestError(`User with email ${email} already exist`);
   }
 
   const hashPassword = await bcrypt.hash(password, 8);
-  const newUser = userActions.createOne({
+  const newUser = userRepository.createOne({
     payload: { email, password: hashPassword },
   });
 
@@ -29,7 +29,7 @@ const logIn = async ({ payload }) => {
 
   const { email, password } = payload;
 
-  const user = await userActions.getOne({ email });
+  const user = await userRepository.getOne({ email });
   const isPassValid = bcrypt.compareSync(password, user.password);
 
   if (!user || !isPassValid) {
@@ -45,7 +45,7 @@ const logIn = async ({ payload }) => {
 
 const auth = async ({ userId }) => {
   // console.log('- user.controller /auth user -', user);
-  const user = await userActions.getOne({ _id: userId });
+  const user = await userRepository.getOne({ _id: userId });
   const token = jwt.sign({ userId }, process.env.SECRET_KEY, {
     expiresIn: '1h',
   });

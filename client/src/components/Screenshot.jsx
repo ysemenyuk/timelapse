@@ -26,7 +26,7 @@ const CameraScreen = ({ selectedCamera }) => {
         />
       </div>
 
-      <div className='mb-3'>
+      {/* <div className='mb-3'>
         <button
           className='btn btn-sm btn-primary'
           onClick={handleGetScreenshot}
@@ -34,7 +34,6 @@ const CameraScreen = ({ selectedCamera }) => {
           GetScreenshot
         </button>
       </div>
-      {/* 
       <h6 className='mb-3'>Last screenshots</h6>
       <div className='mb-3'>
         <ul className='list-group list-group-flush'>

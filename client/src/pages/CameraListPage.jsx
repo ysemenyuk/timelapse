@@ -6,9 +6,7 @@ import { useSelector } from 'react-redux';
 import CamerasList from '../components/CamerasList.jsx';
 import FormEditCamera from '../components/FormEditCamera.jsx';
 import Screenshot from '../components/Screenshot.jsx';
-// import ScreenshotsStatus from '../components/ScreenshotsStatus.jsx';
-// import VideoStatus from '../components/VideoStatus.jsx';
-
+import CameraStatus from '../components/CameraStatus.jsx';
 import CameraInfo from '../components/CameraInfo.jsx';
 
 const CameraListPage = () => {
@@ -27,12 +25,11 @@ const CameraListPage = () => {
         ) : (
           <CameraInfo selectedCamera={selectedCamera} />
         )}
-        {/* <ScreenshotsStatus selectedCamera={selectedCamera} /> */}
-        {/* <VideoStatus selectedCamera={selectedCamera} /> */}
       </div>
 
       <div className='col-3 px-3'>
         <Screenshot selectedCamera={selectedCamera} />
+        <CameraStatus selectedCamera={selectedCamera} />
       </div>
     </div>
   );

@@ -1,12 +1,12 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
-import apiRoutes from '../apiRoutes.js';
+import routes from '../api/routes.js';
 import getAuthHeader from './authHeader.js';
 
 const singup = createAsyncThunk('user/singup', async (values) => {
   try {
-    const response = await axios.post(apiRoutes.singupPath(), values);
+    const response = await axios.post(routes.singupPath(), values);
     console.log('user/singup response.data -', response.data);
     return response.data;
   } catch (e) {
@@ -17,7 +17,7 @@ const singup = createAsyncThunk('user/singup', async (values) => {
 
 const login = createAsyncThunk('user/login', async (values) => {
   try {
-    const response = await axios.post(apiRoutes.loginPath(), values);
+    const response = await axios.post(routes.loginPath(), values);
     console.log('user/login response.data -', response.data);
     return response.data;
   } catch (e) {
@@ -28,7 +28,7 @@ const login = createAsyncThunk('user/login', async (values) => {
 
 const auth = createAsyncThunk('user/auth', async () => {
   try {
-    const response = await axios.get(apiRoutes.authPath(), {
+    const response = await axios.get(routes.authPath(), {
       headers: getAuthHeader(),
     });
     console.log('user/auth response.data -', response.data);

@@ -30,8 +30,16 @@ app.use('/files', express.static(path.join(__dirname, '..', 'cameras')));
 app.use('/api/user', userRoutes);
 app.use('/api/cameras', cameraRoutes);
 
+app.use('/api/files', (req, res) => {
+  res.send([]);
+});
+
 app.get('/', (req, res) => {
   res.send('API is running....');
+});
+
+app.use(function (req, res, next) {
+  res.status(404).send('Sorry cant find that!');
 });
 
 app.use(errorHandlerMiddleware);
@@ -49,9 +57,7 @@ const start = async () => {
 
     app.listen(
       PORT,
-      console.log(
-        `Server running in ${process.env.NODE_ENV} mode on port ${PORT}`
-      )
+      console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`)
     );
   } catch (e) {
     console.log(e);

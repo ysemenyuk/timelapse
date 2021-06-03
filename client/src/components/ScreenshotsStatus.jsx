@@ -4,7 +4,7 @@ import React from 'react';
 // import { formActions } from '../store/formSlice.js';
 // import cameraThunks from '../thunks/cameraThunks.js';
 
-const CameraStatus = ({ selectedCamera }) => {
+const ScreenshotStatus = ({ selectedCamera }) => {
   // const dispatch = useDispatch();
 
   if (selectedCamera === null) {
@@ -49,4 +49,4 @@ const CameraStatus = ({ selectedCamera }) => {
   );
 };
 
-export default CameraStatus;
+export default ScreenshotStatus;
