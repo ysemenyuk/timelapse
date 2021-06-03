@@ -1,4 +1,5 @@
 import Ajv from 'ajv';
+import { ValidateError } from '../middleware/errorHandlerMiddleware.js';
 
 const ajv = new Ajv();
 
@@ -11,38 +12,39 @@ const createOneSchema = {
   required: ['name', 'description'],
 };
 
-const validateCreateOne = ajv.compile(createOneSchema);
-
 const createOne = (req, res, next) => {
-  console.log('- validator createOne req.body -', req.body);
+  // console.log('- validator createOne req.body -', req.body);
 
-  const valid = validateCreateOne(req.body);
+  const validate = ajv.compile(createOneSchema);
+  const valid = validate(req.body);
 
   if (!valid) {
-    console.log('- validate.errors -', validate.errors);
-    throw new Error(validate.errors);
+    // console.log('- validate.errors -', validate.errors);
+    throw new ValidateError('not valid request', validate.errors);
   }
 
   next();
 };
 
-const getOneSchema = {
-  type: "string", maxLength: 24, minLength: 24
+const updateOneSchema = {
+  type: 'object',
+  properties: {
+    name: { type: 'string' },
+    description: { type: 'string' },
+  },
 };
 
-const validateGeteOne = ajv.compile(getOneSchema);
-
-const getOne = (req, res, next) => {
-  console.log('- validator getOne req.params -', req.params);
-
-  const valid = validateGeteOne(req.params.id);
+const updateOne = (req, res, next) => {
+  // console.log('- validator updateOne req.body -', req.body);
+  const validate = ajv.compile(updateOneSchema);
+  const valid = validate(req.body);
 
   if (!valid) {
-    console.log('- validate.errors -', validateGeteOne.errors);
-    throw new Error(validateGeteOne.errors);
+    // console.log('- validate.errors -', validate.errors);
+    throw new ValidateError('not valid request', validate.errors);
   }
 
   next();
 };
 
-export default { getOne, createOne };
+export default { createOne, updateOne };

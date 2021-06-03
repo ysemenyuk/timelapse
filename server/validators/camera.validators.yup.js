@@ -8,7 +8,7 @@ const createOneSchema = yup.object({
 const getOneSchema = yup.string().length(24);
 
 const createOne = async (req, res, next) => {
-  console.log('- validator createOne req.body -', req.body);
+  // console.log('- validator createOne req.body -', req.body);
 
   await createOneSchema.validate(req.body);
 
@@ -16,7 +16,7 @@ const createOne = async (req, res, next) => {
 };
 
 const getOne = async (req, res, next) => {
-  console.log('- validator getOne req.params -', req.params);
+  // console.log('- validator getOne req.params -', req.params);
 
   await getOneSchema.validate(req.params.id);
 

@@ -1,6 +1,8 @@
 import Ajv from 'ajv';
 import addFormats from 'ajv-formats';
 
+import { ValidateError } from '../middleware/errorHandlerMiddleware.js';
+
 const ajv = new Ajv();
 addFormats(ajv);
 
@@ -15,13 +17,12 @@ const singUpSchema = {
 
 const singUp = (req, res, next) => {
   // console.log('- user.validator singUp req.body -', req.body);
-
-  const singUpValidate = ajv.compile(singUpSchema);
-  const valid = singUpValidate(req.body);
+  const validate = ajv.compile(singUpSchema);
+  const valid = validate(req.body);
 
   if (!valid) {
-    console.log('- singUpValidate.errors -', singUpValidate.errors);
-    throw new Error(singUpValidate.errors);
+    // console.log('- singUpValidate.errors -', validate.errors);
+    throw new ValidateError('not valid request', validate.errors);
   }
 
   next();
@@ -37,14 +38,13 @@ const logInSchema = {
 };
 
 const logIn = (req, res, next) => {
-  // console.log('- validator getOne req.params -', req.params);
-
-  const logInValidate = ajv.compile(logInSchema);
-  const valid = logInValidate(req.body);
+  // console.log('- validator logIn req.body -', req.body);
+  const validate = ajv.compile(logInSchema);
+  const valid = validate(req.body);
 
   if (!valid) {
-    console.log('- singUpValidate.errors -', logInValidate.errors);
-    throw new Error(logInValidate.errors);
+    // console.log('- logInValidate.errors -', validate.errors);
+    throw new ValidateError('not valid request', validate.errors);
   }
 
   next();

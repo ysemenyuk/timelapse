@@ -17,7 +17,9 @@ const singUp = async ({ payload }) => {
   }
 
   const hashPassword = await bcrypt.hash(password, 8);
-  const newUser = userActions.createOne({ payload: { email, password: hashPassword } });
+  const newUser = userActions.createOne({
+    payload: { email, password: hashPassword },
+  });
 
   await newUser.save();
 };
@@ -38,17 +40,17 @@ const logIn = async ({ payload }) => {
     expiresIn: '1h',
   });
 
-  return { token, user: _.omit(user, ['password']) };
+  return { token, user: _.pick(user, ['_id', 'name', 'email']) };
 };
 
-const auth = ({ user }) => {
+const auth = async ({ userId }) => {
   // console.log('- user.controller /auth user -', user);
-
-  const token = jwt.sign({ userId: user._id }, process.env.SECRET_KEY, {
+  const user = await userActions.getOne({ _id: userId });
+  const token = jwt.sign({ userId }, process.env.SECRET_KEY, {
     expiresIn: '1h',
   });
 
-  return { token, user: _.omit(user, ['password']) };
+  return { token, user: _.pick(user, ['_id', 'name', 'email']) };
 };
 
 const getOne = async ({ user }) => {
