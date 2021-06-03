@@ -11,6 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "ajv": "^8.5.0",
+    "ajv-formats": "^2.1.0",
     "axios": "^0.21.1",
     "bcryptjs": "^2.4.3",
     "core-js": "^3.13.1",

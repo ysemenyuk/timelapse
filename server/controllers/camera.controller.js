@@ -12,7 +12,11 @@ const getAll = async ({ userId }) => {
 
 const getOne = async ({ userId, cameraId }) => {
   // console.log('- camera controller getOne -', { userId, cameraId });
-  return await cameraActions.getOne({ userId, cameraId });
+  const camera = await cameraActions.getOne({ userId, cameraId });
+  if (!camera) {
+    throw new Error('camera not found');
+  }
+  return camera;
 };
 
 const createOne = async ({ userId, payload }) => {

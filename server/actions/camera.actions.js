@@ -6,21 +6,13 @@ const getAll = async ({ userId }) => {
 
 const getOne = async ({ userId, cameraId }) => {
   // console.log('- camera.actions getOne -', { userId, cameraId });
-
-  const camera = await Camera.findOne({ user: userId, _id: cameraId });
-
-  if (!camera) {
-    throw new Error('camera not found');
-  }
-
-  return camera;
+  return await Camera.findOne({ user: userId, _id: cameraId });
 };
 
 const createOne = async ({ userId, payload }) => {
   // console.log('- camera.actions createOne -', { userId, payload });
   const camera = new Camera({ user: userId, ...payload });
-  await camera.save();
-  return camera;
+  return await camera.save();
 };
 
 const updateOne = async ({ userId, cameraId, payload }) => {

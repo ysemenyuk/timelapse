@@ -1,25 +1,24 @@
 import * as yup from 'yup';
 
-// const schema = Yup.object({
-//   name: Yup.string().required(),
-//   description: Yup.string().required(),
-//   rtspLink: Yup.string().required(),
-// });
+const createOneSchema = yup.object({
+  name: yup.string().required(),
+  description: yup.string().required(),
+});
 
-const createOne = (req, res, next) => {
+const getOneSchema = yup.string().length(24);
+
+const createOne = async (req, res, next) => {
   console.log('- validator createOne req.body -', req.body);
 
-  // schema.validateSync(req.body);
+  await createOneSchema.validate(req.body);
 
   next();
 };
 
-const getOne = (req, res, next) => {
+const getOne = async (req, res, next) => {
   console.log('- validator getOne req.params -', req.params);
 
-  if (!validator.isMongoId(req.params.id)) {
-    throw new Error('must be an id!');
-  }
+  await getOneSchema.validate(req.params.id);
 
   next();
 };
