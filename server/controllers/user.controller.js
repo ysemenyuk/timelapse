@@ -45,7 +45,8 @@ const logIn = async ({ payload }) => {
 
 const auth = async ({ userId }) => {
   // console.log('- user.controller /auth user -', user);
-  const user = await userRepository.getOne({ _id: userId });
+  const user = await userRepository.getById(userId);
+
   const token = jwt.sign({ userId }, process.env.SECRET_KEY, {
     expiresIn: '1h',
   });
@@ -53,16 +54,25 @@ const auth = async ({ userId }) => {
   return { token, user: _.pick(user, ['_id', 'name', 'email']) };
 };
 
-const getOne = async ({ user }) => {
+const getOne = async ({ userId }) => {
   // console.log('- /getOne updateOne.body -', req.body);
+  const user = await userRepository.getById(userId);
+
+  return { user: _.pick(user, ['_id', 'name', 'email']) };
 };
 
-const updateOne = async ({ user, payload }) => {
+const updateOne = async ({ userId, payload }) => {
   // console.log('- /getOne updateOne.body -', req.body);
+  await userRepository.updateOne({ userId, payload });
+
+  const updatedUser = await userRepository.getById(userId);
+
+  return { user: _.pick(updatedUser, ['_id', 'name', 'email']) };
 };
 
-const deleteOne = async ({ user }) => {
+const deleteOne = async ({ userId }) => {
   // console.log('- /deleteOne req.params -', req.params);
+  return await userRepository.deleteOne({ userId });
 };
 
 export default {

@@ -18,25 +18,12 @@ const createOne = async ({ userId, payload }) => {
 const updateOne = async ({ userId, cameraId, payload }) => {
   // console.log('- camera.actions updateOne -', { userId, cameraId, payload });
   const camera = await Camera.findOne({ user: userId, _id: cameraId });
-
-  if (!camera) {
-    throw new Error('camera not found');
-  }
-
-  await camera.update(payload);
-  const upadatedCamera = await Camera.findOne({ user: userId, _id: cameraId });
-
-  return upadatedCamera;
+  return await camera.update(payload);
 };
 
 const deleteOne = async ({ userId, cameraId }) => {
   // console.log('- camera.actions deleteOne -', { userId, cameraId });
   const camera = await Camera.findOne({ user: userId, _id: cameraId });
-
-  if (!camera) {
-    throw new Error('camera not found');
-  }
-
   return await camera.remove();
 };
 

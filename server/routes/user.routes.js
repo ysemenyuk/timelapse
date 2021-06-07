@@ -1,5 +1,4 @@
 import Router from 'express';
-// import asyncHandler from 'express-async-handler';
 
 import authMiddleware from '../middleware/authMiddleware.js';
 import userValidator from '../validators/user.validators.ajv.js';
@@ -36,8 +35,38 @@ router.get(
   })
 );
 
-router.get('/:id', authMiddleware, userController.getOne);
-router.put('/:id', authMiddleware, userController.updateOne);
-router.delete('/:id', authMiddleware, userController.deleteOne);
+router.get(
+  '/:id',
+  authMiddleware,
+  asyncHandler(async (req, res) => {
+    const { user } = await userController.getOne({ userId: req.userId });
+    res.status(200).send({ user });
+  })
+);
+
+router.put(
+  '/:id',
+  authMiddleware,
+  asyncHandler(async (req, res) => {
+    const { user } = await userController.updateOne({
+      userId: req.userId,
+      payload: req.body,
+    });
+
+    res.status(201).send({ user });
+  })
+);
+
+router.delete(
+  '/:id',
+  authMiddleware,
+  asyncHandler(async (req, res) => {
+    await userController.deleteOne({ userId: req.userId });
+    return res.status(204).send();
+  })
+);
+
+router.post('/:id/avatar');
+router.delete('/:id/avatar');
 
 export default router;
