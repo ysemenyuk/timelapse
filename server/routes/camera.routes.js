@@ -5,7 +5,7 @@ import authMiddleware from '../middleware/authMiddleware.js';
 import cameraValidator from '../validators/camera.validators.ajv.js';
 import cameraController from '../controllers/camera.controller.js';
 
-console.log('cameraRouter');
+// console.log('cameraRouter');
 
 const router = express.Router();
 
@@ -14,8 +14,12 @@ router.use(authMiddleware);
 router.get(
   '/',
   asyncHandler(async (req, res) => {
-    const cameras = await cameraController.getAll({ userId: req.userId });
+    req.logger.info('cameraRouter GET: /');
+    const cameras = await cameraController.getAll({ userId: req.userId, logger: req.logger });
     res.status(200).send(cameras);
+    req.logger.info(
+      `res GET: / - ${res.statusCode} ${res.statusMessage} - ${Date.now() - req.start} ms`
+    );
   })
 );
 

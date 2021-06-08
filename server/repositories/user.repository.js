@@ -12,7 +12,9 @@ const getOne = async ({ ...args }) => {
 
 const createOne = async ({ payload }) => {
   // console.log('- user.actions createOne -', { userId, payload });
-  const user = new User(payload);
+  const { email, password } = payload;
+  const hashPassword = await bcrypt.hash(password, 8);
+  const user = new User({ email, password: hashPassword });
   return await user.save();
 };
 

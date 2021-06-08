@@ -5,7 +5,7 @@ import { dirname } from 'path';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-console.log('initDirname __dirname - ', __dirname);
-console.log('initDirname path.resolve() - ', path.resolve());
+// console.log('initDirname __dirname - ', __dirname);
+// console.log('initDirname path.resolve() - ', path.resolve());
 
 export default __dirname;

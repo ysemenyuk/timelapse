@@ -4,15 +4,19 @@ import dotenv from 'dotenv';
 import morgan from 'morgan';
 import mongoose from 'mongoose';
 
+import logger from './libs/logger.js';
 import userRoutes from './routes/user.routes.js';
 import cameraRoutes from './routes/camera.routes.js';
 
+import loggerMiddleware from './middleware/loggerMiddleware.js';
 import { errorHandlerMiddleware } from './middleware/errorHandlerMiddleware.js';
 
-import __dirname from './initDirname.js';
+import __dirname from './dirname.js';
 
-console.log('- index __dirname -', __dirname);
-console.log('- index path.resolve() -', path.resolve());
+logger.info('__dirname', { __dirname });
+
+// console.log('- index __dirname -', __dirname);
+// console.log('- index path.resolve() -', path.resolve());
 
 dotenv.config({ path: path.join(__dirname, '.env') });
 
@@ -22,6 +26,7 @@ if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
 
+app.use(loggerMiddleware);
 app.use(express.json());
 
 app.use('/files/assets', express.static(path.join(__dirname, 'assets')));
@@ -53,11 +58,13 @@ const start = async () => {
       useUnifiedTopology: true,
       useFindAndModify: false,
     });
-    console.log(`MongoDB Connected: ${conn.connection.host}`);
+    // console.log(`MongoDB Connected: ${conn.connection.host}`);
+    logger.info(`MongoDB Connected: ${conn.connection.host}`);
 
     app.listen(
       PORT,
-      console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`)
+      // console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`)
+      logger.info(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`)
     );
   } catch (e) {
     console.log(e);

@@ -1,6 +1,7 @@
 import Camera from '../models/camera.js';
 
-const getAll = async ({ userId }) => {
+const getAll = async ({ userId, logger }) => {
+  logger.info(`cameraRepository getAll userId: ${userId}`);
   return await Camera.find({ user: userId });
 };
 

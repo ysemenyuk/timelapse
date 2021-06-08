@@ -1,7 +1,8 @@
 import cameraRepository from '../repositories/camera.repository.js';
 
-const getAll = async ({ userId }) => {
-  return await cameraRepository.getAll({ userId });
+const getAll = async ({ userId, logger }) => {
+  logger.info(`cameraController getAll userId: ${userId}`);
+  return await cameraRepository.getAll({ userId, logger });
 };
 
 const getOne = async ({ userId, cameraId }) => {
