@@ -6,33 +6,38 @@ import jwt from '../libs/token.js';
 import { BadRequestError } from '../middleware/errorHandlerMiddleware.js';
 import userRepository from '../repositories/user.repository.js';
 
-const singUp = async ({ payload }) => {
-  // console.log('- user.controller singup payload -', payload);
+const singUp = async ({ payload, logger }) => {
+  logger.info(`userController.singUp payload: ${payload}`);
 
   const { email, password } = payload;
 
-  const user = await userRepository.getOne({ email });
+  const user = await userRepository.getByEmail({ email, logger });
 
   if (user) {
+    logger.error(`userController.singUp email ${email} - already exist`);
     throw new BadRequestError(`User with email ${email} already exist`);
   }
 
   const newUser = await userRepository.createOne({
     payload: { email, password },
+    logger,
   });
 
-  await newUser.save();
+  const token = jwt.sign(user._id);
+
+  return { token, user: _.pick(newUser, ['_id', 'name', 'email']) };
 };
 
-const logIn = async ({ payload }) => {
-  // console.log('- user.controller login payload -', payload);
+const logIn = async ({ payload, logger }) => {
+  logger.info(`userController.logIn payload: ${payload}`);
 
   const { email, password } = payload;
 
-  const user = await userRepository.getOne({ email });
+  const user = await userRepository.getByEmail({ email, logger });
   const isPassValid = bcrypt.compareSync(password, user.password);
 
   if (!user || !isPassValid) {
+    logger.error(`userController.singUp Invalid email or password`);
     throw new BadRequestError(`Invalid email or password`);
   }
 
@@ -41,36 +46,38 @@ const logIn = async ({ payload }) => {
   return { token, user: _.pick(user, ['_id', 'name', 'email']) };
 };
 
-const auth = async ({ userId }) => {
-  // console.log('- user.controller /auth user -', user);
-  const user = await userRepository.getById(userId);
+const auth = async ({ userId, logger }) => {
+  logger.info(`userController.auth userId: ${userId}`);
 
-  const token = jwt.sign({ userId }, process.env.SECRET_KEY, {
-    expiresIn: '1h',
-  });
+  const user = await userRepository.getById({ userId, logger });
+
+  const token = jwt.sign(user._id);
 
   return { token, user: _.pick(user, ['_id', 'name', 'email']) };
 };
 
-const getOne = async ({ userId }) => {
-  // console.log('- /getOne updateOne.body -', req.body);
-  const user = await userRepository.getById(userId);
+const getOne = async ({ userId, logger }) => {
+  logger.info(`userController.getOne userId: ${userId}`);
+
+  const user = await userRepository.getById({ userId, logger });
 
   return { user: _.pick(user, ['_id', 'name', 'email']) };
 };
 
-const updateOne = async ({ userId, payload }) => {
-  // console.log('- /getOne updateOne.body -', req.body);
+const updateOne = async ({ userId, payload, logger }) => {
+  logger.info(`userController.updateOne userId: ${userId}`);
+
   await userRepository.updateOne({ userId, payload });
 
-  const updatedUser = await userRepository.getById(userId);
+  const updatedUser = await userRepository.getById({ userId, logger });
 
   return { user: _.pick(updatedUser, ['_id', 'name', 'email']) };
 };
 
-const deleteOne = async ({ userId }) => {
-  // console.log('- /deleteOne req.params -', req.params);
-  return await userRepository.deleteOne({ userId });
+const deleteOne = async ({ userId, logger }) => {
+  logger.info(`userController.deleteOne userId: ${userId}`);
+
+  return await userRepository.deleteOne({ userId, logger });
 };
 
 export default {

@@ -1,11 +1,7 @@
-// import jwt from 'jsonwebtoken';
 import logger from '../libs/logger.js';
-
 import jwt from '../libs/token.js';
 
 export default (req, res, next) => {
-  req.logger.info('auth middleware');
-
   try {
     const token = req.headers.authorization.split(' ')[1];
 
@@ -17,7 +13,9 @@ export default (req, res, next) => {
     const { userId } = jwt.verify(token);
     req.userId = userId;
     // req.user = await userActions.getOne({ _id: userId });
-    req.logger.info('token ok');
+
+    req.logger.info(`token ok - userId: ${userId}`);
+
     next();
   } catch (e) {
     req.logger.error(new Error(e));

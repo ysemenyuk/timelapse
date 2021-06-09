@@ -13,10 +13,7 @@ import { errorHandlerMiddleware } from './middleware/errorHandlerMiddleware.js';
 
 import __dirname from './dirname.js';
 
-logger.info('__dirname', { __dirname });
-
-// console.log('- index __dirname -', __dirname);
-// console.log('- index path.resolve() -', path.resolve());
+logger.info(`__dirname - ${__dirname}`);
 
 dotenv.config({ path: path.join(__dirname, '.env') });
 
@@ -24,9 +21,9 @@ const app = express();
 
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
+  app.use(loggerMiddleware);
 }
 
-app.use(loggerMiddleware);
 app.use(express.json());
 
 app.use('/files/assets', express.static(path.join(__dirname, 'assets')));

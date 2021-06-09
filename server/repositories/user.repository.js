@@ -1,33 +1,38 @@
 import User from '../models/user.js';
 
-const getById = async (id) => {
-  // console.log('- user.actions getOne -', { userId, cameraId });
-  return await User.findById(id);
+const getById = async ({ userId, logger }) => {
+  logger.info(`userRepository.getById userId: ${userId}`);
+  return await User.findById(userId);
 };
 
-const getOne = async ({ ...args }) => {
-  // console.log('- user.actions getOne -', { userId, cameraId });
-  return await User.findOne({ ...args });
+const getByEmail = async ({ email, logger }) => {
+  logger.info(`userRepository.getByEmail email: ${email}`);
+  return await User.findOne({ email });
 };
 
-const createOne = async ({ payload }) => {
-  // console.log('- user.actions createOne -', { userId, payload });
+const createOne = async ({ payload, logger }) => {
+  logger.info(`userRepository.createOne userId: ${userId}`);
+
   const { email, password } = payload;
   const hashPassword = await bcrypt.hash(password, 8);
   const user = new User({ email, password: hashPassword });
+
   return await user.save();
 };
 
-const updateOne = async ({ userId, payload }) => {
-  // console.log('- user.actions updateOne -', { userId, cameraId, payload });
-  const user = await User.findById(userId);
-  return await user.update(payload);
+const updateOne = async ({ userId, payload, logger }) => {
+  logger.info(`userRepository.updateOne userId: ${userId}`);
+
+  const { name, email, password } = payload;
+  const hashPassword = await bcrypt.hash(password, 8);
+
+  return await User.updateOne({ userId }, { name, email, password: hashPassword });
 };
 
-const deleteOne = async ({ userId }) => {
-  // console.log('- user.actions deleteOne -', { userId, cameraId });
+const deleteOne = async ({ userId, logger }) => {
+  logger.info(`userRepository.deleteOne userId: ${userId}`);
   const user = await User.findById(userId);
   return await user.remove();
 };
 
-export default { getById, getOne, createOne, updateOne, deleteOne };
+export default { getById, getByEmail, createOne, updateOne, deleteOne };
