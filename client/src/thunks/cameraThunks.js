@@ -1,16 +1,12 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
 
-import routes from '../api/routes.js';
-import getAuthHeader from './authHeader.js';
+import cameraRepository from '../api/camera.repository.js';
 
 const fetchAll = createAsyncThunk('camera/fetchAll', async () => {
   try {
-    const response = await axios.get(routes.camerasPath(), {
-      headers: getAuthHeader(),
-    });
-    console.log('fetchAll response.data -', response.data);
-    return response.data;
+    const { data } = await cameraRepository.getAll();
+    console.log('fetchAll response.data -', data);
+    return data;
   } catch (e) {
     console.log('fetchAll error -', e.message);
     throw e;
@@ -19,11 +15,9 @@ const fetchAll = createAsyncThunk('camera/fetchAll', async () => {
 
 const fetchOne = createAsyncThunk('camera/fetchOne', async (id) => {
   try {
-    const response = await axios.get(routes.cameraPath(id), {
-      headers: getAuthHeader(),
-    });
-    console.log('fetchOne response.data -', response.data);
-    return response.data;
+    const { data } = await cameraRepository.getOne(id);
+    console.log('fetchOne response.data -', data);
+    return data;
   } catch (e) {
     console.log('fetchOne error -', e.message);
     throw e;
@@ -32,11 +26,11 @@ const fetchOne = createAsyncThunk('camera/fetchOne', async (id) => {
 
 const createOne = createAsyncThunk('camera/createOne', async (values) => {
   try {
-    const response = await axios.post(routes.camerasPath(), values, {
-      headers: getAuthHeader(),
-    });
-    console.log('createOne response.data -', response.data);
-    return response.data;
+    console.log('createOne values -', values);
+
+    const { data } = await cameraRepository.createOne(values);
+    console.log('createOne response.data -', data);
+    return data;
   } catch (e) {
     console.log('createOne error -', e.message);
     throw e;
@@ -46,24 +40,23 @@ const createOne = createAsyncThunk('camera/createOne', async (values) => {
 const updateOne = createAsyncThunk('camera/updateOne', async (values) => {
   try {
     console.log('updateOne values -', values);
-    const response = await axios.put(routes.cameraPath(values._id), values, {
-      headers: getAuthHeader(),
-    });
-    console.log('updateOne response.data -', response.data);
-    return response.data;
+
+    const { data } = await cameraRepository.updateOne(values._id, values);
+
+    console.log('updateOne response.data -', data);
+    return data;
   } catch (e) {
     console.log('updateOne error -', e.message);
     throw e;
   }
 });
 
-const deleteOne = createAsyncThunk('camera/deleteOne', async (camera) => {
+const deleteOne = createAsyncThunk('camera/deleteOne', async (id) => {
   try {
-    const response = await axios.delete(routes.cameraPath(camera._id), {
-      headers: getAuthHeader(),
-    });
-    console.log('deleteOne response -', response);
-    return camera;
+    const { data } = await cameraRepository.deleteOne(id);
+
+    console.log('deleteOne response -', data);
+    return data;
   } catch (e) {
     console.log('deleteOne error -', e.message);
     throw e;

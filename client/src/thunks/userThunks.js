@@ -2,7 +2,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
 import routes from '../api/routes.js';
-import getAuthHeader from './authHeader.js';
+import getAuthHeader from '../api/authHeader.js';
 
 const singup = createAsyncThunk('user/singup', async (values) => {
   try {

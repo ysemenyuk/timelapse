@@ -52,7 +52,7 @@ const CameraFormEdit = ({ selectedCamera }) => {
 
   // console.log('selectedCamera -', selectedCamera);
   // console.log('formik.errors -', formik.errors);
-  // console.log('formik.values -', formik.values);
+  console.log('formik.values -', formik.values);
 
   if (selectedCamera === null) {
     return null;
@@ -75,9 +75,7 @@ const CameraFormEdit = ({ selectedCamera }) => {
               id='name'
               name='name'
               type='text'
-              className={`form-control ${
-                formik.errors?.name ? 'is-invalid' : ''
-              }`}
+              className={`form-control ${formik.errors?.name ? 'is-invalid' : ''}`}
             ></input>
             <div className='invalid-feedback'>{formik.errors?.name}</div>
           </div>
@@ -93,9 +91,7 @@ const CameraFormEdit = ({ selectedCamera }) => {
               id='description'
               name='description'
               type='text'
-              className={`form-control ${
-                formik.errors?.description && 'is-invalid'
-              }`}
+              className={`form-control ${formik.errors?.description && 'is-invalid'}`}
             ></input>
             <div className='invalid-feedback'>{formik.errors?.description}</div>
           </div>
@@ -111,9 +107,7 @@ const CameraFormEdit = ({ selectedCamera }) => {
                 disabled={formik.isSubmitting}
                 name='jpegLink'
                 type='text'
-                className={`form-control ${
-                  formik.errors?.jpegLink && 'is-invalid'
-                }`}
+                className={`form-control ${formik.errors?.jpegLink && 'is-invalid'}`}
               ></input>
               <div className='invalid-feedback'>{formik.errors?.jpegLink}</div>
               <button
@@ -138,9 +132,7 @@ const CameraFormEdit = ({ selectedCamera }) => {
                 disabled={formik.isSubmitting}
                 name='rtspLink'
                 type='text'
-                className={`form-control ${
-                  formik.errors?.rtspLink && 'is-invalid'
-                }`}
+                className={`form-control ${formik.errors?.rtspLink && 'is-invalid'}`}
               ></input>
               <div className='invalid-feedback'>{formik.errors?.rtspLink}</div>
               <button
