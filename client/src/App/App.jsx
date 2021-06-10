@@ -17,14 +17,13 @@ import CameraPage from '../pages/CameraPage.jsx';
 import CameraAddPage from '../pages/CameraAddPage.jsx';
 
 const App = () => {
-  // console.log('App');
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
 
   // console.log('app user', user);
 
   useEffect(() => {
-    user.isLoggedIn === 'checkToken' && dispatch(userThunks.auth());
+    user.tokenVerification && dispatch(userThunks.tokenVerification());
   }, []);
 
   const PrivateRoute = ({ children, ...rest }) => {
@@ -35,7 +34,7 @@ const App = () => {
 
   return (
     <div className='container p-2'>
-      {user.isLoggedIn === 'checkToken' ? (
+      {user.tokenVerification ? (
         <Spinner />
       ) : (
         <Router>

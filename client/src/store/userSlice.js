@@ -2,14 +2,14 @@ import { createSlice } from '@reduxjs/toolkit';
 
 import userThunks from '../thunks/userThunks.js';
 
-const { login, auth } = userThunks;
+const { singup, login, tokenVerification } = userThunks;
 
 const userInfo = JSON.parse(localStorage.getItem('userInfo'));
 
 const initialState =
   userInfo && userInfo.userId && userInfo.token
-    ? { isLoggedIn: 'checkToken', user: null }
-    : { isLoggedIn: false, user: null };
+    ? { tokenVerification: true, isLoggedIn: false, user: null }
+    : { tokenVerification: false, isLoggedIn: false, user: null };
 
 const userSlice = createSlice({
   name: 'user',
@@ -23,6 +23,17 @@ const userSlice = createSlice({
     },
   },
   extraReducers: {
+    [singup.fulfilled]: (state, action) => {
+      const userInfo = {
+        userId: action.payload.user._id,
+        token: action.payload.token,
+      };
+
+      localStorage.setItem('userInfo', JSON.stringify(userInfo));
+
+      state.isLoggedIn = true;
+      state.user = action.payload.user;
+    },
     [login.fulfilled]: (state, action) => {
       const userInfo = {
         userId: action.payload.user._id,
@@ -34,7 +45,7 @@ const userSlice = createSlice({
       state.isLoggedIn = true;
       state.user = action.payload.user;
     },
-    [auth.fulfilled]: (state, action) => {
+    [tokenVerification.fulfilled]: (state, action) => {
       const userInfo = {
         userId: action.payload.user._id,
         token: action.payload.token,
@@ -42,12 +53,14 @@ const userSlice = createSlice({
 
       localStorage.setItem('userInfo', JSON.stringify(userInfo));
 
+      state.tokenVerification = false;
       state.isLoggedIn = true;
       state.user = action.payload.user;
     },
-    [auth.rejected]: (state, action) => {
+    [tokenVerification.rejected]: (state, action) => {
       localStorage.removeItem('userInfo');
 
+      state.tokenVerification = false;
       state.isLoggedIn = false;
       state.user = null;
     },

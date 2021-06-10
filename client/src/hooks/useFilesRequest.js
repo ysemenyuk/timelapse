@@ -1,7 +1,4 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
-
-import routes from '../api/routes.js';
 
 export default function (currentDir) {
   const [isLoading, setIsLoading] = useState(false);
@@ -17,7 +14,7 @@ export default function (currentDir) {
       try {
         setIsSuccess(false);
         setIsLoading(true);
-        const { data } = await axios.get(routes.filesPath(1));
+        const { data } = await axios.get(`/api/files?parentId=1`);
         // console.log(data);
         setData(data);
         setIsSuccess(true);

@@ -33,33 +33,25 @@ const CameraInfo = ({ selectedCamera }) => {
         <ul className='list-group'>
           <li className='list-group-item'>
             <div className='me-3'>Name: </div>
-            <div className='col-9 text-truncate fw-bold'>
-              {selectedCamera.name}
-            </div>
+            <div className='col-9 text-truncate fw-bold'>{selectedCamera.name}</div>
           </li>
           <li className='list-group-item'>
             <div className='me-3'>Description: </div>
-            <div className='col-9 text-truncate fw-bold'>
-              {selectedCamera.description}
-            </div>
+            <div className='col-9 text-truncate fw-bold'>{selectedCamera.description}</div>
           </li>
           <li className='list-group-item'>
             <div className='d-flex justify-content-between align-items-start'>
               <div className='me-3'>jpeg Link: </div>
               <span className='badge bg-success'>ok</span>
             </div>
-            <div className='col-9 text-truncate text-muted'>
-              {selectedCamera.jpegLink}
-            </div>
+            <div className='col-9 text-truncate text-muted'>{selectedCamera.jpegLink}</div>
           </li>
           <li className='list-group-item'>
             <div className='d-flex justify-content-between align-items-start'>
               <div className='me-3'>rtsp Link: </div>
               <div className='badge bg-danger'>bad</div>
             </div>
-            <div className='col-9 text-truncate text-muted'>
-              {selectedCamera.rtspLink}
-            </div>
+            <div className='col-9 text-truncate text-muted'>{selectedCamera.rtspLink}</div>
           </li>
         </ul>
       </div>
