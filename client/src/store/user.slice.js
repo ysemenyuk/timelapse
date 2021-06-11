@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-import userThunks from '../thunks/userThunks.js';
+import userThunks from '../thunks/user.thunks.js';
 
 const { singup, login, tokenVerification } = userThunks;
 
@@ -35,12 +35,12 @@ const userSlice = createSlice({
       state.user = action.payload.user;
     },
     [login.fulfilled]: (state, action) => {
-      const userInfo = {
-        userId: action.payload.user._id,
-        token: action.payload.token,
-      };
+      // const userInfo = {
+      //   userId: action.payload.user._id,
+      //   token: action.payload.token,
+      // };
 
-      localStorage.setItem('userInfo', JSON.stringify(userInfo));
+      // localStorage.setItem('userInfo', JSON.stringify(userInfo));
 
       state.isLoggedIn = true;
       state.user = action.payload.user;

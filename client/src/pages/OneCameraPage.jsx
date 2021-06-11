@@ -5,10 +5,10 @@ import { useParams } from 'react-router-dom';
 import cameraThunks from '../thunks/cameraThunks.js';
 import useThunkStatus from '../hooks/useThunkStatus.js';
 
-import CameraFiles from '../components/CameraFiles.jsx';
-import ScreenshotsStatus from '../components/ScreenshotsStatus.jsx';
-import VideoStatus from '../components/VideoStatus.jsx';
-import FormMakeVideoFile from '../components/FormMakeVideoFile.jsx';
+import CameraFiles from '../components/CameraFiles/CameraFiles.jsx';
+import ScreenshotsStatus from '../components/ScreenshotsStatus/ScreenshotsStatus.jsx';
+import VideoStatus from '../components/VideoStatus/VideoStatus.jsx';
+import FormMakeVideoFile from '../components/MakeVideoFile/MakeVideoFile.jsx';
 // import Screenshot from '../components/Screenshot.jsx';
 // import CameraInfo from '../components/CameraInfo.jsx';
 

@@ -1,13 +1,8 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 
-import CameraList from '../components/CamerasList.jsx';
-
-// import userThunks from '../thunks/userThunks.js';
-
 const UserProfilePage = () => {
   const { user } = useSelector((state) => state.user);
-  const selectedCamera = useSelector((state) => state.camera.selectedCamera);
 
   return (
     <div className='row'>

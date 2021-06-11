@@ -6,8 +6,8 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 
 // import { cameraActions } from '../store/cameraSlice.js';
-import { formActions } from '../store/formSlice.js';
-import cameraThunks from '../thunks/cameraThunks.js';
+import { formActions } from '../../store/formSlice.js';
+import cameraThunks from '../../thunks/cameraThunks.js';
 
 const validationSchema = Yup.object({
   name: Yup.string().required().min(3).max(20),
@@ -52,11 +52,7 @@ const CameraFormEdit = ({ selectedCamera }) => {
 
   // console.log('selectedCamera -', selectedCamera);
   // console.log('formik.errors -', formik.errors);
-  console.log('formik.values -', formik.values);
-
-  if (selectedCamera === null) {
-    return null;
-  }
+  // console.log('formik.values -', formik.values);
 
   return (
     <div className='col-12 mb-3'>

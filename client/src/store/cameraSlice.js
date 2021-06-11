@@ -3,7 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import cameraThunks from '../thunks/cameraThunks.js';
 
 const { fetchAll, fetchOne, createOne, updateOne, deleteOne } = cameraThunks;
-import { userActions } from './userSlice.js';
+import { userActions } from './user.slice.js';
 
 // console.log("cameraSlice");
 

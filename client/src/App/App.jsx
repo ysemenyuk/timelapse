@@ -2,9 +2,9 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
 
-import userThunks from '../thunks/userThunks.js';
+import userThunks from '../thunks/user.thunks.js';
 
-import Navbar from '../components/Navbar.jsx';
+import Navbar from '../components/Navbar/Navbar.jsx';
 import Spinner from '../components/Spinner.jsx';
 // import Error from './components/Error.jsx';
 
@@ -12,9 +12,9 @@ import LoginPage from '../pages/LoginPage.jsx';
 import SignupPage from '../pages/SignupPage.jsx';
 import UserProfilePage from '../pages/UserProfilePage.jsx';
 
-import CameraListPage from '../pages/CameraListPage.jsx';
-import CameraPage from '../pages/CameraPage.jsx';
-import CameraAddPage from '../pages/CameraAddPage.jsx';
+import CameraListPage from '../pages/CamerasListPage.jsx';
+import CameraPage from '../pages/OneCameraPage.jsx';
+import CameraAddPage from '../pages/AddCameraPage.jsx';
 
 const App = () => {
   const dispatch = useDispatch();

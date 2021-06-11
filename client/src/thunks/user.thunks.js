@@ -22,6 +22,13 @@ const login = createAsyncThunk('user/login', async (values) => {
 
     console.log('user/login response.data -', data);
 
+    const userInfo = {
+      userId: data.user._id,
+      token: data.token,
+    };
+
+    localStorage.setItem('userInfo', JSON.stringify(userInfo));
+
     return data;
   } catch (e) {
     console.error('user/login error -', e.response.data);

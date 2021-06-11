@@ -35,6 +35,7 @@ router.post(
     req.logger.info(
       `res: ${req.method} - ${req.originalUrl} - ${res.statusCode} - ${res.statusMessage}`
     );
+    req.logger.info(res);
   })
 );
 

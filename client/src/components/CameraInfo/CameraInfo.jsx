@@ -2,8 +2,8 @@ import React from 'react';
 import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 
-import { formActions } from '../store/formSlice.js';
-import cameraThunks from '../thunks/cameraThunks.js';
+import { formActions } from '../../store/formSlice.js';
+import cameraThunks from '../../thunks/cameraThunks.js';
 
 const CameraInfo = ({ selectedCamera }) => {
   const dispatch = useDispatch();

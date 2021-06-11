@@ -2,7 +2,7 @@ import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 
-import { userActions } from '../store/userSlice.js';
+import { userActions } from '../../store/user.slice.js';
 
 const Navbar = () => {
   const dispatch = useDispatch();

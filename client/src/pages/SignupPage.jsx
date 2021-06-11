@@ -5,7 +5,7 @@ import { useHistory, Link, Redirect } from 'react-router-dom';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 
-import userThunks from '../thunks/userThunks.js';
+import userThunks from '../thunks/user.thunks.js';
 
 const LoginPage = () => {
   const dispatch = useDispatch();
@@ -64,11 +64,7 @@ const LoginPage = () => {
                 name='email'
                 id='email'
                 autoComplete='email'
-                className={
-                  formik.errors.email
-                    ? 'form-control is-invalid'
-                    : 'form-control'
-                }
+                className={formik.errors.email ? 'form-control is-invalid' : 'form-control'}
                 onChange={formik.handleChange}
                 value={formik.values.email}
                 // required
@@ -86,11 +82,7 @@ const LoginPage = () => {
                 name='password'
                 id='password'
                 autoComplete='current-password'
-                className={
-                  formik.errors.password
-                    ? 'form-control is-invalid'
-                    : 'form-control'
-                }
+                className={formik.errors.password ? 'form-control is-invalid' : 'form-control'}
                 onChange={formik.handleChange}
                 value={formik.values.password}
                 // required
@@ -122,10 +114,7 @@ const LoginPage = () => {
               </div>
             </div>
 
-            <button
-              type='submit'
-              className='w-100 mb-3 btn btn-outline-primary'
-            >
+            <button type='submit' className='w-100 mb-3 btn btn-outline-primary'>
               Submit
             </button>
           </form>
