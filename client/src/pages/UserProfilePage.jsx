@@ -6,7 +6,7 @@ const UserProfilePage = () => {
 
   return (
     <div className='row'>
-      <div className='col-5 px-3'>
+      <div className='col-4 px-3'>
         <h6 className='mb-3'>User Profile</h6>
         <div className='mb-3'>
           <ul className='list-group'>

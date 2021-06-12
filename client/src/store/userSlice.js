@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-import userThunks from '../thunks/user.thunks.js';
+import userThunks from '../thunks/userThunks.js';
 
 const { singup, login, tokenVerification } = userThunks;
 

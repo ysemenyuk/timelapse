@@ -9,20 +9,24 @@ import Screenshot from '../components/CameraScreenshot/CameraScreenshot.jsx';
 import CameraStatus from '../components/CameraStatus/CameraStatus.jsx';
 import CameraInfo from '../components/CameraInfo/CameraInfo.jsx';
 
+import Spinner from '../components/Spinner.jsx';
+import Error from '../components/Error.jsx';
+
 const CameraListPage = () => {
   const selectedCamera = useSelector((state) => state.camera.selectedCamera);
-  const form = useSelector((state) => state.form);
+  const formEdit = useSelector((state) => state.form);
 
-  const cameras = useCamerasList();
+  const { cameras, fetchStatus } = useCamerasList();
 
-  return (
+  return fetchStatus.isSuccess ? (
     <div className='row'>
       <div className='col-3 px-3'>
         <CamerasList cameras={cameras} selectedCamera={selectedCamera} />
       </div>
 
       <div className='col-6 px-3'>
-        {form.show && form.type === 'editCamera' ? (
+        <CameraStatus selectedCamera={selectedCamera} />
+        {formEdit.show ? (
           <FormEditCamera selectedCamera={selectedCamera} />
         ) : (
           <CameraInfo selectedCamera={selectedCamera} />
@@ -31,10 +35,13 @@ const CameraListPage = () => {
 
       <div className='col-3 px-3'>
         <Screenshot selectedCamera={selectedCamera} />
-        <CameraStatus selectedCamera={selectedCamera} />
       </div>
     </div>
-  );
+  ) : fetchStatus.isLoading ? (
+    <Spinner />
+  ) : fetchStatus.isError ? (
+    <Error />
+  ) : null;
 };
 
 export default CameraListPage;

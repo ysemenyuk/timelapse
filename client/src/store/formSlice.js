@@ -10,18 +10,15 @@ const formSlice = createSlice({
   name: 'form',
   initialState: {
     show: false,
-    type: null,
   },
   reducers: {
-    set: (state, action) => {
-      state.show = action.payload.show;
-      state.type = action.payload.type;
+    showEditForm: (state, action) => {
+      state.show = action.payload;
     },
   },
   extraReducers: {
     [updateOne.fulfilled]: (state, action) => {
       state.show = false;
-      state.type = null;
     },
   },
 });

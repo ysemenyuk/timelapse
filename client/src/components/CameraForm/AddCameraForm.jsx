@@ -28,7 +28,6 @@ const CameraForm = () => {
     initialValues: {
       name: '',
       description: '',
-      rtspLink: '',
       jpegLink: '',
     },
     validationSchema,
@@ -59,7 +58,7 @@ const CameraForm = () => {
         <form className='row g-3' onSubmit={formik.handleSubmit}>
           <div className='col-md-12'>
             <label htmlFor='name' className='form-label'>
-              name
+              Name
             </label>
             <input
               onChange={formik.handleChange}
@@ -74,7 +73,7 @@ const CameraForm = () => {
 
           <div className='col-md-12'>
             <label htmlFor='description' className='form-label'>
-              description
+              Description
             </label>
             <input
               onChange={formik.handleChange}
@@ -82,41 +81,14 @@ const CameraForm = () => {
               id='description'
               name='description'
               type='text'
-              className={`form-control ${
-                formik.errors?.description && 'is-invalid'
-              }`}
+              className={`form-control ${formik.errors?.description && 'is-invalid'}`}
             ></input>
             <div className='invalid-feedback'>{formik.errors?.description}</div>
           </div>
 
           <div className='col-md-12'>
             <label htmlFor='name' className='form-label'>
-              rtspLink
-            </label>
-            <div className='input-group'>
-              <input
-                onChange={formik.handleChange}
-                value={formik.values.rtspLink}
-                name='rtspLink'
-                type='text'
-                className={`form-control ${
-                  formik.errors?.rtspLink && 'is-invalid'
-                }`}
-              ></input>
-              <div className='invalid-feedback'>{formik.errors?.rtspLink}</div>
-              <button
-                className='btn btn-outline-secondary'
-                type='button'
-                id='button-addon2'
-              >
-                Check
-              </button>
-            </div>
-          </div>
-
-          <div className='col-md-12'>
-            <label htmlFor='name' className='form-label'>
-              jpegLink
+              Screenshot Link
             </label>
             <div className='input-group'>
               <input
@@ -124,16 +96,10 @@ const CameraForm = () => {
                 value={formik.values.jpegLink}
                 name='jpegLink'
                 type='text'
-                className={`form-control ${
-                  formik.errors?.jpegLink && 'is-invalid'
-                }`}
+                className={`form-control ${formik.errors?.jpegLink && 'is-invalid'}`}
               ></input>
               <div className='invalid-feedback'>{formik.errors?.jpegLink}</div>
-              <button
-                className='btn btn-outline-secondary'
-                type='button'
-                id='button-addon2'
-              >
+              <button className='btn btn-outline-secondary' type='button' id='button-addon2'>
                 Check
               </button>
             </div>

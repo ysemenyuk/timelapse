@@ -3,7 +3,7 @@ import { configureStore } from '@reduxjs/toolkit';
 import cameraReducer from './cameraSlice.js';
 import formReducer from './formSlice.js';
 import thunkReducer from './thunkSlice.js';
-import userReducer from './user.slice.js';
+import userReducer from './userSlice.js';
 
 // console.log('store');
 

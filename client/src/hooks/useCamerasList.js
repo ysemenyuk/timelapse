@@ -16,5 +16,5 @@ export default function () {
     }
   }, []);
 
-  return { cameras, isLoading, isSuccess, isError };
+  return { cameras, fetchStatus: { isLoading, isSuccess, isError } };
 }

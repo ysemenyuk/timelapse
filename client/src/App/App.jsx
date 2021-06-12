@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
 
-import userThunks from '../thunks/user.thunks.js';
+import userThunks from '../thunks/userThunks.js';
 
 import Navbar from '../components/Navbar/Navbar.jsx';
 import Spinner from '../components/Spinner.jsx';

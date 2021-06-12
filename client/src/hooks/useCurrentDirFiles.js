@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
+import axios from 'axios';
 
 export default function (currentDir) {
   const [isLoading, setIsLoading] = useState(false);
 
   const [isSuccess, setIsSuccess] = useState(false);
-  const [data, setData] = useState(null);
+  const [files, setFiles] = useState([]);
 
   const [isError, setIsError] = useState(false);
   const [error, setError] = useState(null);
@@ -14,9 +15,9 @@ export default function (currentDir) {
       try {
         setIsSuccess(false);
         setIsLoading(true);
-        const { data } = await axios.get(`/api/files?parentId=1`);
+        const { data } = await axios.get(`/api/files?parentId=${currentDir._id}`);
         // console.log(data);
-        setData(data);
+        setFiles(data);
         setIsSuccess(true);
       } catch (err) {
         // console.log(err);
@@ -27,5 +28,5 @@ export default function (currentDir) {
     }
   }, [currentDir]);
 
-  return { data, error, isLoading, isSuccess, isError };
+  return { files, fetchFilesStatus: { error, isLoading, isSuccess, isError } };
 }

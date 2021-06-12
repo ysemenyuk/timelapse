@@ -5,7 +5,7 @@ import { useHistory, Link, Redirect } from 'react-router-dom';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 
-import userThunks from '../thunks/user.thunks.js';
+import userThunks from '../thunks/userThunks.js';
 
 const LoginPage = () => {
   const dispatch = useDispatch();

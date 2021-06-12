@@ -3,7 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import cameraThunks from '../thunks/cameraThunks.js';
 
 const { fetchAll, fetchOne, createOne, updateOne, deleteOne } = cameraThunks;
-import { userActions } from './user.slice.js';
+import { userActions } from './userSlice.js';
 
 // console.log("cameraSlice");
 
@@ -41,18 +41,14 @@ const cameraSlice = createSlice({
     [updateOne.fulfilled]: (state, action) => {
       // console.log('action updateOne -', action);
       const updatedItem = action.payload;
-      const updatedItemIndex = state.allCameras.findIndex(
-        (item) => item._id === updatedItem._id
-      );
+      const updatedItemIndex = state.allCameras.findIndex((item) => item._id === updatedItem._id);
       state.allCameras[updatedItemIndex] = updatedItem;
       state.selectedCamera = updatedItem;
     },
     [deleteOne.fulfilled]: (state, action) => {
       // console.log('action deleteOne -', action);
       const deletedItem = action.payload;
-      state.allCameras = state.allCameras.filter(
-        (item) => item._id !== deletedItem._id
-      );
+      state.allCameras = state.allCameras.filter((item) => item._id !== deletedItem._id);
       if (state.allCameras.length === 0) {
         state.selectedCamera = null;
       } else {

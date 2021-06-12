@@ -4,7 +4,7 @@ import FilesList from './FilesList.jsx';
 import Spinner from '../Spinner.jsx';
 import Error from '../Error.jsx';
 
-import useFilesRequest from '../../hooks/useFilesRequest.js';
+import useCurrentDirFiles from '../../hooks/useCurrentDirFiles.js';
 
 const CameraFiles = ({ selectedCamera }) => {
   // console.log('camera files');
@@ -23,7 +23,7 @@ const CameraFiles = ({ selectedCamera }) => {
     }
   }, [selectedCamera]);
 
-  const filesRequest = useFilesRequest(currentDir);
+  const { files, fetchFilesStatus } = useCurrentDirFiles(currentDir);
 
   const clickFileHandler = (file) => {
     if (file.type === 'dir') {
@@ -53,7 +53,7 @@ const CameraFiles = ({ selectedCamera }) => {
           type='button'
           className='btn btn-sm btn-primary'
           onClick={backClickHandler}
-          disabled={filesRequest.isLoading || dirStack.length === 1}
+          disabled={fetchFilesStatus.isLoading || dirStack.length === 1}
         >
           Back
         </button>
@@ -69,12 +69,12 @@ const CameraFiles = ({ selectedCamera }) => {
       </div>
 
       <div className='vh-100 d-flex flex-wrap p-3 border rounded overflow-auto'>
-        {filesRequest.isSuccess ? (
-          <FilesList files={filesRequest.data} onClickFile={clickFileHandler} />
-        ) : filesRequest.isLoading ? (
+        {fetchFilesStatus.isSuccess ? (
+          <FilesList files={files} onClickFile={clickFileHandler} />
+        ) : fetchFilesStatus.isLoading ? (
           <Spinner />
-        ) : filesRequest.isError ? (
-          <Error message={filesRequest.error} />
+        ) : fetchFilesStatus.isError ? (
+          <Error message={fetchFilesStatus.error} />
         ) : null}
       </div>
     </div>

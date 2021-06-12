@@ -20,14 +20,13 @@ const CameraFormEdit = ({ selectedCamera }) => {
   const form = useSelector((state) => state.form);
 
   const handleCancel = () => {
-    dispatch(formActions.set({ show: false, type: null }));
+    dispatch(formActions.showEditForm(false));
   };
 
   const formik = useFormik({
     initialValues: {
       name: '',
       description: '',
-      rtspLink: '',
       jpegLink: '',
     },
     validationSchema,
@@ -56,7 +55,7 @@ const CameraFormEdit = ({ selectedCamera }) => {
 
   return (
     <div className='col-12 mb-3'>
-      <h6 className='mb-3'>Camera</h6>
+      <h6 className='mb-3'>CameraInfo</h6>
 
       <div>
         <form className='row g-3' onSubmit={formik.handleSubmit}>
@@ -94,7 +93,7 @@ const CameraFormEdit = ({ selectedCamera }) => {
 
           <div className='col-md-12'>
             <label htmlFor='name' className='form-label'>
-              jpeg Link
+              Screenshot Link
             </label>
             <div className='input-group'>
               <input
@@ -106,31 +105,6 @@ const CameraFormEdit = ({ selectedCamera }) => {
                 className={`form-control ${formik.errors?.jpegLink && 'is-invalid'}`}
               ></input>
               <div className='invalid-feedback'>{formik.errors?.jpegLink}</div>
-              <button
-                className='btn btn-outline-secondary'
-                disabled
-                type='button'
-                id='button-addon2'
-              >
-                Check
-              </button>
-            </div>
-          </div>
-
-          <div className='col-md-12'>
-            <label htmlFor='name' className='form-label'>
-              rtsp Link
-            </label>
-            <div className='input-group'>
-              <input
-                onChange={formik.handleChange}
-                value={formik.values.rtspLink}
-                disabled={formik.isSubmitting}
-                name='rtspLink'
-                type='text'
-                className={`form-control ${formik.errors?.rtspLink && 'is-invalid'}`}
-              ></input>
-              <div className='invalid-feedback'>{formik.errors?.rtspLink}</div>
               <button
                 className='btn btn-outline-secondary'
                 disabled

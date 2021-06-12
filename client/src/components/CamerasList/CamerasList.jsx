@@ -25,17 +25,7 @@ const CamerasList = ({ cameras, selectedCamera }) => {
     <div className='col-12 mb-3'>
       <h6 className='mb-3'>List</h6>
       <div className='list-group mb-3'>
-        {cameras.isSuccess ? (
-          <List
-            cameras={cameras.cameras}
-            selectedCamera={selectedCamera}
-            onSelectItem={handleSelectItem}
-          />
-        ) : cameras.isLoading ? (
-          <Spinner />
-        ) : cameras.isError ? (
-          <Error />
-        ) : null}
+        <List cameras={cameras} selectedCamera={selectedCamera} onSelectItem={handleSelectItem} />
       </div>
       <div>
         <Link className='btn btn-sm btn-primary' to='/form'>

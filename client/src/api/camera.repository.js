@@ -2,11 +2,10 @@ import axios from 'axios';
 
 import getAuthHeader from './authHeader.js';
 
-const host = '';
-const prefix = 'api';
+const host = 'http://localhost:3000/';
 
 const instance = axios.create({
-  baseURL: `${host}/${prefix}/cameras`,
+  baseURL: `${host}api/cameras`,
   headers: getAuthHeader(),
 });
 

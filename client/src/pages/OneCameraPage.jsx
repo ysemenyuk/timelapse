@@ -8,7 +8,7 @@ import useThunkStatus from '../hooks/useThunkStatus.js';
 import CameraFiles from '../components/CameraFiles/CameraFiles.jsx';
 import ScreenshotsStatus from '../components/ScreenshotsStatus/ScreenshotsStatus.jsx';
 import VideoStatus from '../components/VideoStatus/VideoStatus.jsx';
-import FormMakeVideoFile from '../components/MakeVideoFile/MakeVideoFile.jsx';
+import MakeVideoFile from '../components/MakeVideoFile/MakeVideoFile.jsx';
 // import Screenshot from '../components/Screenshot.jsx';
 // import CameraInfo from '../components/CameraInfo.jsx';
 
@@ -19,7 +19,7 @@ const CameraPage = () => {
   const dispatch = useDispatch();
   const { id } = useParams();
 
-  const fetchCamera = useThunkStatus(cameraThunks.fetchOne);
+  const fetchStatus = useThunkStatus(cameraThunks.fetchOne);
   const selectedCamera = useSelector((state) => state.camera.selectedCamera);
 
   useEffect(() => {
@@ -28,22 +28,22 @@ const CameraPage = () => {
     }
   }, []);
 
-  return fetchCamera.isSuccess || selectedCamera !== null ? (
+  return fetchStatus.isSuccess || selectedCamera ? (
     <div className='row'>
       <div className='col-3 px-3'>
         {/* <Screenshot selectedCamera={selectedCamera} /> */}
         {/* <CameraInfo selectedCamera={selectedCamera} /> */}
         <ScreenshotsStatus selectedCamera={selectedCamera} />
         <VideoStatus selectedCamera={selectedCamera} />
-        <FormMakeVideoFile />
+        <MakeVideoFile />
       </div>
       <div className='col-9 px-3'>
         <CameraFiles selectedCamera={selectedCamera} />
       </div>
     </div>
-  ) : fetchCamera.isLoading ? (
+  ) : fetchStatus.isLoading ? (
     <Spinner />
-  ) : fetchCamera.isError ? (
+  ) : fetchStatus.isError ? (
     <Error />
   ) : null;
 };

@@ -10,7 +10,8 @@ const CameraScreen = ({ selectedCamera }) => {
       <h6 className='mb-3'>Screenshot</h6>
       <div className='mb-3'>
         <img
-          width='300px'
+          // height='165px'
+          width='250px'
           src='/files/assets/no_img.png'
           className='file_screenshot img-thumbnail'
         />
