@@ -4,7 +4,7 @@
   "description": "",
   "main": "./index.js",
   "scripts": {
-    "start": "node index.js",
+    "start": "node --trace-deprecation index.js",
     "dev": "nodemon index.js"
   },
   "author": "",
@@ -20,6 +20,7 @@
     "express-validator": "^6.11.1",
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.21",
+    "mongodb": "^3.6.9",
     "mongoose": "^5.12.7",
     "uuid": "^8.3.2",
     "winston": "^3.3.3",

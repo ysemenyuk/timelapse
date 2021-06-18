@@ -1,8 +1,12 @@
 import path from 'path';
+import fs from 'fs';
 import express from 'express';
 import dotenv from 'dotenv';
 import morgan from 'morgan';
 import mongoose from 'mongoose';
+import mongodb from 'mongodb';
+
+const { MongoClient } = mongodb;
 
 import logger from './libs/logger.js';
 import userRoutes from './routes/user.routes.js';
@@ -48,14 +52,56 @@ app.use(errorHandlerMiddleware);
 
 const PORT = process.env.PORT || 4000;
 
+const client = new MongoClient(process.env.MONGO_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
+
 const start = async () => {
   try {
+    await client.connect();
+
+    await client.db('myFirstDatabase').command({ ping: 1 });
+    console.log('Connected successfully to server');
+
+    const database = client.db('myFirstDatabase');
+
+    const bucket = new mongodb.GridFSBucket(database);
+
+    let uploadStream = bucket.openUploadStream('image.png');
+    let id = uploadStream.id;
+
+    fs.createWriteStream('./image.png')
+      // .pipe(uploadStream)
+
+      .on('error', () => {
+        console.log('error', error);
+      })
+
+      .on('open', () => {
+        console.log('open');
+      })
+
+      .on('ready', () => {
+        console.log('ready');
+      })
+
+      .on('close', () => {
+        console.log('finish');
+      });
+
+    // const cameras = database.collection('cameras');
+    // const query = { name: 'Name 123' };
+    // const camera = await cameras.findOne(query);
+
+    // console.log(camera);
+
     const conn = await mongoose.connect(process.env.MONGO_URI, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
       useFindAndModify: false,
     });
-    // console.log(`MongoDB Connected: ${conn.connection.host}`);
+    console.log(`MongoDB Connected: ${conn.connection.host}`);
     logger.info(`MongoDB Connected: ${conn.connection.host}`);
 
     app.listen(
@@ -64,7 +110,9 @@ const start = async () => {
       logger.info(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`)
     );
   } catch (e) {
-    console.log(e);
+    console.log(111, e);
+  } finally {
+    await client.close();
   }
 };
 
