@@ -3,12 +3,9 @@ import mongoose from 'mongoose';
 // console.log('cameraModel');
 
 const CameraSchema = mongoose.Schema({
-  files: [{ type: mongoose.ObjectId, ref: 'File' }],
-  dir: { type: mongoose.ObjectId, ref: 'File' },
-  user: { type: mongoose.ObjectId, ref: 'User' },
   name: { type: String, required: true },
   description: { type: String, required: true },
-  rtspLink: { type: String, default: '' },
+  user: { type: mongoose.ObjectId, ref: 'User' },
   jpegLink: { type: String, default: '' },
   jpegCreateInterval: { type: String, default: '' },
   jpegCreateStartTime: { type: String, default: '' },

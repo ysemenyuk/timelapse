@@ -102,7 +102,19 @@ router.delete(
   })
 );
 
-router.put('/:id/avatar');
+router.post(
+  '/:id/avatar',
+  asyncHandler(async (req, res) => {
+    req.logger.info('userRouter.post /:id/avatar');
+
+    res.status(200).send('ok');
+
+    req.logger.info(
+      `res: ${req.method} - ${req.originalUrl} - ${res.statusCode} - ${res.statusMessage}`
+    );
+  })
+);
+
 router.delete('/:id/avatar');
 
 export default router;

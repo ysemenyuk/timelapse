@@ -1,3 +1,11 @@
+import axios from 'axios';
+import fs from 'fs';
+import path from 'path';
+
+const fsp = fs.promises;
+
+import __dirname from '../dirname.js';
+
 import cameraRepository from '../repositories/camera.repository.js';
 
 const getAll = async ({ userId, logger }) => {
@@ -53,4 +61,23 @@ const deleteOne = async ({ userId, cameraId, logger }) => {
   return await cameraRepository.deleteOne({ userId, cameraId, logger });
 };
 
-export default { getAll, getOne, createOne, updateOne, deleteOne };
+const getScreenshot = async ({ userId, cameraId, logger, bucket }) => {
+  logger.info(`cameraController.getScreensho cameraId: ${cameraId}`);
+
+  // const { data } = await axios.get('http://localhost:4000/files/60cf9ead2567950284e28122', {
+  //   responseType: 'arraybuffer',
+  // });
+  // await axios.post('http://localhost:4000/files/screenshot', data);
+
+  const uploadStream = bucket.openUploadStream('filename.jpg');
+
+  axios({
+    method: 'get',
+    url: 'http://localhost:4000/files/60cf9ead2567950284e28122',
+    responseType: 'stream',
+  }).then(function (response) {
+    response.data.pipe(uploadStream);
+  });
+};
+
+export default { getAll, getOne, createOne, updateOne, deleteOne, getScreenshot };

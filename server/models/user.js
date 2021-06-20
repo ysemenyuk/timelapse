@@ -4,7 +4,7 @@ const UserSchema = mongoose.Schema({
   name: { type: String, required: true, default: 'username' },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
-  cameras: [{ type: mongoose.ObjectId, ref: 'Camera', default: [] }],
+  avatar: { type: String, default: 'no_img.png' },
 });
 
 const File = mongoose.model('User', UserSchema);

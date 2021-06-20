@@ -1,12 +1,11 @@
 import path from 'path';
-import fs from 'fs';
 import express from 'express';
 import dotenv from 'dotenv';
 import morgan from 'morgan';
 import mongoose from 'mongoose';
 import mongodb from 'mongodb';
-
-const { MongoClient } = mongodb;
+import Busboy from 'busboy';
+import assert from 'assert';
 
 import logger from './libs/logger.js';
 import userRoutes from './routes/user.routes.js';
@@ -22,6 +21,15 @@ logger.info(`__dirname - ${__dirname}`);
 dotenv.config({ path: path.join(__dirname, '.env') });
 
 const app = express();
+const { MongoClient, ObjectID } = mongodb;
+
+const PORT = process.env.PORT || 4000;
+const dbUri = process.env.MONGO_URI;
+
+const mongoClient = new MongoClient(dbUri, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
 
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
@@ -30,13 +38,59 @@ if (process.env.NODE_ENV === 'development') {
 
 app.use(express.json());
 
+app.use(function (req, res, next) {
+  const database = mongoClient.db('myFirstDatabase');
+  const bucket = new mongodb.GridFSBucket(database);
+
+  req.bucket = bucket;
+  next();
+});
+
+app.get('/files/:fileId', async (req, res) => {
+  const database = mongoClient.db('myFirstDatabase');
+  const bucket = new mongodb.GridFSBucket(database);
+
+  const { fileId } = req.params;
+  const id = new ObjectID(fileId);
+
+  bucket.openDownloadStream(id).pipe(res);
+});
+
+app.post('/files', (req, res) => {
+  const database = mongoClient.db('myFirstDatabase');
+  const bucket = new mongodb.GridFSBucket(database);
+
+  const busboy = new Busboy({ headers: req.headers });
+
+  busboy.on('file', function (fieldname, file, filename, encoding, mimetype) {
+    console.log(fieldname, file, filename, encoding, mimetype);
+    const uploadStream = bucket.openUploadStream(filename);
+    file.pipe(uploadStream);
+  });
+
+  busboy.on('finish', function () {
+    res.send('Done!');
+  });
+
+  req.pipe(busboy);
+});
+
+app.post('/files/screenshot', (req, res) => {
+  const database = mongoClient.db('myFirstDatabase');
+  const bucket = new mongodb.GridFSBucket(database);
+
+  const uploadStream = bucket.openUploadStream('111.jpg');
+
+  req.pipe(uploadStream);
+});
+
 app.use('/files/assets', express.static(path.join(__dirname, 'assets')));
 app.use('/files', express.static(path.join(__dirname, '..', 'cameras')));
 
 app.use('/api/user', userRoutes);
 app.use('/api/cameras', cameraRoutes);
 
-app.use('/api/files', (req, res) => {
+app.get('/api/files', (req, res) => {
   res.send([]);
 });
 
@@ -50,59 +104,18 @@ app.use(function (req, res, next) {
 
 app.use(errorHandlerMiddleware);
 
-const PORT = process.env.PORT || 4000;
-
-const client = new MongoClient(process.env.MONGO_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
-
 const start = async () => {
   try {
-    await client.connect();
+    await mongoClient.connect();
+    logger.info(`mongoClient successfully Connected`);
 
-    await client.db('myFirstDatabase').command({ ping: 1 });
-    console.log('Connected successfully to server');
-
-    const database = client.db('myFirstDatabase');
-
-    const bucket = new mongodb.GridFSBucket(database);
-
-    let uploadStream = bucket.openUploadStream('image.png');
-    let id = uploadStream.id;
-
-    fs.createWriteStream('./image.png')
-      // .pipe(uploadStream)
-
-      .on('error', () => {
-        console.log('error', error);
-      })
-
-      .on('open', () => {
-        console.log('open');
-      })
-
-      .on('ready', () => {
-        console.log('ready');
-      })
-
-      .on('close', () => {
-        console.log('finish');
-      });
-
-    // const cameras = database.collection('cameras');
-    // const query = { name: 'Name 123' };
-    // const camera = await cameras.findOne(query);
-
-    // console.log(camera);
-
-    const conn = await mongoose.connect(process.env.MONGO_URI, {
+    await mongoose.connect(dbUri, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
       useFindAndModify: false,
     });
-    console.log(`MongoDB Connected: ${conn.connection.host}`);
-    logger.info(`MongoDB Connected: ${conn.connection.host}`);
+
+    logger.info(`mongoose successfully Connected`);
 
     app.listen(
       PORT,
@@ -110,9 +123,7 @@ const start = async () => {
       logger.info(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`)
     );
   } catch (e) {
-    console.log(111, e);
-  } finally {
-    await client.close();
+    console.log('catch err', e);
   }
 };
 

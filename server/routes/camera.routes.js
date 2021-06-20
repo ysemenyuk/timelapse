@@ -99,4 +99,20 @@ router.delete(
   })
 );
 
+router.get(
+  '/:id/screenshot',
+  asyncHandler(async (req, res) => {
+    req.logger.info('cameraRouter.get /:id/screenshot');
+
+    const camera = await cameraController.getScreenshot({
+      userId: req.userId,
+      cameraId: req.params.id,
+      logger: req.logger,
+      bucket: req.bucket,
+    });
+
+    res.status(200).send(camera);
+  })
+);
+
 export default router;
