@@ -46,42 +46,14 @@ app.use(function (req, res, next) {
   next();
 });
 
-app.get('/files/:fileId', async (req, res) => {
+app.get('/files/:fileName', (req, res) => {
   const database = mongoClient.db('myFirstDatabase');
   const bucket = new mongodb.GridFSBucket(database);
 
-  const { fileId } = req.params;
-  const id = new ObjectID(fileId);
+  const { fileName } = req.params;
+  // const id = new ObjectID(fileId);
 
-  bucket.openDownloadStream(id).pipe(res);
-});
-
-app.post('/files', (req, res) => {
-  const database = mongoClient.db('myFirstDatabase');
-  const bucket = new mongodb.GridFSBucket(database);
-
-  const busboy = new Busboy({ headers: req.headers });
-
-  busboy.on('file', function (fieldname, file, filename, encoding, mimetype) {
-    console.log(fieldname, file, filename, encoding, mimetype);
-    const uploadStream = bucket.openUploadStream(filename);
-    file.pipe(uploadStream);
-  });
-
-  busboy.on('finish', function () {
-    res.send('Done!');
-  });
-
-  req.pipe(busboy);
-});
-
-app.post('/files/screenshot', (req, res) => {
-  const database = mongoClient.db('myFirstDatabase');
-  const bucket = new mongodb.GridFSBucket(database);
-
-  const uploadStream = bucket.openUploadStream('111.jpg');
-
-  req.pipe(uploadStream);
+  bucket.openDownloadStreamByName(fileName).pipe(res);
 });
 
 app.use('/files/assets', express.static(path.join(__dirname, 'assets')));

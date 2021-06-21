@@ -1,4 +1,7 @@
 import Router from 'express';
+import Busboy from 'busboy';
+
+import Avatar from '../models/avatar.js';
 
 import authMiddleware from '../middleware/authMiddleware.js';
 import { asyncHandler } from '../middleware/errorHandlerMiddleware.js';
@@ -107,11 +110,30 @@ router.post(
   asyncHandler(async (req, res) => {
     req.logger.info('userRouter.post /:id/avatar');
 
-    res.status(200).send('ok');
+    const avatarName = `${req.userId}-avatar.jpg`;
 
-    req.logger.info(
-      `res: ${req.method} - ${req.originalUrl} - ${res.statusCode} - ${res.statusMessage}`
-    );
+    const avatar = new Avatar({
+      name: avatarName,
+      user: req.userId,
+      original: `${req.userId}-avatar-original.jpg`,
+      preview: `${req.userId}-avatar-preview.jpg`,
+    });
+
+    const bucket = req.bucket;
+    const busboy = new Busboy({ headers: req.headers });
+
+    busboy.on('file', function (fieldname, file, filename, encoding, mimetype) {
+      console.log({ fieldname, file, filename, encoding, mimetype });
+
+      const uploadStream = bucket.openUploadStream(`${req.userId}.jpg`);
+      file.pipe(uploadStream);
+    });
+
+    busboy.on('finish', function () {
+      res.send(avatar);
+    });
+
+    req.pipe(busboy);
   })
 );
 

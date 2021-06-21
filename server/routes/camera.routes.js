@@ -1,6 +1,12 @@
 import express from 'express';
+import axios from 'axios';
+import sharp from 'sharp';
+import { Readable } from 'stream';
 
-import authMiddleware from '../middleware/authMiddleware.js';
+import Camera from '../models/camera.js';
+import File from '../models/file.js';
+
+// import authMiddleware from '../middleware/authMiddleware.js';
 import { asyncHandler } from '../middleware/errorHandlerMiddleware.js';
 
 import cameraValidator from '../validators/camera.validators.ajv.js';
@@ -8,7 +14,7 @@ import cameraController from '../controllers/camera.controller.js';
 
 const router = express.Router();
 
-router.use(authMiddleware);
+// router.use(authMiddleware);
 
 router.get(
   '/',
@@ -104,14 +110,37 @@ router.get(
   asyncHandler(async (req, res) => {
     req.logger.info('cameraRouter.get /:id/screenshot');
 
-    const camera = await cameraController.getScreenshot({
-      userId: req.userId,
-      cameraId: req.params.id,
-      logger: req.logger,
-      bucket: req.bucket,
+    const camera = await Camera.findOne({ _id: req.params.id });
+    console.log(camera);
+
+    // const jpegLink =
+    //   'http://admin:qwer1234@93.188.47.252:8080/ISAPI/Streaming/Channels/101/picture?snapShotImageType=JPEG';
+
+    const fileName = `${req.params.id}-screenshot.jpg`;
+    const originalName = `${req.params.id}-screenshot-original.jpg`;
+    const previewName = `${req.params.id}-screenshot-preview.jpg`;
+
+    const file = new File({
+      name: fileName,
+      type: 'jpg',
+      user: req.userId,
+      camera: req.params.id,
+      original: originalName,
+      preview: previewName,
     });
 
-    res.status(200).send(camera);
+    const { data } = await axios.get(camera.jpegLink, { responseType: 'arraybuffer' });
+    Readable.from(data).pipe(req.bucket.openUploadStream(originalName));
+
+    const prev = await sharp(data).resize(200).toBuffer();
+    Readable.from(prev).pipe(req.bucket.openUploadStream(previewName));
+
+    // const { data } = await axios.get(camera.jpegLink, { responseType: 'stream' });
+    // data.pipe(req.bucket.openUploadStream(originalName));
+
+    file.save();
+
+    res.status(200).send(file);
   })
 );
 

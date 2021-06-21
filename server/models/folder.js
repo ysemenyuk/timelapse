@@ -2,7 +2,6 @@ import mongoose from 'mongoose';
 
 const FolderSchema = mongoose.Schema({
   name: { type: String, required: true },
-  type: { type: String },
   date: { type: Date, default: Date.now() },
   user: { type: mongoose.ObjectId, ref: 'User' },
   camera: { type: mongoose.ObjectId, ref: 'Camera' },
