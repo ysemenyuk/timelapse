@@ -1,7 +1,8 @@
 import Router from 'express';
-import Busboy from 'busboy';
+import { Readable } from 'stream';
+import { v4 as uuidv4 } from 'uuid';
 
-import Avatar from '../models/avatar.js';
+import User from '../models/user.js';
 
 import authMiddleware from '../middleware/authMiddleware.js';
 import { asyncHandler } from '../middleware/errorHandlerMiddleware.js';
@@ -55,6 +56,41 @@ router.get(
   })
 );
 
+router.post(
+  '/avatar',
+  authMiddleware,
+  asyncHandler(async (req, res) => {
+    req.logger.info('userRouter.post /avatar');
+
+    if (!req.files || Object.keys(req.files).length === 0) {
+      return res.status(400).send('No file.');
+    }
+
+    const file = req.files.avatar.data;
+    const fileName = `${uuidv4()}.jpg`;
+
+    Readable.from(file).pipe(req.bucket.openUploadStream(fileName));
+
+    await User.updateOne({ _id: req.userId }, { avatar: fileName });
+    const user = await User.findOne({ _id: req.userId });
+
+    res.send(user);
+  })
+);
+
+router.delete(
+  '/avatar',
+  authMiddleware,
+  asyncHandler(async (req, res) => {
+    req.logger.info('userRouter.delete /avatar');
+
+    await User.updateOne({ _id: req.userId }, { avatar: 'no_img.jpg' });
+    const user = await User.findOne({ _id: req.userId });
+
+    res.send(user);
+  })
+);
+
 router.get(
   '/:id',
   authMiddleware,
@@ -104,39 +140,5 @@ router.delete(
     );
   })
 );
-
-router.post(
-  '/:id/avatar',
-  asyncHandler(async (req, res) => {
-    req.logger.info('userRouter.post /:id/avatar');
-
-    const avatarName = `${req.userId}-avatar.jpg`;
-
-    const avatar = new Avatar({
-      name: avatarName,
-      user: req.userId,
-      original: `${req.userId}-avatar-original.jpg`,
-      preview: `${req.userId}-avatar-preview.jpg`,
-    });
-
-    const bucket = req.bucket;
-    const busboy = new Busboy({ headers: req.headers });
-
-    busboy.on('file', function (fieldname, file, filename, encoding, mimetype) {
-      console.log({ fieldname, file, filename, encoding, mimetype });
-
-      const uploadStream = bucket.openUploadStream(`${req.userId}.jpg`);
-      file.pipe(uploadStream);
-    });
-
-    busboy.on('finish', function () {
-      res.send(avatar);
-    });
-
-    req.pipe(busboy);
-  })
-);
-
-router.delete('/:id/avatar');
 
 export default router;

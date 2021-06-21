@@ -2,11 +2,12 @@ import express from 'express';
 import axios from 'axios';
 import sharp from 'sharp';
 import { Readable } from 'stream';
+import { v4 as uuidv4 } from 'uuid';
 
 import Camera from '../models/camera.js';
 import File from '../models/file.js';
 
-// import authMiddleware from '../middleware/authMiddleware.js';
+import authMiddleware from '../middleware/authMiddleware.js';
 import { asyncHandler } from '../middleware/errorHandlerMiddleware.js';
 
 import cameraValidator from '../validators/camera.validators.ajv.js';
@@ -14,7 +15,7 @@ import cameraController from '../controllers/camera.controller.js';
 
 const router = express.Router();
 
-// router.use(authMiddleware);
+router.use(authMiddleware);
 
 router.get(
   '/',
@@ -111,14 +112,13 @@ router.get(
     req.logger.info('cameraRouter.get /:id/screenshot');
 
     const camera = await Camera.findOne({ _id: req.params.id });
-    console.log(camera);
+    // console.log(camera);
 
-    // const jpegLink =
-    //   'http://admin:qwer1234@93.188.47.252:8080/ISAPI/Streaming/Channels/101/picture?snapShotImageType=JPEG';
+    const name = uuidv4();
 
-    const fileName = `${req.params.id}-screenshot.jpg`;
-    const originalName = `${req.params.id}-screenshot-original.jpg`;
-    const previewName = `${req.params.id}-screenshot-preview.jpg`;
+    const fileName = `${name}.jpg`;
+    const originalName = `${name}-orig.jpg`;
+    const previewName = `${name}-prev.jpg`;
 
     const file = new File({
       name: fileName,

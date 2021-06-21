@@ -4,8 +4,10 @@ import dotenv from 'dotenv';
 import morgan from 'morgan';
 import mongoose from 'mongoose';
 import mongodb from 'mongodb';
-import Busboy from 'busboy';
-import assert from 'assert';
+// import Busboy from 'busboy';
+// import assert from 'assert';
+import fileUpload from 'express-fileupload';
+import { Readable } from 'stream';
 
 import logger from './libs/logger.js';
 import userRoutes from './routes/user.routes.js';
@@ -21,7 +23,7 @@ logger.info(`__dirname - ${__dirname}`);
 dotenv.config({ path: path.join(__dirname, '.env') });
 
 const app = express();
-const { MongoClient, ObjectID } = mongodb;
+const { MongoClient } = mongodb;
 
 const PORT = process.env.PORT || 4000;
 const dbUri = process.env.MONGO_URI;
@@ -37,6 +39,7 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 app.use(express.json());
+app.use(fileUpload());
 
 app.use(function (req, res, next) {
   const database = mongoClient.db('myFirstDatabase');
@@ -47,13 +50,23 @@ app.use(function (req, res, next) {
 });
 
 app.get('/files/:fileName', (req, res) => {
-  const database = mongoClient.db('myFirstDatabase');
-  const bucket = new mongodb.GridFSBucket(database);
-
   const { fileName } = req.params;
   // const id = new ObjectID(fileId);
+  const downloadStream = req.bucket.openDownloadStreamByName(fileName);
+  downloadStream.pipe(res);
+  downloadStream.on('error', () => res.sendStatus(404));
+});
 
-  bucket.openDownloadStreamByName(fileName).pipe(res);
+app.post('/files', (req, res) => {
+  if (!req.files || Object.keys(req.files).length === 0) {
+    return res.status(400).send('No file.');
+  }
+
+  const file = req.files.file.data;
+  const fileName = req.files.file.name;
+
+  Readable.from(file).pipe(req.bucket.openUploadStream(fileName));
+  res.send(fileName);
 });
 
 app.use('/files/assets', express.static(path.join(__dirname, 'assets')));

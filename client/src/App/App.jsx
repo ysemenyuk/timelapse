@@ -10,7 +10,7 @@ import Spinner from '../components/Spinner.jsx';
 
 import LoginPage from '../pages/LoginPage.jsx';
 import SignupPage from '../pages/SignupPage.jsx';
-import UserProfilePage from '../pages/UserProfilePage.jsx';
+import ProfilePage from '../pages/ProfilePage.jsx';
 
 import CameraListPage from '../pages/CamerasListPage.jsx';
 import CameraPage from '../pages/OneCameraPage.jsx';
@@ -43,7 +43,7 @@ const App = () => {
             <Route exact path='/login' component={LoginPage} />
             <Route exact path='/signup' component={SignupPage} />
             <PrivateRoute>
-              <Route exact path='/user' component={UserProfilePage} />
+              <Route exact path='/user' component={ProfilePage} />
               <Route exact path='/form' component={CameraAddPage} />
               <Route exact path='/cameras/:id' component={CameraPage} />
               <Route exact path={['/', '/cameras']} component={CameraListPage} />

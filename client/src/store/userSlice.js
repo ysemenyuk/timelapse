@@ -21,6 +21,9 @@ const userSlice = createSlice({
       state.isLoggedIn = false;
       state.user = null;
     },
+    updateUser: (state, action) => {
+      state.user = action.payload;
+    },
   },
   extraReducers: {
     [singup.fulfilled]: (state, action) => {

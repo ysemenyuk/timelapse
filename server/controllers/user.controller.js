@@ -25,7 +25,7 @@ const singUp = async ({ payload, logger }) => {
 
   const token = jwt.sign(user._id);
 
-  return { token, user: _.pick(newUser, ['_id', 'name', 'email']) };
+  return { token, user: _.pick(newUser, ['_id', 'name', 'email', 'avatar']) };
 };
 
 const logIn = async ({ payload, logger }) => {
@@ -43,7 +43,7 @@ const logIn = async ({ payload, logger }) => {
 
   const token = jwt.sign(user._id);
 
-  return { token, user: _.pick(user, ['_id', 'name', 'email']) };
+  return { token, user: _.pick(user, ['_id', 'name', 'email', 'avatar']) };
 };
 
 const auth = async ({ userId, logger }) => {
@@ -53,7 +53,7 @@ const auth = async ({ userId, logger }) => {
 
   const token = jwt.sign(user._id);
 
-  return { token, user: _.pick(user, ['_id', 'name', 'email']) };
+  return { token, user: _.pick(user, ['_id', 'name', 'email', 'avatar']) };
 };
 
 const getOne = async ({ userId, logger }) => {
