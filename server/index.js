@@ -45,13 +45,17 @@ app.use(function (req, res, next) {
   const database = mongoClient.db('myFirstDatabase');
   const bucket = new mongodb.GridFSBucket(database);
 
+  req.database = database;
   req.bucket = bucket;
   next();
 });
 
-app.get('/files/:fileName', (req, res) => {
+app.get('/files/:fileName', async (req, res) => {
   const { fileName } = req.params;
-  // const id = new ObjectID(fileId);
+
+  const file = await req.database.collection('fs.files').findOne({ filename: fileName });
+  console.log(file);
+
   const downloadStream = req.bucket.openDownloadStreamByName(fileName);
   downloadStream.pipe(res);
   downloadStream.on('error', () => res.sendStatus(404));

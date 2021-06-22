@@ -6,8 +6,8 @@ const FileSchema = mongoose.Schema({
   user: { type: mongoose.ObjectId, ref: 'User' },
   camera: { type: mongoose.ObjectId, ref: 'Camera' },
   parent: { type: mongoose.ObjectId, ref: 'Folder' },
-  original: { type: String },
-  preview: { type: String },
+  original: { type: String }, // file name original size
+  preview: { type: String }, // file name small size
 });
 
 const File = mongoose.model('File', FileSchema);

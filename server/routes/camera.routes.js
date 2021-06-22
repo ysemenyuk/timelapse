@@ -15,7 +15,7 @@ import cameraController from '../controllers/camera.controller.js';
 
 const router = express.Router();
 
-router.use(authMiddleware);
+// router.use(authMiddleware);
 
 router.get(
   '/',
@@ -111,9 +111,6 @@ router.get(
   asyncHandler(async (req, res) => {
     req.logger.info('cameraRouter.get /:id/screenshot');
 
-    const camera = await Camera.findOne({ _id: req.params.id });
-    // console.log(camera);
-
     const name = uuidv4();
 
     const fileName = `${name}.jpg`;
@@ -129,8 +126,12 @@ router.get(
       preview: previewName,
     });
 
+    const camera = await Camera.findOne({ _id: req.params.id });
+
     const { data } = await axios.get(camera.jpegLink, { responseType: 'arraybuffer' });
-    Readable.from(data).pipe(req.bucket.openUploadStream(originalName));
+    Readable.from(data).pipe(
+      req.bucket.openUploadStream(originalName, { metadata: { user: 'user1' } })
+    );
 
     const prev = await sharp(data).resize(200).toBuffer();
     Readable.from(prev).pipe(req.bucket.openUploadStream(previewName));
