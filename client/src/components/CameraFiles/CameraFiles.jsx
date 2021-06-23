@@ -26,7 +26,7 @@ const CameraFiles = ({ selectedCamera }) => {
   const fetchFiles = useCurrentDirFiles(currentDir);
 
   const clickFileHandler = (file) => {
-    console.log('click');
+    console.log('click', file);
   };
 
   const clickDirHandler = (file) => {
@@ -62,11 +62,11 @@ const CameraFiles = ({ selectedCamera }) => {
         </button>
       </div>
 
-      <div className='mb-3'>
+      {/* <div className='mb-3'>
         {dirStack.map((dir) => (
           <span key={dir._id}>{` ${dir.name} /`}</span>
         ))}
-      </div>
+      </div> */}
 
       <div className='vh-100 d-flex flex-wrap align-content-start border rounded overflow-auto'>
         {fetchFiles.isSuccess ? (

@@ -1,11 +1,9 @@
 import path from 'path';
 import express from 'express';
 import dotenv from 'dotenv';
-import morgan from 'morgan';
+// import morgan from 'morgan';
 import mongoose from 'mongoose';
 import mongodb from 'mongodb';
-// import Busboy from 'busboy';
-// import assert from 'assert';
 import fileUpload from 'express-fileupload';
 import { Readable } from 'stream';
 
@@ -14,8 +12,9 @@ import userRoutes from './routes/user.routes.js';
 import cameraRoutes from './routes/camera.routes.js';
 import folderRoutes from './routes/folder.routes.js';
 import filesRoutes from './routes/file.routes.js';
+import screenshotByTimeRoutes from './routes/screenshotByTime.routes.js';
 
-import authMiddleware from './middleware/authMiddleware.js';
+// import authMiddleware from './middleware/authMiddleware.js';
 import loggerMiddleware from './middleware/loggerMiddleware.js';
 import { errorHandlerMiddleware } from './middleware/errorHandlerMiddleware.js';
 
@@ -37,7 +36,6 @@ const mongoClient = new MongoClient(dbUri, {
 });
 
 if (process.env.NODE_ENV === 'development') {
-  // app.use(morgan('dev'));
   app.use(loggerMiddleware);
 }
 
@@ -88,10 +86,7 @@ app.use('/api/user', userRoutes);
 app.use('/api/cameras', cameraRoutes);
 app.use('/api/folders', folderRoutes);
 app.use('/api/files', filesRoutes);
-
-app.get('/api/files', (req, res) => {
-  res.send([]);
-});
+app.use('/api/screenshots', screenshotByTimeRoutes);
 
 app.get('/', (req, res) => {
   res.send('API is running....');
@@ -118,7 +113,6 @@ const start = async () => {
 
     app.listen(
       PORT,
-      // console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`)
       logger.info(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`)
     );
   } catch (e) {

@@ -2,7 +2,7 @@ import express from 'express';
 
 import File from '../models/file.js';
 
-import authMiddleware from '../middleware/authMiddleware.js';
+// import authMiddleware from '../middleware/authMiddleware.js';
 import { asyncHandler } from '../middleware/errorHandlerMiddleware.js';
 
 const router = express.Router();

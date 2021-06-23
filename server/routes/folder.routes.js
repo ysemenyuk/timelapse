@@ -2,12 +2,12 @@ import express from 'express';
 
 import Folder from '../models/folder.js';
 
-import authMiddleware from '../middleware/authMiddleware.js';
+// import authMiddleware from '../middleware/authMiddleware.js';
 import { asyncHandler } from '../middleware/errorHandlerMiddleware.js';
 
 const router = express.Router();
 
-router.use(authMiddleware);
+// router.use(authMiddleware);
 
 router.get(
   '/',
@@ -37,8 +37,6 @@ router.post(
     });
 
     await folder.save();
-
-    console.log(folder);
 
     res.status(200).send(folder);
   })

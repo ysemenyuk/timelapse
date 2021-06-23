@@ -5,15 +5,13 @@ import mongoose from 'mongoose';
 const CameraSchema = mongoose.Schema({
   name: { type: String, required: true },
   description: { type: String, required: true },
+  screenshotLink: { type: String, default: '' },
   user: { type: mongoose.ObjectId, ref: 'User' },
+  avatar: { type: String, default: 'a25ca481-4784-4923-b690-fcb4f7b0aba3-prev.jpg' },
   mainFolder: { type: mongoose.ObjectId, ref: 'Folder' },
-  screenshots: { type: mongoose.ObjectId, ref: 'Folder' },
-  images: { type: mongoose.ObjectId, ref: 'Folder' },
-  videos: { type: mongoose.ObjectId, ref: 'Folder' },
-  jpegLink: { type: String, default: '' },
-  jpegCreateInterval: { type: String, default: '' },
-  jpegCreateStartTime: { type: String, default: '' },
-  jpegCreateStopTime: { type: String, default: '' },
+  screenshotsFolder: { type: mongoose.ObjectId, ref: 'Folder' },
+  imagesFolder: { type: mongoose.ObjectId, ref: 'Folder' },
+  videosFolder: { type: mongoose.ObjectId, ref: 'Folder' },
 });
 
 const Camera = mongoose.model('Camera', CameraSchema);

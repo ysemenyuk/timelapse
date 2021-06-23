@@ -17,7 +17,7 @@ const CameraInfo = ({ selectedCamera }) => {
             <div className='me-3'>Screenshot Link: </div>
             <span className='badge bg-success'>ok</span>
           </div>
-          <div className='col-9 text-truncate text-muted'>{selectedCamera.jpegLink}</div>
+          <div className='col-9 text-truncate text-muted'>{selectedCamera.screenshotLink}</div>
         </li>
       </ul>
     </div>

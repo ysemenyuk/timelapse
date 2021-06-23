@@ -69,7 +69,12 @@ router.post(
     const file = req.files.avatar.data;
     const fileName = `${uuidv4()}.jpg`;
 
-    Readable.from(file).pipe(req.bucket.openUploadStream(fileName));
+    const metadata = {
+      size: 'original',
+      user: req.userId,
+    };
+
+    Readable.from(file).pipe(req.bucket.openUploadStream(fileName, { metadata }));
 
     await User.updateOne({ _id: req.userId }, { avatar: fileName });
     const user = await User.findOne({ _id: req.userId });
@@ -86,6 +91,8 @@ router.delete(
 
     await User.updateOne({ _id: req.userId }, { avatar: 'no_img.jpg' });
     const user = await User.findOne({ _id: req.userId });
+
+    // delete file fom gridfs
 
     res.send(user);
   })

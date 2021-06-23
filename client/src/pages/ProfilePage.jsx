@@ -44,11 +44,11 @@ const ProfilePage = () => {
 
   const onUpdateUser = async (e) => {
     e.preventDefault();
-    if (password !== confirmPassword) {
-      setMessage('Passwords do not match');
+    if (password.length < 6 || password !== confirmPassword) {
+      setMessage('Invalid passwords');
       return;
     }
-    // setMessage(null);
+    setMessage(null);
     console.log({ name, email, password });
     const resp = await userRepo.update(user._id, { name, email, password });
     console.log(resp.data);

@@ -27,7 +27,7 @@ const CameraFormEdit = ({ selectedCamera }) => {
     initialValues: {
       name: '',
       description: '',
-      jpegLink: '',
+      screenshotLink: '',
     },
     validationSchema,
     onSubmit: (values, { resetForm, setSubmitting, setFieldError }) => {
@@ -98,13 +98,13 @@ const CameraFormEdit = ({ selectedCamera }) => {
             <div className='input-group'>
               <input
                 onChange={formik.handleChange}
-                value={formik.values.jpegLink}
+                value={formik.values.screenshotLink}
                 disabled={formik.isSubmitting}
-                name='jpegLink'
+                name='screenshotLink'
                 type='text'
-                className={`form-control ${formik.errors?.jpegLink && 'is-invalid'}`}
+                className={`form-control ${formik.errors?.screenshotLink && 'is-invalid'}`}
               ></input>
-              <div className='invalid-feedback'>{formik.errors?.jpegLink}</div>
+              <div className='invalid-feedback'>{formik.errors?.screenshotLink}</div>
               <button
                 className='btn btn-outline-secondary'
                 disabled

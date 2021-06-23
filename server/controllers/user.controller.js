@@ -34,11 +34,17 @@ const logIn = async ({ payload, logger }) => {
   const { email, password } = payload;
 
   const user = await userRepository.getByEmail({ email, logger });
+
+  if (!user) {
+    logger.error(`userController.singUp Invalid email`);
+    throw new BadRequestError(`Invalid email`);
+  }
+
   const isPassValid = bcrypt.compareSync(password, user.password);
 
-  if (!user || !isPassValid) {
-    logger.error(`userController.singUp Invalid email or password`);
-    throw new BadRequestError(`Invalid email or password`);
+  if (!isPassValid) {
+    logger.error(`userController.singUp Invalid password`);
+    throw new BadRequestError(`Invalid password`);
   }
 
   const token = jwt.sign(user._id);

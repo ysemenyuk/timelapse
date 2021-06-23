@@ -29,7 +29,7 @@ const updateOne = async ({ userId, payload, logger }) => {
   const { name, email, password } = payload;
   const hashPassword = await bcrypt.hash(password, 8);
 
-  return await User.updateOne({ userId }, { name, email, password: hashPassword });
+  return await User.updateOne({ _id: userId }, { name, email, password: hashPassword });
 };
 
 const deleteOne = async ({ userId, logger }) => {

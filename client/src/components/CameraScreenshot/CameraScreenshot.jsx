@@ -12,7 +12,7 @@ const CameraScreen = ({ selectedCamera }) => {
         <img
           // height='165px'
           width='250px'
-          src='/files/assets/no_img.png'
+          src={`/files/${selectedCamera.avatar}`}
           className='img-thumbnail'
         />
       </div>

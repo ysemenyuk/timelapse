@@ -1,10 +1,6 @@
 import React from 'react';
-// import { useDispatch } from 'react-redux';
-// import { unwrapResult } from '@reduxjs/toolkit';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-
-// import cameraThunks from '../thunks/cameraThunks.js';
 
 const validationSchema = Yup.object({
   start: Yup.string().required(),
@@ -24,7 +20,7 @@ const MakeVideoFile = () => {
     validationSchema,
     onSubmit: (values, { setSubmitting }) => {
       console.log('values', values);
-      setTimeout(() => setSubmitting(false), 1000);
+      setTimeout(() => setSubmitting(false), 2000);
     },
   });
 
@@ -63,9 +59,7 @@ const MakeVideoFile = () => {
               name='finish'
               type='text'
               disabled={formik.isSubmitting}
-              className={`form-control ${
-                formik.errors?.finish && 'is-invalid'
-              }`}
+              className={`form-control ${formik.errors?.finish && 'is-invalid'}`}
             ></input>
             <div className='invalid-feedback'>{formik.errors?.finish}</div>
           </div>

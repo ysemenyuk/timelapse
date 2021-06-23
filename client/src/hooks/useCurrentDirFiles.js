@@ -15,7 +15,9 @@ export default function (currentDir) {
       try {
         setIsSuccess(false);
         setIsLoading(true);
-        const { data } = await axios.get(`/api/files?parentId=60d262484de6470b3139a375`);
+        const { data } = await axios.get(
+          `http://localhost:3000/api/files?parentId=60d262484de6470b3139a375`
+        );
         // console.log(data);
         setFiles(data);
         setIsSuccess(true);

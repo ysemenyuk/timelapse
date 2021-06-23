@@ -5,7 +5,6 @@ import { Readable } from 'stream';
 import { v4 as uuidv4 } from 'uuid';
 
 import Camera from '../models/camera.js';
-import Folder from '../models/folder.js';
 import File from '../models/file.js';
 
 import authMiddleware from '../middleware/authMiddleware.js';
@@ -120,13 +119,15 @@ router.get(
 
     const camera = await Camera.findOne({ _id: req.params.id });
 
+    console.log(camera);
+
     const file = new File({
       user: req.userId,
       camera: req.params.id,
       name: fileName,
       original: originalName,
       preview: previewName,
-      parent: camera.screenshots,
+      parent: camera.screenshotsFolder,
     });
 
     const originalMetadata = {
@@ -143,7 +144,7 @@ router.get(
       parent: camera.screenshots,
     };
 
-    const { data } = await axios.get(camera.jpegLink, { responseType: 'arraybuffer' });
+    const { data } = await axios.get(camera.screenshotLink, { responseType: 'arraybuffer' });
     Readable.from(data).pipe(
       req.bucket.openUploadStream(originalName, { metadata: originalMetadata })
     );
