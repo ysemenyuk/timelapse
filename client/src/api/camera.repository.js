@@ -17,4 +17,10 @@ const deleteOne = async (id) => await instance.delete(`/${id}`);
 
 const getScreenshot = async (id) => await instance.get(`/${id}/screenshot`);
 
-export default { getAll, getOne, createOne, updateOne, deleteOne, getScreenshot };
+const getFiles = async (cameraId, parentId) =>
+  await instance.get(`/${cameraId}/files?parentId=${parentId}`);
+
+const getTaskScreenshotByTime = async (cameraId) =>
+  await instance.get(`/${cameraId}/tasks?type=ScreenshotByTime`);
+
+export default { getAll, getOne, createOne, updateOne, deleteOne, getScreenshot, getFiles };

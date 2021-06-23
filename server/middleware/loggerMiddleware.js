@@ -9,6 +9,10 @@ export default (req, res, next) => {
   req.logger = logger.child({ requestId });
 
   req.logger.info(`req: ${req.method} - ${req.originalUrl}`);
+  const t1 = Date.now();
 
   next();
+
+  const t2 = Date.now();
+  req.logger.info(`res: ${res.statusCode} - ${t2 - t1} msec`);
 };

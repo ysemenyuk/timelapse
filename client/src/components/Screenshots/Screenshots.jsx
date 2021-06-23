@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 
-import screenshotsRepository from '../../api/screenshots.repository.js';
 import cameraRepository from '../../api/camera.repository.js';
 
 import ScreenshotsStatus from './Status.jsx';
@@ -12,7 +11,7 @@ const ScreenshotStatus = ({ selectedCamera }) => {
   const [screenshotsData, setScreenshotsData] = useState(null);
 
   useEffect(async () => {
-    const { data } = await screenshotsRepository.getOne(selectedCamera._id);
+    const { data } = await cameraRepository.getTaskScreenshotByTime(selectedCamera._id);
     console.log(data);
     setScreenshotsData(data);
   }, []);

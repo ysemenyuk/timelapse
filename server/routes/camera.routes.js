@@ -6,6 +6,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 import Camera from '../models/camera.js';
 import File from '../models/file.js';
+import Folder from '../models/folder.js';
 
 import authMiddleware from '../middleware/authMiddleware.js';
 import { asyncHandler } from '../middleware/errorHandlerMiddleware.js';
@@ -25,9 +26,6 @@ router.get(
     const cameras = await cameraController.getAll({ userId: req.userId, logger: req.logger });
 
     res.status(200).send(cameras);
-    req.logger.info(
-      `res: ${req.method} - ${req.originalUrl} - ${res.statusCode} - ${res.statusMessage}`
-    );
   })
 );
 
@@ -43,9 +41,6 @@ router.get(
     });
 
     res.status(200).send(camera);
-    req.logger.info(
-      `res: ${req.method} - ${req.originalUrl} - ${res.statusCode} - ${res.statusMessage}`
-    );
   })
 );
 
@@ -62,9 +57,6 @@ router.post(
     });
 
     res.status(201).send(camera);
-    req.logger.info(
-      `res: ${req.method} - ${req.originalUrl} - ${res.statusCode} - ${res.statusMessage}`
-    );
   })
 );
 
@@ -82,9 +74,6 @@ router.put(
     });
 
     res.status(201).send(camera);
-    req.logger.info(
-      `res: ${req.method} - ${req.originalUrl} - ${res.statusCode} - ${res.statusMessage}`
-    );
   })
 );
 
@@ -100,9 +89,6 @@ router.delete(
     });
 
     res.status(204).send();
-    req.logger.info(
-      `res: ${req.method} - ${req.originalUrl} - ${res.statusCode} - ${res.statusMessage}`
-    );
   })
 );
 
@@ -130,33 +116,57 @@ router.get(
       parent: camera.screenshotsFolder,
     });
 
-    const originalMetadata = {
-      size: 'original',
-      user: req.userId,
-      camera: req.params.id,
-      parent: camera.screenshots,
-    };
-
-    const previewMetadata = {
-      size: 'preview',
-      user: req.userId,
-      camera: req.params.id,
-      parent: camera.screenshots,
-    };
-
     const { data } = await axios.get(camera.screenshotLink, { responseType: 'arraybuffer' });
-    Readable.from(data).pipe(
-      req.bucket.openUploadStream(originalName, { metadata: originalMetadata })
-    );
+    Readable.from(data).pipe(req.bucket.openUploadStream(originalName));
 
     const prev = await sharp(data).resize(200).toBuffer();
-    Readable.from(prev).pipe(
-      req.bucket.openUploadStream(previewName, { metadata: previewMetadata })
-    );
+    Readable.from(prev).pipe(req.bucket.openUploadStream(previewName));
 
     file.save();
 
     res.status(200).send(file);
+  })
+);
+
+router.get(
+  '/:id/files',
+  asyncHandler(async (req, res) => {
+    req.logger.info('cameraRouter.get /:id/files?paretnId=123456');
+
+    const files = await File.find({ parent: req.query.parentId });
+
+    res.status(200).send(files);
+  })
+);
+
+router.get(
+  '/:id/folders',
+  asyncHandler(async (req, res) => {
+    req.logger.info('cameraRouter.get /:id/folders?paretnId=123456');
+
+    const folders = await Folder.find({ parent: req.body.parentId });
+
+    res.status(200).send(folders);
+  })
+);
+
+router.post(
+  '/:id/folders',
+  asyncHandler(async (req, res) => {
+    req.logger.info('cameraRouter.post /:id/folders');
+
+    console.log(req.body);
+
+    const folder = new Folder({
+      name: req.body.name,
+      user: req.userId,
+      camera: req.body.cameraId,
+      parent: req.body.parentId,
+    });
+
+    await folder.save();
+
+    res.status(200).send(folder);
   })
 );
 

@@ -1,39 +1,30 @@
 import path from 'path';
 import express from 'express';
 import dotenv from 'dotenv';
-// import morgan from 'morgan';
 import mongoose from 'mongoose';
-import mongodb from 'mongodb';
 import fileUpload from 'express-fileupload';
-import { Readable } from 'stream';
 
+import mongoClient from './dbConfig.js';
 import logger from './libs/logger.js';
+
 import userRoutes from './routes/user.routes.js';
 import cameraRoutes from './routes/camera.routes.js';
-import folderRoutes from './routes/folder.routes.js';
-import filesRoutes from './routes/file.routes.js';
-import screenshotByTimeRoutes from './routes/screenshotByTime.routes.js';
+import taskRoutes from './routes/task.routes.js';
 
-// import authMiddleware from './middleware/authMiddleware.js';
+import fileRoutes from './routes/file.routes.js';
+
 import loggerMiddleware from './middleware/loggerMiddleware.js';
+// import authMiddleware from './middleware/authMiddleware.js';
+import userFileMiddleware from './middleware/userFileMiddleware.js';
 import { errorHandlerMiddleware } from './middleware/errorHandlerMiddleware.js';
 
 import __dirname from './dirname.js';
-
 logger.info(`__dirname - ${__dirname}`);
 
-dotenv.config({ path: path.join(__dirname, '.env') });
-
 const app = express();
-const { MongoClient } = mongodb;
 
 const PORT = process.env.PORT || 4000;
 const dbUri = process.env.MONGO_URI;
-
-const mongoClient = new MongoClient(dbUri, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
 
 if (process.env.NODE_ENV === 'development') {
   app.use(loggerMiddleware);
@@ -42,51 +33,12 @@ if (process.env.NODE_ENV === 'development') {
 app.use(express.json());
 app.use(fileUpload());
 
-app.use(function (req, res, next) {
-  const database = mongoClient.db('myFirstDatabase');
-  const bucket = new mongodb.GridFSBucket(database);
-
-  req.database = database;
-  req.bucket = bucket;
-  next();
-});
-
-app.get('/files/:fileName', async (req, res) => {
-  const { fileName } = req.params;
-
-  const file = await req.database.collection('fs.files').findOne({ filename: fileName });
-
-  // console.log(file);
-
-  // if (file.metadata.user !== req.userId) {
-  //   return res.sendStatus(401);
-  // }
-
-  const downloadStream = req.bucket.openDownloadStreamByName(fileName);
-  downloadStream.pipe(res);
-  downloadStream.on('error', () => res.sendStatus(404));
-});
-
-app.post('/files', (req, res) => {
-  if (!req.files || Object.keys(req.files).length === 0) {
-    return res.status(400).send('No file.');
-  }
-
-  const file = req.files.file.data;
-  const fileName = req.files.file.name;
-
-  Readable.from(file).pipe(req.bucket.openUploadStream(fileName));
-  res.send(fileName);
-});
-
-app.use('/files/assets', express.static(path.join(__dirname, 'assets')));
-app.use('/files', express.static(path.join(__dirname, '..', 'cameras')));
+app.use('/files', fileRoutes);
+app.use('/files/userfiles', userFileMiddleware, fileRoutes);
 
 app.use('/api/user', userRoutes);
 app.use('/api/cameras', cameraRoutes);
-app.use('/api/folders', folderRoutes);
-app.use('/api/files', filesRoutes);
-app.use('/api/screenshots', screenshotByTimeRoutes);
+app.use('/api/cameras', taskRoutes);
 
 app.get('/', (req, res) => {
   res.send('API is running....');

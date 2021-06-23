@@ -3,6 +3,7 @@ import { Readable } from 'stream';
 import { v4 as uuidv4 } from 'uuid';
 
 import User from '../models/user.js';
+import { getBucket } from '../dbConfig.js';
 
 import authMiddleware from '../middleware/authMiddleware.js';
 import { asyncHandler } from '../middleware/errorHandlerMiddleware.js';
@@ -20,10 +21,6 @@ router.post(
 
     const { token, user } = await userController.singUp({ payload: req.body, logger: req.logger });
     res.status(201).send({ token, user });
-
-    req.logger.info(
-      `res: ${req.method} - ${req.originalUrl} - ${res.statusCode} - ${res.statusMessage}`
-    );
   })
 );
 
@@ -35,11 +32,6 @@ router.post(
 
     const { token, user } = await userController.logIn({ payload: req.body, logger: req.logger });
     res.status(200).send({ token, user });
-
-    req.logger.info(
-      `res: ${req.method} - ${req.originalUrl} - ${res.statusCode} - ${res.statusMessage}`
-    );
-    req.logger.info(res);
   })
 );
 
@@ -49,10 +41,6 @@ router.get(
   asyncHandler(async (req, res) => {
     const { token, user } = await userController.auth({ userId: req.userId, logger: req.logger });
     res.status(200).send({ token, user });
-
-    req.logger.info(
-      `res: ${req.method} - ${req.originalUrl} - ${res.statusCode} - ${res.statusMessage}`
-    );
   })
 );
 
@@ -66,20 +54,39 @@ router.post(
       return res.status(400).send('No file.');
     }
 
-    const file = req.files.avatar.data;
+    // check file type
+
+    const fileData = req.files.avatar.data;
     const fileName = `${uuidv4()}.jpg`;
 
-    const metadata = {
-      size: 'original',
-      user: req.userId,
-    };
+    const bucket = getBucket();
+    const uploadStream = bucket.openUploadStream(fileName, { metadata });
 
-    Readable.from(file).pipe(req.bucket.openUploadStream(fileName, { metadata }));
+    Readable.from(fileData).pipe(uploadStream);
 
-    await User.updateOne({ _id: req.userId }, { avatar: fileName });
-    const user = await User.findOne({ _id: req.userId });
+    uploadStream.on('error', () => {
+      // console.log('error streem');
+      res.sendStatus(500);
+    });
 
-    res.send(user);
+    uploadStream.on('close', async () => {
+      // console.log('close streem');
+      const file = new File({
+        user: req.userId,
+        name: fileName,
+        original: fileName,
+      });
+
+      await file.save();
+
+      const user = await User.findOneAndUpdate(
+        { _id: req.userId },
+        { avatar: fileName },
+        { new: true }
+      );
+
+      res.status(201).send(user);
+    });
   })
 );
 
@@ -89,8 +96,13 @@ router.delete(
   asyncHandler(async (req, res) => {
     req.logger.info('userRouter.delete /avatar');
 
-    await User.updateOne({ _id: req.userId }, { avatar: 'no_img.jpg' });
-    const user = await User.findOne({ _id: req.userId });
+    const user = await User.findOneAndUpdate(
+      { _id: req.userId },
+      { avatar: 'no_img.jpg' },
+      { new: true }
+    );
+
+    // File.findByIdAndDelete();
 
     // delete file fom gridfs
 
@@ -106,10 +118,6 @@ router.get(
 
     const { user } = await userController.getOne({ userId: req.userId, logger: req.logger });
     res.status(200).send({ user });
-
-    req.logger.info(
-      `res: ${req.method} - ${req.originalUrl} - ${res.statusCode} - ${res.statusMessage}`
-    );
   })
 );
 
@@ -126,10 +134,6 @@ router.put(
     });
 
     res.status(201).send(user);
-
-    req.logger.info(
-      `res: ${req.method} - ${req.originalUrl} - ${res.statusCode} - ${res.statusMessage}`
-    );
   })
 );
 
@@ -141,10 +145,6 @@ router.delete(
 
     await userController.deleteOne({ userId: req.userId, logger: req.logger });
     res.status(204).send();
-
-    req.logger.info(
-      `res: ${req.method} - ${req.originalUrl} - ${res.statusCode} - ${res.statusMessage}`
-    );
   })
 );
 

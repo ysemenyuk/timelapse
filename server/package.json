@@ -4,8 +4,8 @@
   "description": "",
   "main": "./index.js",
   "scripts": {
-    "start": "node --trace-deprecation index.js",
-    "dev": "nodemon index.js"
+    "start": "node index.js",
+    "dev": "nodemon -r dotenv/config index.js"
   },
   "author": "",
   "license": "ISC",
