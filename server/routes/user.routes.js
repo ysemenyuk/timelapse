@@ -118,7 +118,7 @@ router.put(
       logger: req.logger,
     });
 
-    res.status(201).send({ user });
+    res.status(201).send(user);
 
     req.logger.info(
       `res: ${req.method} - ${req.originalUrl} - ${res.statusCode} - ${res.statusMessage}`

@@ -46,10 +46,13 @@ const ProfilePage = () => {
     e.preventDefault();
     if (password !== confirmPassword) {
       setMessage('Passwords do not match');
-    } else {
-      setMessage(null);
-      console.log({ name, email, password });
+      return;
     }
+    // setMessage(null);
+    console.log({ name, email, password });
+    const resp = await userRepo.update(user._id, { name, email, password });
+    console.log(resp.data);
+    dispatch(userActions.updateUser(resp.data));
   };
 
   const onDeleteUser = async (e) => {

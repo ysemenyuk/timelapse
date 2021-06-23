@@ -15,4 +15,6 @@ const createOne = async (data) => await instance.post(`/`, data);
 const updateOne = async (id, data) => await instance.put(`/${id}`, data);
 const deleteOne = async (id) => await instance.delete(`/${id}`);
 
-export default { getAll, getOne, createOne, updateOne, deleteOne };
+const getScreenshot = async (id) => await instance.get(`/${id}/screenshot`);
+
+export default { getAll, getOne, createOne, updateOne, deleteOne, getScreenshot };

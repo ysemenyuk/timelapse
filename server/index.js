@@ -12,7 +12,10 @@ import { Readable } from 'stream';
 import logger from './libs/logger.js';
 import userRoutes from './routes/user.routes.js';
 import cameraRoutes from './routes/camera.routes.js';
+import folderRoutes from './routes/folder.routes.js';
+import filesRoutes from './routes/file.routes.js';
 
+import authMiddleware from './middleware/authMiddleware.js';
 import loggerMiddleware from './middleware/loggerMiddleware.js';
 import { errorHandlerMiddleware } from './middleware/errorHandlerMiddleware.js';
 
@@ -34,7 +37,7 @@ const mongoClient = new MongoClient(dbUri, {
 });
 
 if (process.env.NODE_ENV === 'development') {
-  app.use(morgan('dev'));
+  // app.use(morgan('dev'));
   app.use(loggerMiddleware);
 }
 
@@ -54,7 +57,12 @@ app.get('/files/:fileName', async (req, res) => {
   const { fileName } = req.params;
 
   const file = await req.database.collection('fs.files').findOne({ filename: fileName });
-  console.log(file);
+
+  // console.log(file);
+
+  // if (file.metadata.user !== req.userId) {
+  //   return res.sendStatus(401);
+  // }
 
   const downloadStream = req.bucket.openDownloadStreamByName(fileName);
   downloadStream.pipe(res);
@@ -78,6 +86,8 @@ app.use('/files', express.static(path.join(__dirname, '..', 'cameras')));
 
 app.use('/api/user', userRoutes);
 app.use('/api/cameras', cameraRoutes);
+app.use('/api/folders', folderRoutes);
+app.use('/api/files', filesRoutes);
 
 app.get('/api/files', (req, res) => {
   res.send([]);

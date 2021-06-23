@@ -1,3 +1,4 @@
+import bcrypt from 'bcryptjs';
 import User from '../models/user.js';
 
 const getById = async ({ userId, logger }) => {
@@ -22,6 +23,8 @@ const createOne = async ({ payload, logger }) => {
 
 const updateOne = async ({ userId, payload, logger }) => {
   logger.info(`userRepository.updateOne userId: ${userId}`);
+
+  console.log(payload);
 
   const { name, email, password } = payload;
   const hashPassword = await bcrypt.hash(password, 8);

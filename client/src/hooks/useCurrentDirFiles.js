@@ -15,7 +15,7 @@ export default function (currentDir) {
       try {
         setIsSuccess(false);
         setIsLoading(true);
-        const { data } = await axios.get(`/api/files?parentId=${currentDir._id}`);
+        const { data } = await axios.get(`/api/files?parentId=60d262484de6470b3139a375`);
         // console.log(data);
         setFiles(data);
         setIsSuccess(true);
@@ -28,5 +28,5 @@ export default function (currentDir) {
     }
   }, [currentDir]);
 
-  return { files, fetchFilesStatus: { error, isLoading, isSuccess, isError } };
+  return { files, error, isLoading, isSuccess, isError };
 }

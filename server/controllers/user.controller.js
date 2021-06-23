@@ -61,17 +61,17 @@ const getOne = async ({ userId, logger }) => {
 
   const user = await userRepository.getById({ userId, logger });
 
-  return { user: _.pick(user, ['_id', 'name', 'email']) };
+  return { user: _.pick(user, ['_id', 'name', 'email', 'avatar']) };
 };
 
 const updateOne = async ({ userId, payload, logger }) => {
   logger.info(`userController.updateOne userId: ${userId}`);
 
-  await userRepository.updateOne({ userId, payload });
+  await userRepository.updateOne({ userId, payload, logger });
 
   const updatedUser = await userRepository.getById({ userId, logger });
 
-  return { user: _.pick(updatedUser, ['_id', 'name', 'email']) };
+  return { user: _.pick(updatedUser, ['_id', 'name', 'email', 'avatar']) };
 };
 
 const deleteOne = async ({ userId, logger }) => {

@@ -14,6 +14,11 @@ const tokenVerification = async () =>
     headers: getAuthHeader(),
   });
 
+const update = async (id, data) =>
+  await instance.put(`/${id}`, data, {
+    headers: getAuthHeader(),
+  });
+
 const uploadAvatar = async (data) =>
   await instance.post(`/avatar`, data, {
     headers: { ...getAuthHeader(), 'Content-Type': 'multipart/form-data' },
@@ -24,4 +29,4 @@ const deleteAvatar = async () =>
     headers: getAuthHeader(),
   });
 
-export default { singup, login, tokenVerification, uploadAvatar, deleteAvatar };
+export default { singup, login, tokenVerification, update, uploadAvatar, deleteAvatar };

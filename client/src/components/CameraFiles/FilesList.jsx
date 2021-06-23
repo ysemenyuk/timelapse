@@ -11,17 +11,12 @@ const FilesList = ({ files, onClickFile }) => {
   return files.map((file) => (
     <div
       key={file._id}
-      className='m-3'
+      className='m-3 col-2'
       display='block'
       role='button'
       onClick={() => onClickFile(file)}
     >
-      <img
-        src={file.type === 'dir' ? dirLogo : fileLogo}
-        width='60px'
-        height='60px'
-        className='img-thumbnail'
-      />
+      <img src={`/files/${file.preview}`} width='190px' height='107px' className='img-thumbnail' />
       <div>{file.name}</div>
     </div>
   ));

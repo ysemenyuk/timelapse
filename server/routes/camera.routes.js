@@ -5,6 +5,7 @@ import { Readable } from 'stream';
 import { v4 as uuidv4 } from 'uuid';
 
 import Camera from '../models/camera.js';
+import Folder from '../models/folder.js';
 import File from '../models/file.js';
 
 import authMiddleware from '../middleware/authMiddleware.js';
@@ -15,7 +16,7 @@ import cameraController from '../controllers/camera.controller.js';
 
 const router = express.Router();
 
-// router.use(authMiddleware);
+router.use(authMiddleware);
 
 router.get(
   '/',
@@ -117,27 +118,40 @@ router.get(
     const originalName = `${name}-orig.jpg`;
     const previewName = `${name}-prev.jpg`;
 
+    const camera = await Camera.findOne({ _id: req.params.id });
+
     const file = new File({
-      name: fileName,
-      type: 'jpg',
       user: req.userId,
       camera: req.params.id,
+      name: fileName,
       original: originalName,
       preview: previewName,
+      parent: camera.screenshots,
     });
 
-    const camera = await Camera.findOne({ _id: req.params.id });
+    const originalMetadata = {
+      size: 'original',
+      user: req.userId,
+      camera: req.params.id,
+      parent: camera.screenshots,
+    };
+
+    const previewMetadata = {
+      size: 'preview',
+      user: req.userId,
+      camera: req.params.id,
+      parent: camera.screenshots,
+    };
 
     const { data } = await axios.get(camera.jpegLink, { responseType: 'arraybuffer' });
     Readable.from(data).pipe(
-      req.bucket.openUploadStream(originalName, { metadata: { user: 'user1' } })
+      req.bucket.openUploadStream(originalName, { metadata: originalMetadata })
     );
 
     const prev = await sharp(data).resize(200).toBuffer();
-    Readable.from(prev).pipe(req.bucket.openUploadStream(previewName));
-
-    // const { data } = await axios.get(camera.jpegLink, { responseType: 'stream' });
-    // data.pipe(req.bucket.openUploadStream(originalName));
+    Readable.from(prev).pipe(
+      req.bucket.openUploadStream(previewName, { metadata: previewMetadata })
+    );
 
     file.save();
 

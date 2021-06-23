@@ -1,11 +1,13 @@
 import React from 'react';
-// import {useSelector, useDispatch } from 'react-redux';
-
-// import { formActions } from '../store/formSlice.js';
-// import cameraThunks from '../thunks/cameraThunks.js';
+import cameraRepository from '../../api//camera.repository.js';
 
 const ScreenshotStatus = ({ selectedCamera }) => {
   // const dispatch = useDispatch();
+
+  const onGetScreenshot = async (e) => {
+    const { data } = await cameraRepository.getScreenshot(selectedCamera._id);
+    console.log(data);
+  };
 
   if (selectedCamera === null) {
     return null;
@@ -22,11 +24,11 @@ const ScreenshotStatus = ({ selectedCamera }) => {
           </li>
           <li className='list-group-item d-flex'>
             <div className='me-3 w-50'>Start time</div>
-            <span>10:00 pm</span>
+            <span>10:00</span>
           </li>
           <li className='list-group-item d-flex'>
             <div className='me-3 w-50'>Stop time</div>
-            <span>18:00 pm</span>
+            <span>18:00</span>
           </li>
           <li className='list-group-item d-flex'>
             <div className='me-3 w-50'>Interval</div>
@@ -36,12 +38,9 @@ const ScreenshotStatus = ({ selectedCamera }) => {
       </div>
       <div className='d-grid gap-2 d-flex justify-content-start'>
         <button type='button' className='btn btn-sm btn-primary'>
-          Edit
-        </button>
-        <button type='button' className='btn btn-sm btn-primary'>
           Start
         </button>
-        <button type='button' className='btn btn-sm btn-primary'>
+        <button type='button' onClick={onGetScreenshot} className='btn btn-sm btn-primary'>
           GetOne
         </button>
       </div>

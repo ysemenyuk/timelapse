@@ -15,7 +15,7 @@ const CameraFiles = ({ selectedCamera }) => {
   useEffect(() => {
     if (selectedCamera !== null) {
       const selectedCameraDir = {
-        _id: selectedCamera.dir,
+        _id: selectedCamera.mainFolder,
         name: selectedCamera.name,
       };
       setCurrentDir(selectedCameraDir);
@@ -23,15 +23,15 @@ const CameraFiles = ({ selectedCamera }) => {
     }
   }, [selectedCamera]);
 
-  const { files, fetchFilesStatus } = useCurrentDirFiles(currentDir);
+  const fetchFiles = useCurrentDirFiles(currentDir);
 
   const clickFileHandler = (file) => {
-    if (file.type === 'dir') {
-      setCurrentDir(file);
-      setDirStack((prevState) => [...prevState, file]);
-    } else {
-      console.log('not dir');
-    }
+    console.log('click');
+  };
+
+  const clickDirHandler = (file) => {
+    setCurrentDir(file);
+    setDirStack((prevState) => [...prevState, file]);
   };
 
   const backClickHandler = () => {
@@ -53,7 +53,7 @@ const CameraFiles = ({ selectedCamera }) => {
           type='button'
           className='btn btn-sm btn-primary'
           onClick={backClickHandler}
-          disabled={fetchFilesStatus.isLoading || dirStack.length === 1}
+          disabled={fetchFiles.isLoading || dirStack.length === 1}
         >
           Back
         </button>
@@ -68,13 +68,13 @@ const CameraFiles = ({ selectedCamera }) => {
         ))}
       </div>
 
-      <div className='vh-100 d-flex flex-wrap p-3 border rounded overflow-auto'>
-        {fetchFilesStatus.isSuccess ? (
-          <FilesList files={files} onClickFile={clickFileHandler} />
-        ) : fetchFilesStatus.isLoading ? (
+      <div className='vh-100 d-flex flex-wrap align-content-start border rounded overflow-auto'>
+        {fetchFiles.isSuccess ? (
+          <FilesList files={fetchFiles.files} onClickFile={clickFileHandler} />
+        ) : fetchFiles.isLoading ? (
           <Spinner />
-        ) : fetchFilesStatus.isError ? (
-          <Error message={fetchFilesStatus.error} />
+        ) : fetchFiles.isError ? (
+          <Error message={fetchFiles.error} />
         ) : null}
       </div>
     </div>
