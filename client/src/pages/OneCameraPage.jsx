@@ -6,10 +6,10 @@ import cameraThunks from '../thunks/cameraThunks.js';
 import useThunkStatus from '../hooks/useThunkStatus.js';
 
 import CameraFiles from '../components/CameraFiles/CameraFiles.jsx';
-import Screenshots from '../components/Screenshots/Screenshots.jsx';
+// import Screenshots from '../components/Screenshots/Screenshots.jsx';
 // import VideoStatus from '../components/VideoStatus/VideoStatus.jsx';
-import MakeVideoFile from '../components/MakeVideoFile/MakeVideoFile.jsx';
-// import CameraScreenshot from '../components/CameraScreenshot/CameraScreenshot.jsx';
+// import MakeVideoFile from '../components/MakeVideoFile/MakeVideoFile.jsx';
+import CameraScreenshot from '../components/CameraScreenshot/CameraScreenshot.jsx';
 
 import Spinner from '../components/Spinner.jsx';
 import Error from '../components/Error.jsx';
@@ -30,10 +30,10 @@ const CameraPage = () => {
   return fetchStatus.isSuccess || selectedCamera ? (
     <div className='row'>
       <div className='col-3 px-3'>
-        {/* <CameraScreenshot selectedCamera={selectedCamera} /> */}
-        <Screenshots selectedCamera={selectedCamera} />
+        <CameraScreenshot selectedCamera={selectedCamera} />
+        {/* <Screenshots selectedCamera={selectedCamera} /> */}
         {/* <VideoStatus selectedCamera={selectedCamera} /> */}
-        <MakeVideoFile />
+        {/* <MakeVideoFile /> */}
       </div>
       <div className='col-9 px-3'>
         <CameraFiles selectedCamera={selectedCamera} />

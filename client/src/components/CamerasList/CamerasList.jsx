@@ -6,8 +6,8 @@ import { Link } from 'react-router-dom';
 import { cameraActions } from '../../store/cameraSlice.js';
 
 import List from './List.jsx';
-import Spinner from '../Spinner.jsx';
-import Error from '../Error.jsx';
+// import Spinner from '../Spinner.jsx';
+// import Error from '../Error.jsx';
 
 const CamerasList = ({ cameras, selectedCamera }) => {
   const dispatch = useDispatch();

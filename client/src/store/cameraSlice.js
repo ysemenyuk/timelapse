@@ -15,7 +15,6 @@ const cameraSlice = createSlice({
   },
   reducers: {
     selectCamera: (state, action) => {
-      // console.log('action', action);
       state.selectedCamera = action.payload;
     },
   },

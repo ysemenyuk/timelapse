@@ -20,7 +20,20 @@ const getScreenshot = async (id) => await instance.get(`/${id}/screenshot`);
 const getFiles = async (cameraId, parentId) =>
   await instance.get(`/${cameraId}/files?parentId=${parentId}`);
 
-const getTaskScreenshotByTime = async (cameraId) =>
-  await instance.get(`/${cameraId}/tasks?type=ScreenshotByTime`);
+const getFolders = async (cameraId, parentId) =>
+  await instance.get(`/${cameraId}/folders?parentId=${parentId}`);
 
-export default { getAll, getOne, createOne, updateOne, deleteOne, getScreenshot, getFiles };
+const getOneFolder = async (cameraId, folderId) =>
+  await instance.get(`/${cameraId}/folders/${folderId}`);
+
+export default {
+  getAll,
+  getOne,
+  createOne,
+  updateOne,
+  deleteOne,
+  getScreenshot,
+  getFiles,
+  getFolders,
+  getOneFolder,
+};

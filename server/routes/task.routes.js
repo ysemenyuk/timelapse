@@ -37,7 +37,7 @@ router.post(
       stopTime: req.body.stopTime,
     });
 
-    await screenshotsData.save();
+    await task.save();
 
     res.status(200).send(task);
   })

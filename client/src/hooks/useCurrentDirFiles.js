@@ -3,14 +3,12 @@ import axios from 'axios';
 
 import getAuthHeader from '../api/authHeader.js';
 
-export default function (currentDir) {
+export default async (currentDir) => {
   const [isLoading, setIsLoading] = useState(false);
-
   const [isSuccess, setIsSuccess] = useState(false);
-  const [files, setFiles] = useState([]);
-
   const [isError, setIsError] = useState(false);
-  const [error, setError] = useState(null);
+
+  const [files, setFiles] = useState([]);
 
   useEffect(async () => {
     try {
@@ -26,10 +24,9 @@ export default function (currentDir) {
     } catch (err) {
       // console.log(err);
       setIsError(true);
-      setError(err.messsage);
     }
     setIsLoading(false);
   }, []);
 
-  return { files, error, isLoading, isSuccess, isError };
-}
+  return { files, fetchStatus: { isLoading, isSuccess, isError } };
+};

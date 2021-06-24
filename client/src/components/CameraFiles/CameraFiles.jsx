@@ -1,80 +1,101 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+
+import fileThunks from '../../thunks/fileThunks.js';
+import folderThunks from '../../thunks/folderThunks.js';
+
+import useThunkStatus from '../../hooks/useThunkStatus.js';
+
+// import { folderActions } from '../../store/folderSlice.js';
 
 import FilesList from './FilesList.jsx';
+import FolderList from './FolderList.jsx';
+
 import Spinner from '../Spinner.jsx';
 import Error from '../Error.jsx';
 
-import useCurrentDirFiles from '../../hooks/useCurrentDirFiles.js';
-
 const CameraFiles = ({ selectedCamera }) => {
-  // console.log('camera files');
+  const { _id, mainFolder } = selectedCamera;
+  const cameraId = _id;
 
-  const [currentDir, setCurrentDir] = useState(null);
-  const [dirStack, setDirStack] = useState([]);
+  const dispatch = useDispatch();
+
+  const fetchFiles = useThunkStatus(fileThunks.fetchAll);
+  const fetchFolders = useThunkStatus(folderThunks.fetchAll);
+
+  const files = useSelector((state) => state.files);
+  const folders = useSelector((state) => state.folders);
 
   useEffect(() => {
-    if (selectedCamera !== null) {
-      const selectedCameraDir = {
-        _id: selectedCamera.mainFolder,
-        name: selectedCamera.name,
-      };
-      setCurrentDir(selectedCameraDir);
-      setDirStack([selectedCameraDir]);
-    }
+    dispatch(folderThunks.fetchOne({ cameraId, parentId: mainFolder }));
   }, [selectedCamera]);
 
-  const fetchFiles = useCurrentDirFiles(currentDir);
+  useEffect(() => {
+    if (folders.currentItem) {
+      dispatch(fileThunks.fetchAll({ cameraId, parentId: folders.currentItem._id }));
+      dispatch(folderThunks.fetchAll({ cameraId, parentId: folders.currentItem._id }));
+    }
+  }, [folders.currentItem]);
 
   const clickFileHandler = (file) => {
     console.log('click', file);
   };
 
-  const clickDirHandler = (file) => {
-    setCurrentDir(file);
-    setDirStack((prevState) => [...prevState, file]);
+  const clickFolderHandler = (folder) => {
+    console.log('click', folder);
+    // setCurrentDir(file);
+    // setDirStack((prevState) => [...prevState, file]);
   };
 
-  const backClickHandler = () => {
-    const backDir = dirStack[dirStack.length - 2];
-    setCurrentDir(backDir);
-    setDirStack((prevState) => prevState.slice(0, -1));
-  };
+  // const backClickHandler = () => {
+  //   const backDir = dirStack[dirStack.length - 2];
+  //   setCurrentDir(backDir);
+  //   setDirStack((prevState) => prevState.slice(0, -1));
+  // };
 
-  if (selectedCamera === null) {
-    return null;
-  }
+  // const refreshHandler = () => {
+  //   fetchFiles();
+  // };
 
   return (
     <div className='col-12 mb-3'>
       <h6 className='mb-3'>Files</h6>
 
-      <div className='mb-3 d-grid gap-2 d-flex justify-content-start'>
+      {/* <div className='mb-3 d-grid gap-2 d-flex justify-content-start'>
         <button
           type='button'
           className='btn btn-sm btn-primary'
           onClick={backClickHandler}
-          disabled={fetchFiles.isLoading || dirStack.length === 1}
+          // disabled={isLoading || dirStack.length === 1}
         >
           Back
         </button>
-        <button type='button' className='btn btn-sm btn-primary' disabled>
-          Button
+        <button
+          type='button'
+          className='btn btn-sm btn-primary'
+          onClick={refreshHandler}
+          // disabled={isLoading}
+        >
+          Refresh
         </button>
-      </div>
-
-      {/* <div className='mb-3'>
-        {dirStack.map((dir) => (
-          <span key={dir._id}>{` ${dir.name} /`}</span>
-        ))}
       </div> */}
 
+      <div className='mb-3'>
+        {folders.stack.map((folder) => (
+          <span key={folder._id}>{` ${folder.name} /`}</span>
+        ))}
+      </div>
+
       <div className='vh-100 d-flex flex-wrap align-content-start border rounded overflow-auto'>
-        {fetchFiles.isSuccess ? (
-          <FilesList files={fetchFiles.files} onClickFile={clickFileHandler} />
-        ) : fetchFiles.isLoading ? (
+        {fetchFolders.isSuccess && fetchFiles.isSuccess ? (
+          <>
+            <FolderList folders={folders.allItems} onClickFolder={clickFolderHandler} />
+            <FilesList files={files.allItems} onClickFile={clickFileHandler} />
+          </>
+        ) : fetchFolders.isLoading || fetchFiles.isLoading ? (
           <Spinner />
-        ) : fetchFiles.isError ? (
-          <Error message={fetchFiles.error} />
+        ) : fetchFolders.isError || fetchFiles.isLoading ? (
+          <Error message={'error'} />
         ) : null}
       </div>
     </div>

@@ -124,6 +124,8 @@ router.get(
 
     file.save();
 
+    console.log(file);
+
     res.status(200).send(file);
   })
 );
@@ -131,27 +133,44 @@ router.get(
 router.get(
   '/:id/files',
   asyncHandler(async (req, res) => {
-    req.logger.info('cameraRouter.get /:id/files?paretnId=123456');
+    req.logger.info(`cameraRouter.get /:id/files?parentId=${req.query.parentId}`);
 
     const files = await File.find({ parent: req.query.parentId });
+
+    console.log('files', files);
 
     res.status(200).send(files);
   })
 );
 
 router.get(
-  '/:id/folders',
+  '/:cameraId/folders/:folderId',
   asyncHandler(async (req, res) => {
-    req.logger.info('cameraRouter.get /:id/folders?paretnId=123456');
+    req.logger.info(`cameraRouter.get /:id/folders/${req.params.folderId}`);
 
-    const folders = await Folder.find({ parent: req.body.parentId });
+    const folders = await Folder.findOne({ _id: req.params.folderId });
+
+    console.log('folders', folders);
+
+    res.status(200).send(folders);
+  })
+);
+
+router.get(
+  '/:cameraId/folders',
+  asyncHandler(async (req, res) => {
+    req.logger.info(`cameraRouter.get /:id/folders?parentId=${req.query.parentId}`);
+
+    const folders = await Folder.find({ parent: req.query.parentId });
+
+    console.log('folders', folders);
 
     res.status(200).send(folders);
   })
 );
 
 router.post(
-  '/:id/folders',
+  '/:cameraId/folders',
   asyncHandler(async (req, res) => {
     req.logger.info('cameraRouter.post /:id/folders');
 
@@ -165,6 +184,8 @@ router.post(
     });
 
     await folder.save();
+
+    console.log(folder);
 
     res.status(200).send(folder);
   })
