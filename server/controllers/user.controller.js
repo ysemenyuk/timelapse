@@ -36,14 +36,14 @@ const logIn = async ({ payload, logger }) => {
   const user = await userRepository.getByEmail({ email, logger });
 
   if (!user) {
-    logger.error(`userController.singUp Invalid email`);
+    logger.error(`userController.logIn Invalid email`);
     throw new BadRequestError(`Invalid email`);
   }
 
   const isPassValid = bcrypt.compareSync(password, user.password);
 
   if (!isPassValid) {
-    logger.error(`userController.singUp Invalid password`);
+    logger.error(`userController.logIn Invalid password`);
     throw new BadRequestError(`Invalid password`);
   }
 

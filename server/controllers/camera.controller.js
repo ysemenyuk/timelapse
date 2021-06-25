@@ -1,22 +1,12 @@
-import axios from 'axios';
-import fs from 'fs';
-import path from 'path';
-
-const fsp = fs.promises;
-
-import __dirname from '../dirname.js';
-
 import cameraRepository from '../repositories/camera.repository.js';
 
 const getAll = async ({ userId, logger }) => {
   logger.info(`cameraController.getAll`);
-
   return await cameraRepository.getAll({ userId, logger });
 };
 
 const getOne = async ({ userId, cameraId, logger }) => {
   logger.info(`cameraController.getOne cameraId: ${cameraId}`);
-
   const camera = await cameraRepository.getOne({ userId, cameraId, logger });
 
   if (!camera) {
@@ -29,13 +19,11 @@ const getOne = async ({ userId, cameraId, logger }) => {
 
 const createOne = async ({ userId, payload, logger }) => {
   logger.info(`cameraController.createOne payload: ${payload}`);
-
   return await cameraRepository.createOne({ userId, payload, logger });
 };
 
 const updateOne = async ({ userId, cameraId, payload, logger }) => {
   logger.info(`cameraController.updateOne cameraId: ${cameraId}, payload: ${payload}`);
-
   const camera = await cameraRepository.getOne({ userId, cameraId, logger });
 
   if (!camera) {
@@ -44,13 +32,11 @@ const updateOne = async ({ userId, cameraId, payload, logger }) => {
   }
 
   await cameraRepository.updateOne({ userId, cameraId, payload, logger });
-
   return await cameraRepository.getOne({ userId, cameraId, logger });
 };
 
 const deleteOne = async ({ userId, cameraId, logger }) => {
   logger.info(`cameraController.deleteOne cameraId: ${cameraId}`);
-
   const camera = await cameraRepository.getOne({ userId, cameraId, logger });
 
   if (!camera) {

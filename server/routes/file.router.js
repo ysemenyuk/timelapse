@@ -1,26 +1,14 @@
 import express from 'express';
 
-// import File from '../models/file.js';
-
-// import authMiddleware from '../middleware/authMiddleware.js';
 import { asyncHandler } from '../middleware/errorHandlerMiddleware.js';
 import { getBucket } from '../dbConfig.js';
 
 const router = express.Router();
 
-// router.use(authMiddleware);
-
 router.get(
   '/:fileName',
   asyncHandler(async (req, res) => {
     const { fileName } = req.params;
-
-    // const file = await File.findOne({ filename: fileName });
-    // console.log(file);
-
-    // if (!file) {
-    //   return res.sendStatus(404);
-    // }
 
     const bucket = getBucket();
     const downloadStream = bucket.openDownloadStreamByName(fileName);

@@ -60,14 +60,16 @@ const CameraFiles = ({ selectedCamera }) => {
           type='button'
           className='btn btn-sm btn-primary'
           onClick={backClickHandler}
-          disabled={fetchFolders.isLoading || fetchFiles.isLoading}>
+          disabled={fetchFolders.isLoading || fetchFiles.isLoading}
+        >
           Back
         </button>
         <button
           type='button'
           className='btn btn-sm btn-primary'
           onClick={refreshHandler}
-          disabled={fetchFolders.isLoading || fetchFiles.isLoading}>
+          disabled={fetchFolders.isLoading || fetchFiles.isLoading}
+        >
           Refresh
         </button>
       </ButtonsGroup>
@@ -80,7 +82,7 @@ const CameraFiles = ({ selectedCamera }) => {
             <FoldersList folders={folders} onClickFolder={clickFolderHandler} />
             {files.map((file) => (
               <FilesListItem
-                name={file.name}
+                name={file.date}
                 icon={file.preview}
                 key={file._id}
                 onClickFile={clickFileHandler}

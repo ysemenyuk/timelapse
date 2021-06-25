@@ -1,21 +1,22 @@
-import path from 'path';
 import express from 'express';
-import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import fileUpload from 'express-fileupload';
 
 import mongoClient from './dbConfig.js';
 import logger from './libs/logger.js';
 
-import userRoutes from './routes/user.routes.js';
-import cameraRoutes from './routes/camera.routes.js';
-import taskRoutes from './routes/task.routes.js';
+import userRouter from './routes/user.router.js';
+import cameraRouter from './routes/camera.router.js';
+import cameraScreenshotRouter from './routes/cameraScreenshot.router.js';
+import cameraFolderRouter from './routes/cameraFolder.router.js';
+import cameraFileRouter from './routes/cameraFile.router.js';
+import cameraTaskRouter from './routes/cameraTask.router.js';
 
-import fileRoutes from './routes/file.routes.js';
+import fileRouter from './routes/file.router.js';
 
 import loggerMiddleware from './middleware/loggerMiddleware.js';
 // import authMiddleware from './middleware/authMiddleware.js';
-import userFileMiddleware from './middleware/userFileMiddleware.js';
+// import userFileMiddleware from './middleware/userFileMiddleware.js';
 import { errorHandlerMiddleware } from './middleware/errorHandlerMiddleware.js';
 
 import __dirname from './dirname.js';
@@ -33,12 +34,16 @@ if (process.env.NODE_ENV === 'development') {
 app.use(express.json());
 app.use(fileUpload());
 
-app.use('/files', fileRoutes);
-app.use('/files/userfiles', userFileMiddleware, fileRoutes);
+app.use('/files', fileRouter);
+// app.use('/files/userfiles', userFileMiddleware, userFileRouter);
 
-app.use('/api/user', userRoutes);
-app.use('/api/cameras', cameraRoutes);
-app.use('/api/cameras', taskRoutes);
+app.use('/api/user', userRouter);
+
+app.use('/api/cameras', cameraRouter);
+app.use('/api/cameras/:cameraId/screenshots', cameraScreenshotRouter);
+app.use('/api/cameras/:cameraId/folders', cameraFolderRouter);
+app.use('/api/cameras/:cameraId/files', cameraFileRouter);
+app.use('/api/cameras/:cameraId/tasks', cameraTaskRouter);
 
 app.get('/', (req, res) => {
   res.send('API is running....');

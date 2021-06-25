@@ -60,7 +60,7 @@ router.post(
     const fileName = `${uuidv4()}.jpg`;
 
     const bucket = getBucket();
-    const uploadStream = bucket.openUploadStream(fileName, { metadata });
+    const uploadStream = bucket.openUploadStream(fileName);
 
     Readable.from(fileData).pipe(uploadStream);
 
@@ -71,6 +71,7 @@ router.post(
 
     uploadStream.on('close', async () => {
       // console.log('close streem');
+
       const file = new File({
         user: req.userId,
         name: fileName,
@@ -133,7 +134,7 @@ router.put(
       logger: req.logger,
     });
 
-    res.status(201).send(user);
+    res.status(201).send({ user });
   })
 );
 
