@@ -5,7 +5,7 @@ import useCamerasList from '../hooks/useCamerasList.js';
 
 import CamerasList from '../components/CamerasList/CamerasList.jsx';
 import FormEditCamera from '../components/CameraForm/EditCameraForm.jsx';
-import Screenshot from '../components/CameraScreenshot/CameraScreenshot.jsx';
+import Screenshot from '../components/Screenshot/Screenshot.jsx';
 import CameraStatus from '../components/CameraStatus/CameraStatus.jsx';
 import CameraInfo from '../components/CameraInfo/CameraInfo.jsx';
 

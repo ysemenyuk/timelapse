@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react';
 
 import cameraRepository from '../../api/camera.repository.js';
 
-import ScreenshotsStatus from './Status.jsx';
-import ScreenshotsSettings from './Settings.jsx';
+import Status from './Status.jsx';
+import Settings from './Settings.jsx';
 
-const ScreenshotStatus = ({ selectedCamera }) => {
+const ScreenshotsByTime = ({ selectedCamera }) => {
   // const dispatch = useDispatch();
 
   const [screenshotsData, setScreenshotsData] = useState(null);
@@ -27,14 +27,11 @@ const ScreenshotStatus = ({ selectedCamera }) => {
 
   return (
     <div className='col-12 mb-4'>
-      <h6 className='mb-3'>Get screenshot by time</h6>
-      <ScreenshotsStatus screenshotsData={screenshotsData} />
-      <ScreenshotsSettings
-        screenshotsData={screenshotsData}
-        onGetOneScreenshot={getOneScreenshot}
-      />
+      <h6 className='mb-3'>Get screenshots by time</h6>
+      <Status screenshotsData={screenshotsData} />
+      <Settings screenshotsData={screenshotsData} onGetOneScreenshot={getOneScreenshot} />
     </div>
   );
 };
 
-export default ScreenshotStatus;
+export default ScreenshotsByTime;

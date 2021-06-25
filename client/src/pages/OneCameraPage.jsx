@@ -5,11 +5,11 @@ import { useParams } from 'react-router-dom';
 import cameraThunks from '../thunks/cameraThunks.js';
 import useThunkStatus from '../hooks/useThunkStatus.js';
 
-import CameraFiles from '../components/CameraFiles/CameraFiles.jsx';
-// import Screenshots from '../components/Screenshots/Screenshots.jsx';
-// import VideoStatus from '../components/VideoStatus/VideoStatus.jsx';
+import FileManager from '../components/FileManager/FileManager.jsx';
+// import ScreenshotsByTime from '../components/ScreenshotsByTime/ScreenshotsByTime.jsx';
+// import VideosByTime from '../components/VideosByTime/VideosByTime.jsx';
 // import MakeVideoFile from '../components/MakeVideoFile/MakeVideoFile.jsx';
-import CameraScreenshot from '../components/CameraScreenshot/CameraScreenshot.jsx';
+import Screenshot from '../components/Screenshot/Screenshot.jsx';
 
 import Spinner from '../components/Spinner.jsx';
 import Error from '../components/Error.jsx';
@@ -30,13 +30,13 @@ const CameraPage = () => {
   return fetchStatus.isSuccess || selectedCamera ? (
     <div className='row'>
       <div className='col-3 px-3'>
-        <CameraScreenshot selectedCamera={selectedCamera} />
+        <Screenshot selectedCamera={selectedCamera} />
         {/* <Screenshots selectedCamera={selectedCamera} /> */}
         {/* <VideoStatus selectedCamera={selectedCamera} /> */}
         {/* <MakeVideoFile /> */}
       </div>
       <div className='col-9 px-3'>
-        <CameraFiles selectedCamera={selectedCamera} />
+        <FileManager selectedCamera={selectedCamera} />
       </div>
     </div>
   ) : fetchStatus.isLoading ? (

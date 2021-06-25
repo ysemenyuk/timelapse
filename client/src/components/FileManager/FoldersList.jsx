@@ -1,9 +1,6 @@
 import React from 'react';
 
-const dirLogo = '/files/assets/folder-img.png';
-const fileLogo = '/files/assets/file-img.png';
-
-const FolderList = ({ folders, onClickFolder }) => {
+const FoldersList = ({ folders, onClickFolder }) => {
   if (folders.length === 0) {
     return null;
   }
@@ -14,12 +11,11 @@ const FolderList = ({ folders, onClickFolder }) => {
       className='m-3 col-2'
       display='block'
       role='button'
-      onClick={() => onClickFolder(folder)}
-    >
+      onClick={() => onClickFolder(folder)}>
       <img src={`/files/no_img.jpg`} width='190px' height='107px' className='img-thumbnail' />
       <div>{folder.name}</div>
     </div>
   ));
 };
 
-export default FolderList;
+export default FoldersList;

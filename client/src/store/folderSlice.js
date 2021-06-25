@@ -1,41 +1,41 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 import folderThunks from '../thunks/folderThunks.js';
-import cameraActions from './cameraSlice.js';
+import cameraThunks from '../thunks/cameraThunks.js';
 
-const { fetchAll, fetchOne } = folderThunks;
-
-// console.log("fileSlice");
+import { cameraActions } from './cameraSlice.js';
 
 const folderSlice = createSlice({
   name: 'folder',
   initialState: {
-    allItems: [],
-    currentItem: null,
+    folders: [],
+    currentFolder: null,
     stack: [],
   },
   reducers: {
-    setCurrentItem: (state, action) => {
-      state.currentItem = action.payload;
+    setCurrentFolder: (state, action) => {
+      state.currentFolder = action.payload;
     },
     pushToStack: (state, action) => {
+      state.currentFolder = action.payload;
       state.stack.push(action.payload);
     },
     popFromStack: (state, action) => {
       state.stack.pop();
+      state.currentFolder = state.stack.length ? state.stack[state.stack.length - 1] : null;
     },
   },
   extraReducers: {
     [cameraActions.selectCamera]: (state, action) => {
-      console.log('cameraActions.selectCamera action.payload -', action.payload);
-      // state.currentItem = ;
+      state.currentFolder = null;
+      state.stack = [];
     },
-    [fetchAll.fulfilled]: (state, action) => {
-      state.allItems = action.payload;
+    [folderThunks.fetchAll.fulfilled]: (state, action) => {
+      state.folders = action.payload;
     },
-    [fetchOne.fulfilled]: (state, action) => {
-      state.currentItem = action.payload;
-      state.stack = [action.payload];
+    [cameraThunks.fetchOne.fulfilled]: (state, action) => {
+      // state.currentFolder = null;
+      // state.stack = [];
     },
   },
 });

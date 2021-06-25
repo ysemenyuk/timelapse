@@ -33,7 +33,7 @@ const LoginPage = () => {
         .catch((e) => {
           setSubmitting(false);
           setFieldError('auth', e.message);
-          console.log('catch formik err -', e);
+          console.log('catch login formik err -', e);
         });
     },
   });
