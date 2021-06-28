@@ -12,8 +12,15 @@ router.get(
 
     const bucket = getBucket();
     const downloadStream = bucket.openDownloadStreamByName(fileName);
-    downloadStream.on('error', () => res.sendStatus(404));
-    downloadStream.pipe(res);
+
+    downloadStream
+      .pipe(res)
+      .on('error', () => res.sendStatus(404))
+      .on('close', () =>
+        req.logger.info(
+          `RES: ${req.originalUrl} - ${res.statusCode} - ${Date.now() - req.t1} msec`
+        )
+      );
   })
 );
 
@@ -33,6 +40,7 @@ router.post(
     Readable.from(file).pipe(uploadStream);
 
     res.send(fileName);
+    req.logger.info(`res: ${res.statusCode} - ${Date.now() - req.t1} msec`);
   })
 );
 

@@ -1,4 +1,5 @@
 import winston from 'winston';
+import colors from 'colors';
 
 const { createLogger, format, transports } = winston;
 

@@ -1,6 +1,8 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import fileUpload from 'express-fileupload';
+// import morgan from 'morgan';
+import colors from 'colors';
 
 import mongoClient from './dbConfig.js';
 import logger from './libs/logger.js';
@@ -20,6 +22,7 @@ import loggerMiddleware from './middleware/loggerMiddleware.js';
 import { errorHandlerMiddleware } from './middleware/errorHandlerMiddleware.js';
 
 import __dirname from './dirname.js';
+
 logger.info(`__dirname - ${__dirname}`);
 
 const app = express();
@@ -29,6 +32,7 @@ const dbUri = process.env.MONGO_URI;
 
 if (process.env.NODE_ENV === 'development') {
   app.use(loggerMiddleware);
+  // app.use(morgan('dev'));
 }
 
 app.use(express.json());
@@ -59,6 +63,7 @@ const start = async () => {
   try {
     await mongoClient.connect();
     logger.info(`mongoClient successfully Connected`);
+    console.log(`mongoClient successfully Connected ${colors.red(PORT)}`);
 
     await mongoose.connect(dbUri, {
       useNewUrlParser: true,

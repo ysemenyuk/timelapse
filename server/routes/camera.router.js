@@ -6,25 +6,27 @@ import { asyncHandler } from '../middleware/errorHandlerMiddleware.js';
 import cameraValidator from '../validators/camera.validators.ajv.js';
 import cameraController from '../controllers/camera.controller.js';
 
-const router = express.Router();
+const router = express.Router({ mergeParams: true });
 
 router.use(authMiddleware);
 
 router.get(
   '/',
   asyncHandler(async (req, res) => {
-    req.logger.info('cameraRouter GET /');
+    req.logger.info('cameraRouter GET /api/cameras/');
 
     const cameras = await cameraController.getAll({ userId: req.userId, logger: req.logger });
 
     res.status(200).send(cameras);
+
+    req.logger.info(`RES: ${req.originalUrl} - ${res.statusCode} - ${Date.now() - req.t1} msec`);
   })
 );
 
 router.get(
   '/:cameraId',
   asyncHandler(async (req, res) => {
-    req.logger.info('cameraRouter.get /:cameraId');
+    req.logger.info(`cameraRouter.get /api/cameras/${req.params.cameraId}`);
 
     const camera = await cameraController.getOne({
       userId: req.userId,
@@ -33,6 +35,8 @@ router.get(
     });
 
     res.status(200).send(camera);
+
+    req.logger.info(`RES: ${req.originalUrl} - ${res.statusCode} - ${Date.now() - req.t1} msec`);
   })
 );
 
@@ -40,7 +44,7 @@ router.post(
   '/',
   cameraValidator.createOne,
   asyncHandler(async (req, res) => {
-    req.logger.info('cameraRouter.post /');
+    req.logger.info('cameraRouter.post /api/cameras');
 
     const camera = await cameraController.createOne({
       userId: req.userId,

@@ -1,6 +1,8 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
+import cameraRepository from '../../api/camera.repository.js';
+
 import fileThunks from '../../thunks/fileThunks.js';
 import folderThunks from '../../thunks/folderThunks.js';
 
@@ -51,6 +53,11 @@ const CameraFiles = ({ selectedCamera }) => {
     dispatch(folderThunks.fetchAll({ cameraId, parentId }));
   };
 
+  const getOneScreenshotHandler = async (e) => {
+    const { data } = await cameraRepository.getScreenshot(selectedCamera._id);
+    console.log(data);
+  };
+
   return (
     <div className='col-12 mb-3'>
       <h6 className='mb-3'>Files</h6>
@@ -71,6 +78,14 @@ const CameraFiles = ({ selectedCamera }) => {
           disabled={fetchFolders.isLoading || fetchFiles.isLoading}
         >
           Refresh
+        </button>
+        <button
+          type='button'
+          className='btn btn-sm btn-primary'
+          onClick={getOneScreenshotHandler}
+          disabled={fetchFolders.isLoading || fetchFiles.isLoading}
+        >
+          GetOneScreenshot
         </button>
       </ButtonsGroup>
 

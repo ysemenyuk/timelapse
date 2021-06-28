@@ -15,7 +15,7 @@ const createOne = async (data) => await instance.post(`/`, data);
 const updateOne = async (id, data) => await instance.put(`/${id}`, data);
 const deleteOne = async (id) => await instance.delete(`/${id}`);
 
-const getScreenshot = async (id) => await instance.get(`/${id}/screenshot`);
+const getScreenshot = async (id) => await instance.get(`/${id}/screenshots`);
 
 const getFiles = async (cameraId, parentId) =>
   await instance.get(`/${cameraId}/files?parentId=${parentId}`);

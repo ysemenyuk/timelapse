@@ -4,7 +4,6 @@ export default async (req, res, next) => {
   // console.log('cameraMiddleware req.logger', req.logger);
   // console.log('cameraMiddleware req.params', req.params);
   // console.log('cameraMiddleware req.query', req.query);
-
   try {
     const camera = await CameraRepo.getOne({
       userId: req.userId,

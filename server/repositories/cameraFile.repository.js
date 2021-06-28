@@ -6,26 +6,38 @@ const getAll = async ({ userId, cameraId, query, logger }) => {
   return files;
 };
 
-const getOne = async ({ userId, cameraId, logger }) => {
-  logger.info(`cameraRepository.getOne cameraId: ${cameraId}`);
-  // return await Camera.findOne({ user: userId, _id: cameraId });
+const getOne = async ({ userId, cameraId, fileId, logger }) => {
+  logger.info(`cameraFileRepository.getOne fileId: ${fileId}`);
+  return await File.findOne({ user: userId, camera: cameraId, _id: fileId });
 };
 
-const createOne = async ({ userId, payload, logger }) => {
-  logger.info(`cameraRepository.createOne payload: ${payload}`);
-  // const camera = new Camera({ user: userId, ...payload });
-  // return await camera.save();
+const createOne = async ({ userId, cameraId, name, original, preview, parent, logger }) => {
+  logger.info(`cameraFileRepository.createOne fileName: ${name}`);
+
+  const file = new File({
+    user: userId,
+    camera: cameraId,
+    name,
+    original,
+    preview,
+    parent,
+  });
+
+  // console.log('cameraFileRepository.getScreenshot file', file);
+
+  file.save();
+
+  return file;
 };
 
 const updateOne = async ({ userId, cameraId, payload, logger }) => {
-  logger.info(`cameraRepository.updateOne cameraId: ${cameraId}, payload: ${payload}`);
+  // logger.info(`cameraFileRepository.updateOne cameraId: ${cameraId}, payload: ${payload}`);
   // return await Camera.updateOne({ user: userId, _id: cameraId }, payload);
 };
 
-const deleteOne = async ({ userId, cameraId, logger }) => {
-  logger.info(`cameraRepository.deleteOne cameraId: ${cameraId}`);
-  // const camera = await Camera.findOne({ user: userId, _id: cameraId });
-  // return await camera.remove();
+const deleteOne = async ({ userId, cameraId, fileId, logger }) => {
+  logger.info(`cameraFileRepository.deleteOne fileId: ${fileId}`);
+  return await File.findOneAndDelete({ user: userId, camera: cameraId, _id: fileId });
 };
 
 export default { getAll, getOne, createOne, updateOne, deleteOne };
