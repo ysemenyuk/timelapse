@@ -9,10 +9,4 @@ const mongoClient = new MongoClient(dbUri, {
   useUnifiedTopology: true,
 });
 
-export const getBucket = () => {
-  const database = mongoClient.db('myFirstDatabase');
-  const bucket = new mongodb.GridFSBucket(database);
-  return bucket;
-};
-
 export default mongoClient;

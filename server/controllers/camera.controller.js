@@ -1,16 +1,16 @@
 import cameraRepository from '../repositories/camera.repository.js';
 
 const getAll = async ({ userId, logger }) => {
-  logger.info(`cameraController.getAll`);
+  logger(`cameraController.getAll`);
   return await cameraRepository.getAll({ userId, logger });
 };
 
 const getOne = async ({ userId, cameraId, logger }) => {
-  logger.info(`cameraController.getOne cameraId: ${cameraId}`);
+  logger(`cameraController.getOne cameraId: ${cameraId}`);
   const camera = await cameraRepository.getOne({ userId, cameraId, logger });
 
   if (!camera) {
-    logger.error(`cameraController.getOne cameraId: ${cameraId} - not found`);
+    logger(`cameraController.getOne cameraId: ${cameraId} - not found`);
     throw new Error('camera not found');
   }
 
@@ -18,16 +18,16 @@ const getOne = async ({ userId, cameraId, logger }) => {
 };
 
 const createOne = async ({ userId, payload, logger }) => {
-  logger.info(`cameraController.createOne payload: ${payload}`);
+  logger(`cameraController.createOne payload: ${payload}`);
   return await cameraRepository.createOne({ userId, payload, logger });
 };
 
 const updateOne = async ({ userId, cameraId, payload, logger }) => {
-  logger.info(`cameraController.updateOne cameraId: ${cameraId}, payload: ${payload}`);
+  logger(`cameraController.updateOne cameraId: ${cameraId}, payload: ${payload}`);
   const camera = await cameraRepository.getOne({ userId, cameraId, logger });
 
   if (!camera) {
-    logger.error(`cameraController.updateOne cameraId: ${cameraId} - not found`);
+    logger(`cameraController.updateOne cameraId: ${cameraId} - not found`);
     throw new Error('camera not found');
   }
 
@@ -36,11 +36,11 @@ const updateOne = async ({ userId, cameraId, payload, logger }) => {
 };
 
 const deleteOne = async ({ userId, cameraId, logger }) => {
-  logger.info(`cameraController.deleteOne cameraId: ${cameraId}`);
+  logger(`cameraController.deleteOne cameraId: ${cameraId}`);
   const camera = await cameraRepository.getOne({ userId, cameraId, logger });
 
   if (!camera) {
-    logger.error(`cameraController.deleteOne cameraId: ${cameraId} - not found`);
+    logger(`cameraController.deleteOne cameraId: ${cameraId} - not found`);
     throw new Error('camera not found');
   }
 

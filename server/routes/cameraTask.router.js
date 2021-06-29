@@ -12,7 +12,7 @@ router.use(authMiddleware);
 router.get(
   '/:id/tasks',
   asyncHandler(async (req, res) => {
-    req.logger.info('task.routes get api/cameras/:id/tasks');
+    req.logger('task.routes get api/cameras/:id/tasks');
 
     const task = await Task.findOne({ camera: req.params.id });
 
@@ -23,7 +23,7 @@ router.get(
 router.post(
   '/:id/tasks',
   asyncHandler(async (req, res) => {
-    req.logger.info('task.routes post api/cameras/:id/tasks');
+    req.logger('task.routes post api/cameras/:id/tasks');
 
     console.log(req.body);
 

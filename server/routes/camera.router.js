@@ -13,20 +13,22 @@ router.use(authMiddleware);
 router.get(
   '/',
   asyncHandler(async (req, res) => {
-    req.logger.info('cameraRouter GET /api/cameras/');
+    req.logger('cameraRouter GET /api/cameras/');
 
     const cameras = await cameraController.getAll({ userId: req.userId, logger: req.logger });
 
     res.status(200).send(cameras);
 
-    req.logger.info(`RES: ${req.originalUrl} - ${res.statusCode} - ${Date.now() - req.t1} msec`);
+    req.logger(
+      `RES: ${req.method}-${req.originalUrl} -${res.statusCode} -${Date.now() - req.t1}ms`
+    );
   })
 );
 
 router.get(
   '/:cameraId',
   asyncHandler(async (req, res) => {
-    req.logger.info(`cameraRouter.get /api/cameras/${req.params.cameraId}`);
+    req.logger(`cameraRouter.get /api/cameras/${req.params.cameraId}`);
 
     const camera = await cameraController.getOne({
       userId: req.userId,
@@ -36,7 +38,9 @@ router.get(
 
     res.status(200).send(camera);
 
-    req.logger.info(`RES: ${req.originalUrl} - ${res.statusCode} - ${Date.now() - req.t1} msec`);
+    req.logger(
+      `RES: ${req.method}-${req.originalUrl} -${res.statusCode} -${Date.now() - req.t1}ms`
+    );
   })
 );
 
@@ -44,7 +48,7 @@ router.post(
   '/',
   cameraValidator.createOne,
   asyncHandler(async (req, res) => {
-    req.logger.info('cameraRouter.post /api/cameras');
+    req.logger('cameraRouter.post /api/cameras');
 
     const camera = await cameraController.createOne({
       userId: req.userId,
@@ -53,6 +57,10 @@ router.post(
     });
 
     res.status(201).send(camera);
+
+    req.logger(
+      `RES: ${req.method}-${req.originalUrl} -${res.statusCode} -${Date.now() - req.t1}ms`
+    );
   })
 );
 
@@ -60,7 +68,7 @@ router.put(
   '/:cameraId',
   cameraValidator.updateOne,
   asyncHandler(async (req, res) => {
-    req.logger.info('cameraRouter.put /:cameraId');
+    req.logger('cameraRouter.put /:cameraId');
 
     const camera = await cameraController.updateOne({
       userId: req.userId,
@@ -70,13 +78,17 @@ router.put(
     });
 
     res.status(201).send(camera);
+
+    req.logger(
+      `RES: ${req.method}-${req.originalUrl} -${res.statusCode} -${Date.now() - req.t1}ms`
+    );
   })
 );
 
 router.delete(
   '/:cameraId',
   asyncHandler(async (req, res) => {
-    req.logger.info('cameraRouter.delete /:cameraId');
+    req.logger('cameraRouter.delete /:cameraId');
 
     await cameraController.deleteOne({
       userId: req.userId,
@@ -85,6 +97,10 @@ router.delete(
     });
 
     res.status(204).send();
+
+    req.logger(
+      `RES: ${req.method}-${req.originalUrl} -${res.statusCode} -${Date.now() - req.t1}ms`
+    );
   })
 );
 

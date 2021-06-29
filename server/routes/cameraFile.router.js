@@ -14,9 +14,7 @@ router.use(userCameraMiddleware);
 router.get(
   '/',
   asyncHandler(async (req, res) => {
-    req.logger.info(
-      `cameraFileRouter GET api/cameras/:cameraId/files?parent=${req.query.parentId}`
-    );
+    req.logger(`cameraFileRouter.get api/cameras/:cameraId/files?parent=${req.query.parentId}`);
 
     // console.log('cameraFileRouter req.params', req.params);
     // console.log('cameraFileRouter req.query', req.query);
@@ -33,16 +31,44 @@ router.get(
 
     res.status(200).send(files);
 
-    req.logger.info(`RES: ${req.originalUrl} - ${res.statusCode} - ${Date.now() - req.t1} msec`);
+    req.logger(
+      `RES: ${req.method}-${req.originalUrl} -${res.statusCode} -${Date.now() - req.t1}ms`
+    );
+  })
+);
+
+router.get(
+  '/:fileId',
+  asyncHandler(async (req, res) => {
+    req.logger(`cameraFileRouter.get api/cameras/:cameraId/files/${req.params.fileId}`);
+
+    // console.log('cameraFileRouter req.params', req.params);
+    // console.log('cameraFileRouter req.query', req.query);
+    // console.log('cameraFileRouter req.cameraId', req.cameraId);
+
+    const file = await cameraFileController.getOne({
+      userId: req.userId,
+      cameraId: req.cameraId,
+      fileId: req.params.fileId,
+      logger: req.logger,
+    });
+
+    // console.log('cameraFileRouter file', file);
+
+    res.status(200).send(file);
+
+    req.logger(
+      `RES: ${req.method}-${req.originalUrl} -${res.statusCode} -${Date.now() - req.t1}ms`
+    );
   })
 );
 
 router.delete(
   '/:fileId',
   asyncHandler(async (req, res) => {
-    req.logger.info(`cameraFileRouter DELETE api/cameras/:cameraId/files/:fileId`);
+    req.logger(`cameraFileRouter.delete api/cameras/:cameraId/files/${req.params.fileId}`);
 
-    console.log('cameraFileRouter req.params', req.params);
+    // console.log('cameraFileRouter req.params', req.params);
 
     await cameraFileController.deleteOne({
       userId: req.userId,
@@ -52,6 +78,10 @@ router.delete(
     });
 
     res.status(204).send();
+
+    req.logger(
+      `RES: ${req.method}-${req.originalUrl} -${res.statusCode} -${Date.now() - req.t1}ms`
+    );
   })
 );
 

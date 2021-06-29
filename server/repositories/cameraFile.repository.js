@@ -1,18 +1,18 @@
 import File from '../models/file.js';
 
 const getAll = async ({ userId, cameraId, query, logger }) => {
-  logger.info(`cameraFileRepository.getAll cameraId: ${cameraId}`);
+  logger(`cameraFileRepository.getAll cameraId: ${cameraId}`);
   const files = await File.find({ user: userId, camera: cameraId, parent: query.parentId });
   return files;
 };
 
 const getOne = async ({ userId, cameraId, fileId, logger }) => {
-  logger.info(`cameraFileRepository.getOne fileId: ${fileId}`);
+  logger(`cameraFileRepository.getOne fileId: ${fileId}`);
   return await File.findOne({ user: userId, camera: cameraId, _id: fileId });
 };
 
 const createOne = async ({ userId, cameraId, name, original, preview, parent, logger }) => {
-  logger.info(`cameraFileRepository.createOne fileName: ${name}`);
+  logger(`cameraFileRepository.createOne fileName: ${name}`);
 
   const file = new File({
     user: userId,
@@ -23,21 +23,21 @@ const createOne = async ({ userId, cameraId, name, original, preview, parent, lo
     parent,
   });
 
-  // console.log('cameraFileRepository.getScreenshot file', file);
+  // console.log('screenshotRepository.createOne file', file);
 
   file.save();
 
   return file;
 };
 
-const updateOne = async ({ userId, cameraId, payload, logger }) => {
-  // logger.info(`cameraFileRepository.updateOne cameraId: ${cameraId}, payload: ${payload}`);
-  // return await Camera.updateOne({ user: userId, _id: cameraId }, payload);
-};
-
 const deleteOne = async ({ userId, cameraId, fileId, logger }) => {
-  logger.info(`cameraFileRepository.deleteOne fileId: ${fileId}`);
+  logger(`cameraFileRepository.deleteOne fileId: ${fileId}`);
   return await File.findOneAndDelete({ user: userId, camera: cameraId, _id: fileId });
 };
 
-export default { getAll, getOne, createOne, updateOne, deleteOne };
+const deleteMany = async ({ userId, cameraId, filesIds, logger }) => {
+  logger(`cameraFileRepository.deleteMany`);
+  // return await File.findOneAndDelete({ user: userId, camera: cameraId, _id: fileId });
+};
+
+export default { getAll, getOne, createOne, deleteOne, deleteMany };

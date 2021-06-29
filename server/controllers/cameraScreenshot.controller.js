@@ -1,22 +1,16 @@
-// import fs from 'fs';
-// import path from 'path';
-// import axios from 'axios';
-// import sharp from 'sharp';
-// import { Readable } from 'stream';
-
 import { v4 as uuidv4 } from 'uuid';
-import { getBucket } from '../dbConfig.js';
+import staticFileRepo from '../repositories/staticFile.repository.js';
 
 import cameraService from '../services/camera.service.js';
 import imageService from '../services/image.service.js';
 
 import cameraRepository from '../repositories/camera.repository.js';
-import cameraFileRepository from '../repositories/cameraFile.repository.js';
+import cameraFileRepo from '../repositories/cameraFile.repository.js';
 
 import __dirname from '../dirname.js';
 
 const getScreenshot = async ({ userId, cameraId, logger }) => {
-  logger.info(`cameraScreenshotController.getScreenshot cameraId: ${cameraId}`);
+  logger(`cameraScreenshotController.getScreenshot cameraId: ${cameraId}`);
 
   const name = uuidv4();
 
@@ -26,8 +20,6 @@ const getScreenshot = async ({ userId, cameraId, logger }) => {
 
   const camera = await cameraRepository.getOne({ userId, cameraId, logger });
 
-  // console.log('cameraScreenshotController.getScreenshot camera', camera);
-
   const dataStream = await cameraService.getScreenshot(camera.screenshotLink, 'stream');
 
   // dataStream.pipe(fs.createWriteStream(path.join(__dirname, 'image-original.jpg')));
@@ -35,10 +27,8 @@ const getScreenshot = async ({ userId, cameraId, logger }) => {
   //   .pipe(sharp().resize(200))
   //   .pipe(fs.createWriteStream(path.join(__dirname, 'image-preview.jpg')));
 
-  const bucket = getBucket();
-
-  const originalSizeUloadStream = bucket.openUploadStream(originalName);
-  const previewSizeUloadStream = bucket.openUploadStream(previewName);
+  const originalSizeUloadStream = staticFileRepo.openUploadStream(originalName);
+  const previewSizeUloadStream = staticFileRepo.openUploadStream(previewName);
 
   const resizeImageStream = imageService.resize(200);
 
@@ -61,7 +51,7 @@ const getScreenshot = async ({ userId, cameraId, logger }) => {
     console.log('close previewSizeUloadStream');
   });
 
-  const file = await cameraFileRepository.createOne({
+  const file = await cameraFileRepo.createOne({
     userId,
     cameraId,
     name: fileName,

@@ -1,9 +1,11 @@
 import CameraRepo from '../repositories/camera.repository.js';
 
 export default async (req, res, next) => {
-  // console.log('cameraMiddleware req.logger', req.logger);
-  // console.log('cameraMiddleware req.params', req.params);
-  // console.log('cameraMiddleware req.query', req.query);
+  // console.log('userCameraMiddleware req.logger', req.logger);
+  // console.log('userCameraMiddleware req.params', req.params);
+  // console.log('userCameraMiddleware req.query', req.query);
+
+  req.logger(`userCameraMiddleware cameraId: ${req.params.cameraId}`);
   try {
     const camera = await CameraRepo.getOne({
       userId: req.userId,

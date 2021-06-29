@@ -1,22 +1,36 @@
-import cameraFileRepository from '../repositories/cameraFile.repository.js';
+import cameraFileRepo from '../repositories/cameraFile.repository.js';
 
 const getAll = async ({ userId, cameraId, query, logger }) => {
-  logger.info(`cameraFileController.getAll cameraId: ${cameraId}`);
-  const files = await cameraFileRepository.getAll({ userId, cameraId, query, logger });
+  logger(`cameraFileController.getAll cameraId: ${cameraId}`);
+
+  const files = await cameraFileRepo.getAll({ userId, cameraId, query, logger });
   return files;
 };
 
-const deleteOne = async ({ userId, cameraId, fileId, logger }) => {
-  logger.info(`cameraFileController.deleteOne fileId: ${fileId}`);
+const getOne = async ({ userId, cameraId, fileId, logger }) => {
+  logger(`cameraFileController.getOne fileId: ${fileId}`);
 
-  const file = await cameraFileRepository.getOne({ userId, cameraId, fileId, logger });
+  const file = await cameraFileRepo.getOne({ userId, cameraId, fileId, logger });
 
   if (!file) {
-    logger.error(`cameraFileController.deleteOne fileId: ${fileId} - not found`);
+    logger(`cameraFileController.deleteOne fileId: ${fileId} - not found`);
     throw new Error('file not found');
   }
 
-  return await cameraFileRepository.deleteOne({ userId, cameraId, fileId, logger });
+  return file;
 };
 
-export default { getAll, deleteOne };
+const deleteOne = async ({ userId, cameraId, fileId, logger }) => {
+  logger(`cameraFileController.deleteOne fileId: ${fileId}`);
+
+  const file = await cameraFileRepo.getOne({ userId, cameraId, fileId, logger });
+
+  if (!file) {
+    logger(`cameraFileController.deleteOne fileId: ${fileId} - not found`);
+    throw new Error('file not found');
+  }
+
+  return await cameraFileRepo.deleteOne({ userId, cameraId, fileId, logger });
+};
+
+export default { getAll, getOne, deleteOne };
