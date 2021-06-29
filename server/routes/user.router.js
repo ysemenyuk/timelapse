@@ -1,9 +1,6 @@
 import Router from 'express';
-import { Readable } from 'stream';
-import { v4 as uuidv4 } from 'uuid';
 
-import User from '../models/user.js';
-import staticFileRepo from '../repositories/staticFile.repository.js';
+import User from '../models/User.js';
 
 import authMiddleware from '../middleware/authMiddleware.js';
 import { asyncHandler } from '../middleware/errorHandlerMiddleware.js';
@@ -50,6 +47,7 @@ router.get(
     req.logger('userRouter.get /api/user/auth');
 
     const { token, user } = await userController.auth({ userId: req.userId, logger: req.logger });
+
     res.status(200).send({ token, user });
 
     req.logger(
@@ -62,19 +60,25 @@ router.post(
   '/:userId/avatar',
   authMiddleware,
   asyncHandler(async (req, res) => {
-    req.logger('userRouter.post api/user/:userId/avatar');
+    req.logger(`userRouter.post api/user/${req.params.userId}/avatar`);
 
-    if (!req.files || req.files.avatar) {
+    console.log(1, req.files);
+
+    if (!req.files || !req.files.avatar) {
       return res.status(400).send('No file.');
     }
 
-    const updadatedUser = await userController.uploadAvatar({
+    const { user } = await userController.uploadAvatar({
       userId: req.userId,
       file: req.files.avatar,
       logger: req.logger,
     });
 
-    res.status(200).send(updadatedUser);
+    res.status(200).send({ user });
+
+    req.logger(
+      `RES: ${req.method}-${req.originalUrl} -${res.statusCode} -${Date.now() - req.t1}ms`
+    );
   })
 );
 
@@ -84,17 +88,16 @@ router.delete(
   asyncHandler(async (req, res) => {
     req.logger('userRouter.delete api/user/:userId/avatar');
 
-    const user = await User.findOneAndUpdate(
-      { _id: req.userId },
-      { avatar: 'no_img.jpg' },
-      { new: true }
+    const { user } = await userController.deleteAvatar({
+      userId: req.userId,
+      logger: req.logger,
+    });
+
+    res.send({ user });
+
+    req.logger(
+      `RES: ${req.method}-${req.originalUrl} -${res.statusCode} -${Date.now() - req.t1}ms`
     );
-
-    // File.findByIdAndDelete();
-
-    // delete file fom gridfs
-
-    res.send(user);
   })
 );
 
@@ -105,7 +108,12 @@ router.get(
     req.logger('userRouter.get /:id');
 
     const { user } = await userController.getOne({ userId: req.userId, logger: req.logger });
+
     res.status(200).send({ user });
+
+    req.logger(
+      `RES: ${req.method}-${req.originalUrl} -${res.statusCode} -${Date.now() - req.t1}ms`
+    );
   })
 );
 
@@ -122,6 +130,10 @@ router.put(
     });
 
     res.status(201).send({ user });
+
+    req.logger(
+      `RES: ${req.method}-${req.originalUrl} -${res.statusCode} -${Date.now() - req.t1}ms`
+    );
   })
 );
 
@@ -132,7 +144,12 @@ router.delete(
     req.logger('userRouter.delete /:id');
 
     await userController.deleteOne({ userId: req.userId, logger: req.logger });
+
     res.status(204).send();
+
+    req.logger(
+      `RES: ${req.method}-${req.originalUrl} -${res.statusCode} -${Date.now() - req.t1}ms`
+    );
   })
 );
 

@@ -1,13 +1,15 @@
 import mongoose from 'mongoose';
 
-const FolderSchema = mongoose.Schema({
+const CameraFileSchema = mongoose.Schema({
   name: { type: String, required: true },
   date: { type: Date, default: Date.now() },
   user: { type: mongoose.ObjectId, ref: 'User' },
   camera: { type: mongoose.ObjectId, ref: 'Camera' },
   parent: { type: mongoose.ObjectId, ref: 'Folder' },
+  original: { type: String }, // file name original size
+  preview: { type: String }, // file name small size
 });
 
-const Folder = mongoose.model('Folder', FolderSchema);
+const CameraFile = mongoose.model('CameraFile', CameraFileSchema);
 
-export default Folder;
+export default CameraFile;

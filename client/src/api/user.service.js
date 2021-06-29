@@ -14,19 +14,19 @@ const tokenVerification = async () =>
     headers: getAuthHeader(),
   });
 
-const update = async (id, data) =>
-  await instance.put(`/${id}`, data, {
+const updateOne = async (userId, data) =>
+  await instance.put(`/${userId}`, data, {
     headers: getAuthHeader(),
   });
 
-const uploadAvatar = async (data) =>
-  await instance.post(`/avatar`, data, {
+const uploadAvatar = async (userId, data) =>
+  await instance.post(`/${userId}/avatar`, data, {
     headers: { ...getAuthHeader(), 'Content-Type': 'multipart/form-data' },
   });
 
-const deleteAvatar = async () =>
-  await instance.delete(`/avatar`, {
+const deleteAvatar = async (userId) =>
+  await instance.delete(`/${userId}/avatar`, {
     headers: getAuthHeader(),
   });
 
-export default { singup, login, tokenVerification, update, uploadAvatar, deleteAvatar };
+export default { singup, login, tokenVerification, updateOne, uploadAvatar, deleteAvatar };

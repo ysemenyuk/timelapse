@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 import userThunks from '../thunks/userThunks.js';
 
-const { singup, login, tokenVerification } = userThunks;
+const { singup, login, tokenVerification, uploadAvatar, deleteAvatar, updateOne } = userThunks;
 
 const userInfo = JSON.parse(localStorage.getItem('userInfo'));
 
@@ -20,9 +20,6 @@ const userSlice = createSlice({
 
       state.isLoggedIn = false;
       state.user = null;
-    },
-    updateUser: (state, action) => {
-      state.user = action.payload;
     },
   },
   extraReducers: {
@@ -46,6 +43,15 @@ const userSlice = createSlice({
       // localStorage.setItem('userInfo', JSON.stringify(userInfo));
 
       state.isLoggedIn = true;
+      state.user = action.payload.user;
+    },
+    [uploadAvatar.fulfilled]: (state, action) => {
+      state.user = action.payload.user;
+    },
+    [deleteAvatar.fulfilled]: (state, action) => {
+      state.user = action.payload.user;
+    },
+    [updateOne.fulfilled]: (state, action) => {
       state.user = action.payload.user;
     },
     [tokenVerification.fulfilled]: (state, action) => {

@@ -1,20 +1,27 @@
-import File from '../models/file.js';
+import CameraFile from '../models/CameraFile.js';
 
-const getAll = async ({ userId, cameraId, query, logger }) => {
+const getAll = async ({ userId, cameraId, parentId, logger }) => {
   logger(`cameraFileRepository.getAll cameraId: ${cameraId}`);
-  const files = await File.find({ user: userId, camera: cameraId, parent: query.parentId });
-  return files;
+
+  return await CameraFile.find({ user: userId, camera: cameraId, parent: parentId });
 };
 
 const getOne = async ({ userId, cameraId, fileId, logger }) => {
   logger(`cameraFileRepository.getOne fileId: ${fileId}`);
-  return await File.findOne({ user: userId, camera: cameraId, _id: fileId });
+
+  return await CameraFile.findOne({ user: userId, camera: cameraId, _id: fileId });
+};
+
+const getOneByName = async ({ userId, cameraId, fileName, logger }) => {
+  logger(`cameraFileRepository.getOne fileName: ${fileName}`);
+
+  return await CameraFile.findOne({ user: userId, camera: cameraId, name: fileId });
 };
 
 const createOne = async ({ userId, cameraId, name, original, preview, parent, logger }) => {
   logger(`cameraFileRepository.createOne fileName: ${name}`);
 
-  const file = new File({
+  const file = new CameraFile({
     user: userId,
     camera: cameraId,
     name,
@@ -23,8 +30,6 @@ const createOne = async ({ userId, cameraId, name, original, preview, parent, lo
     parent,
   });
 
-  // console.log('screenshotRepository.createOne file', file);
-
   file.save();
 
   return file;
@@ -32,12 +37,16 @@ const createOne = async ({ userId, cameraId, name, original, preview, parent, lo
 
 const deleteOne = async ({ userId, cameraId, fileId, logger }) => {
   logger(`cameraFileRepository.deleteOne fileId: ${fileId}`);
-  return await File.findOneAndDelete({ user: userId, camera: cameraId, _id: fileId });
+
+  return await CameraFile.findOneAndDelete({ user: userId, camera: cameraId, _id: fileId });
 };
 
 const deleteMany = async ({ userId, cameraId, filesIds, logger }) => {
   logger(`cameraFileRepository.deleteMany`);
-  // return await File.findOneAndDelete({ user: userId, camera: cameraId, _id: fileId });
+
+  console.log('filesIds', filesIds);
+
+  return await CameraFile.deleteMany({ user: userId, camera: cameraId, _id: { $in: filesIds } });
 };
 
-export default { getAll, getOne, createOne, deleteOne, deleteMany };
+export default { getAll, getOne, getOneByName, createOne, deleteOne, deleteMany };

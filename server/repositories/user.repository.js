@@ -1,5 +1,5 @@
 import bcrypt from 'bcryptjs';
-import User from '../models/user.js';
+import User from '../models/User.js';
 
 const getById = async ({ userId, logger }) => {
   logger(`userRepository.getById userId: ${userId}`);
@@ -11,10 +11,9 @@ const getByEmail = async ({ email, logger }) => {
   return await User.findOne({ email });
 };
 
-const createOne = async ({ payload, logger }) => {
-  logger(`userRepository.createOne userId: ${userId}`);
+const createOne = async ({ email, password, logger }) => {
+  logger(`userRepository.createOne email: ${email}`);
 
-  const { email, password } = payload;
   const hashPassword = await bcrypt.hash(password, 8);
   const user = new User({ email, password: hashPassword });
 
@@ -44,8 +43,6 @@ const deleteOne = async ({ userId, logger }) => {
 
 const updateAvatar = async ({ userId, avatar, logger }) => {
   logger(`userRepository.updateAvatar userId: ${userId}`);
-
-  console.log(avatar);
 
   return await User.findOneAndUpdate({ _id: userId }, { avatar: avatar.name }, { new: true });
 };

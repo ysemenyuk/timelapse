@@ -1,4 +1,4 @@
-import Camera from '../models/camera.js';
+import Camera from '../models/Camera.js';
 
 const getAll = async ({ userId, logger }) => {
   logger(`cameraRepository.getAll userId: ${userId}`);

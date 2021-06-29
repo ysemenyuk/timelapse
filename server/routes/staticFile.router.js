@@ -2,24 +2,61 @@ import express from 'express';
 
 import { asyncHandler } from '../middleware/errorHandlerMiddleware.js';
 import staticFileRepo from '../repositories/staticFile.repository.js';
+import cameraFileRepo from '../repositories/cameraFile.repository.js';
 
 const router = express.Router();
 
 router.get(
   '/:fileName',
   asyncHandler(async (req, res) => {
-    const { fileName } = req.params;
+    req.logger(`staticFileRouter.get /files/${req.params.fileName}`);
 
-    const downloadStream = staticFileRepo.openDownloadStreamByName(fileName);
+    // find file in cameraFiles
+    // if not res 404
+    // else return fileId
+    // downloadStream by fileId
 
-    downloadStream
-      .pipe(res)
-      .on('error', () => res.sendStatus(404))
-      .on('close', () =>
-        req.logger(
-          `RES: ${req.method}-${req.originalUrl} -${res.statusCode} -${Date.now() - req.t1}ms`
-        )
+    const downloadStream = staticFileRepo.openDownloadStreamByName({
+      fileName: req.params.fileName,
+      logger: req.logger,
+    });
+
+    downloadStream.pipe(res);
+
+    downloadStream.on('error', () => {
+      res.sendStatus(404);
+      req.logger(
+        `RES: ${req.method}-${req.originalUrl} -${res.statusCode} -${Date.now() - req.t1}ms`
       );
+    });
+
+    downloadStream.on('end', () => {
+      // console.log('end');
+      req.logger(
+        `RES: ${req.method}-${req.originalUrl} -${res.statusCode} -${Date.now() - req.t1}ms`
+      );
+    });
+  })
+);
+
+router.delete(
+  '/:fileName',
+  asyncHandler(async (req, res) => {
+    req.logger(`staticFileRouter.delete /files/${req.params.fileName}`);
+
+    // find file in cameraFiles
+    // if not res 404
+    // else return fileId
+    // delete by fileId
+
+    const file = await cameraFileRepo.getOneByName({
+      userId: req.userId,
+      cameraId: req.cameraId,
+      fileName: req.params.fileName,
+      logger: req.logger,
+    });
+
+    console.log('file', file);
   })
 );
 

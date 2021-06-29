@@ -4,7 +4,6 @@ import fileUpload from 'express-fileupload';
 import debug from 'debug';
 
 import mongoClient from './dbConfig.js';
-// import logger from './libs/logger.js';
 
 import userRouter from './routes/user.router.js';
 import cameraRouter from './routes/camera.router.js';
@@ -18,7 +17,6 @@ import staticFileRouter from './routes/staticFile.router.js';
 // import winstonMiddleware from './middleware/winstonMiddleware.js';
 import debugMiddleware from './middleware/debugMiddleware.js';
 
-// import authMiddleware from './middleware/authMiddleware.js';
 // import userFileMiddleware from './middleware/userFileMiddleware.js';
 import { errorHandlerMiddleware } from './middleware/errorHandlerMiddleware.js';
 

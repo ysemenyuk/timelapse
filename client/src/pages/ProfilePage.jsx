@@ -3,8 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 
 import Message from '../components/Message.jsx';
 
-import userRepo from '../api/user.repository.js';
-import { userActions } from '../store/userSlice.js';
+import userThunks from '../thunks/userThunks.js';
 
 const ProfilePage = () => {
   const dispatch = useDispatch();
@@ -15,25 +14,17 @@ const ProfilePage = () => {
 
   const onUploadAvatar = async (e) => {
     e.preventDefault();
+
     const formData = new FormData();
     formData.append('avatar', file);
 
-    try {
-      const resp = await userRepo.uploadAvatar(formData);
-      dispatch(userActions.updateUser(resp.data));
-    } catch (err) {
-      console.log(err);
-    }
+    dispatch(userThunks.uploadAvatar({ userId: user._id, formData }));
   };
 
   const onDeleteAvatar = async (e) => {
     e.preventDefault();
-    try {
-      const resp = await userRepo.deleteAvatar();
-      dispatch(userActions.updateUser(resp.data));
-    } catch (err) {
-      console.log(err);
-    }
+
+    dispatch(userThunks.deleteAvatar({ userId: user._id }));
   };
 
   const [name, setName] = useState(user.name);
@@ -44,15 +35,16 @@ const ProfilePage = () => {
 
   const onUpdateUser = async (e) => {
     e.preventDefault();
+
     if (password.length < 6 || password !== confirmPassword) {
       setMessage('Invalid passwords');
       return;
     }
+
     setMessage(null);
-    console.log({ name, email, password });
-    const resp = await userRepo.update(user._id, { name, email, password });
-    console.log(resp.data);
-    dispatch(userActions.updateUser(resp.data));
+
+    const values = { name, email, password };
+    dispatch(userThunks.updateOne({ userId: user._id, values }));
   };
 
   const onDeleteUser = async (e) => {
@@ -79,7 +71,8 @@ const ProfilePage = () => {
               type='file'
               name='avatar'
               id='file-input'
-              onChange={(e) => setFile(e.target.files[0])}></input>
+              onChange={(e) => setFile(e.target.files[0])}
+            ></input>
           </div>
 
           <div className='d-grid gap-2 d-flex justify-content-start'>
@@ -110,7 +103,8 @@ const ProfilePage = () => {
               autoComplete='text'
               className='form-control'
               onChange={(e) => setName(e.target.value)}
-              value={name}></input>
+              value={name}
+            ></input>
           </div>
 
           <div className='mb-3'>
@@ -124,7 +118,8 @@ const ProfilePage = () => {
               autoComplete='email'
               className='form-control'
               onChange={(e) => setEmail(e.target.value)}
-              value={email}></input>
+              value={email}
+            ></input>
           </div>
 
           <div className='mb-3'>
@@ -138,7 +133,8 @@ const ProfilePage = () => {
               autoComplete='password'
               className='form-control'
               onChange={(e) => setPassword(e.target.value)}
-              value={password}></input>
+              value={password}
+            ></input>
           </div>
 
           <div className='mb-3'>
@@ -152,7 +148,8 @@ const ProfilePage = () => {
               autoComplete='password'
               className='form-control'
               onChange={(e) => setConfirmPassword(e.target.value)}
-              value={confirmPassword}></input>
+              value={confirmPassword}
+            ></input>
           </div>
 
           <div className='d-grid gap-2 d-flex justify-content-start'>

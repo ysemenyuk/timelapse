@@ -1,6 +1,8 @@
 import express from 'express';
 
-import Folder from '../models/folder.js';
+import CameraFolder from '../models/CameraFolder.js';
+
+import cameraFolderController from '../controllers/cameraFolder.controller.js';
 
 import authMiddleware from '../middleware/authMiddleware.js';
 import userCameraMiddleware from '../middleware/userCameraMiddleware.js';
@@ -16,20 +18,14 @@ router.post(
   asyncHandler(async (req, res) => {
     req.logger('cameraFolderRouter.post api/cameras/:cameraId/folders');
 
-    // console.log('cameraFolderRouter req.params', req.params);
-    // console.log('cameraFolderRouter req.query', req.query);
-    // console.log('cameraFolderRouter req.body', req.body);
-
-    const folder = new Folder({
+    const folder = new CameraFolder({
       name: req.body.name,
       user: req.userId,
-      camera: req.body.cameraId,
+      camera: req.cameraId,
       parent: req.body.parentId,
     });
 
     await folder.save();
-
-    // console.log('cameraFolderRouter folder', folder);
 
     res.status(200).send(folder);
 
@@ -46,12 +42,12 @@ router.get(
       `cameraFolderRouter.get api/cameras/:cameraId/folders?parent=${req.query.parentId}`
     );
 
-    // console.log('cameraFolderRouter req.params', req.params);
-    // console.log('cameraFolderRouter req.query', req.query);
-
-    const folders = await Folder.find({ parent: req.query.parentId });
-
-    // console.log('cameraFolderRouter folders', folders);
+    const folders = await cameraFolderController.getAll({
+      userId: req.userId,
+      cameraId: req.cameraId,
+      parentId: req.query.parentId,
+      logger: req.logger,
+    });
 
     res.status(200).send(folders);
 
@@ -66,12 +62,12 @@ router.get(
   asyncHandler(async (req, res) => {
     req.logger(`cameraFolderRouter.get api/cameras/:cameraId/folders/${req.params.folderId}`);
 
-    // console.log('cameraFolderRouter req.params', req.params);
-    // console.log('cameraFolderRouter req.query', req.query);
-
-    const folder = await Folder.findOne({ _id: req.params.folderId });
-
-    // console.log('cameraFolderRouter folder', folder);
+    const folder = await cameraFolderController.getOne({
+      userId: req.userId,
+      cameraId: req.cameraId,
+      folderId: req.params.folderId,
+      logger: req.logger,
+    });
 
     res.status(200).send(folder);
 
@@ -86,10 +82,12 @@ router.delete(
   asyncHandler(async (req, res) => {
     req.logger(`cameraFolderRouter.delete api/cameras/:cameraId/folders/${req.params.folderId}`);
 
-    // console.log('cameraFolderRouter req.params', req.params);
-    // console.log('cameraFolderRouter req.query', req.query);
-
-    await Folder.findOneAndDelete({ user: userId, camera: cameraId, _id: fileId });
+    await cameraFolderController.deleteOne({
+      userId: req.userId,
+      cameraId: req.cameraId,
+      folderId: req.params.folderId,
+      logger: req.logger,
+    });
 
     res.status(204).send();
 

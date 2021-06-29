@@ -16,14 +16,10 @@ router.get(
   asyncHandler(async (req, res) => {
     req.logger(`cameraFileRouter.get api/cameras/:cameraId/files?parent=${req.query.parentId}`);
 
-    // console.log('cameraFileRouter req.params', req.params);
-    // console.log('cameraFileRouter req.query', req.query);
-    // console.log('cameraFileRouter req.cameraId', req.cameraId);
-
     const files = await cameraFileController.getAll({
       userId: req.userId,
       cameraId: req.cameraId,
-      query: req.query,
+      parentId: req.query.parentId,
       logger: req.logger,
     });
 
@@ -41,10 +37,6 @@ router.get(
   '/:fileId',
   asyncHandler(async (req, res) => {
     req.logger(`cameraFileRouter.get api/cameras/:cameraId/files/${req.params.fileId}`);
-
-    // console.log('cameraFileRouter req.params', req.params);
-    // console.log('cameraFileRouter req.query', req.query);
-    // console.log('cameraFileRouter req.cameraId', req.cameraId);
 
     const file = await cameraFileController.getOne({
       userId: req.userId,
@@ -67,8 +59,6 @@ router.delete(
   '/:fileId',
   asyncHandler(async (req, res) => {
     req.logger(`cameraFileRouter.delete api/cameras/:cameraId/files/${req.params.fileId}`);
-
-    // console.log('cameraFileRouter req.params', req.params);
 
     await cameraFileController.deleteOne({
       userId: req.userId,

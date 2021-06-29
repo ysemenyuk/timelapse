@@ -17,6 +17,8 @@ const singUp = async ({ payload, logger }) => {
 
   const { email, password } = payload;
 
+  console.log('payload', payload);
+
   const user = await userRepository.getByEmail({ email, logger });
 
   if (user) {
@@ -25,11 +27,14 @@ const singUp = async ({ payload, logger }) => {
   }
 
   const newUser = await userRepository.createOne({
-    payload: { email, password },
+    email,
+    password,
     logger,
   });
 
-  const token = jwt.sign(user._id);
+  console.log('newUser', newUser);
+
+  const token = jwt.sign(newUser._id);
 
   return { token, user: _.pick(newUser, ['_id', 'name', 'email', 'avatar']) };
 };
@@ -80,34 +85,54 @@ const uploadAvatar = async ({ userId, file, logger }) => {
 
   // check file type
 
-  console.log(1, file.mimetype);
-  console.log(2, file.size);
-  console.log(3, file.name);
-
   const fileData = file.data;
-  const fileName = `${uuidv4()}.jpg`;
+  const fileName = `${uuidv4()}.${file.mimetype.split('/')[1]}`;
 
-  const uploadStream = staticFileRepo.openUploadStream(fileName);
+  const uploadStream = staticFileRepo.openUploadStream({ fileName, logger });
 
   Readable.from(fileData).pipe(uploadStream);
 
-  uploadStream.on('error', () => {
-    // console.log('error streem');
-    throw new Error('file upload error');
-  });
-
-  uploadStream.on('close', async () => {
-    // console.log('close streem');
-
-    const avatar = await userFileRepository.createOne({
-      user: req.userId,
-      name: fileName,
+  return new Promise((resolve, reject) => {
+    uploadStream.on('error', () => {
+      console.log('error uploadStream streem');
+      reject('file upload error');
     });
 
-    const user = await userRepository.updateAvatar(avatar);
+    uploadStream.on('finish', () => {
+      console.log('finish uploadStream streem');
+    });
 
-    return user;
+    uploadStream.on('close', async () => {
+      console.log('close uploadStream streem');
+
+      const avatar = await userFileRepository.createOne({
+        user: userId,
+        name: fileName,
+        type: file.mimetype,
+        logger,
+      });
+
+      // console.log('avatar', avatar);
+
+      // delete old file from gridfs
+
+      const user = await userRepository.updateAvatar({ userId, avatar, logger });
+
+      resolve({ user: _.pick(user, ['_id', 'name', 'email', 'avatar']) });
+    });
   });
+};
+
+const deleteAvatar = async ({ userId, logger }) => {
+  logger(`userController.deleteAvatar userId: ${userId}`);
+
+  // delete old file fom gridfs
+
+  const avatar = { name: 'no_img.jpg' };
+
+  const user = await userRepository.updateAvatar({ userId, avatar, logger });
+
+  return { user: _.pick(user, ['_id', 'name', 'email', 'avatar']) };
 };
 
 const updateOne = async ({ userId, payload, logger }) => {
@@ -129,6 +154,7 @@ export default {
   logIn,
   auth,
   uploadAvatar,
+  deleteAvatar,
   getOne,
   updateOne,
   deleteOne,

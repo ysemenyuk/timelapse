@@ -30,10 +30,10 @@ const getScreenshot = async ({ userId, cameraId, logger }) => {
   const originalSizeUloadStream = staticFileRepo.openUploadStream(originalName);
   const previewSizeUloadStream = staticFileRepo.openUploadStream(previewName);
 
-  const resizeImageStream = imageService.resize(200);
+  const resizeImage = imageService.resize(200);
 
   dataStream.pipe(originalSizeUloadStream);
-  dataStream.pipe(resizeImageStream).pipe(previewSizeUloadStream);
+  dataStream.pipe(resizeImage).pipe(previewSizeUloadStream);
 
   originalSizeUloadStream.on('error', () => {
     console.log('error originalSizeUloadStream');
