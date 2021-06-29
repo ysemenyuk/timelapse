@@ -18,19 +18,19 @@ const getOneByName = async ({ userId, cameraId, fileName, logger }) => {
   return await CameraFile.findOne({ user: userId, camera: cameraId, name: fileId });
 };
 
-const createOne = async ({ userId, cameraId, name, original, preview, parent, logger }) => {
+const createOne = async ({ user, camera, name, original, preview, parent, logger }) => {
   logger(`cameraFileRepository.createOne fileName: ${name}`);
 
   const file = new CameraFile({
-    user: userId,
-    camera: cameraId,
+    user,
+    camera,
     name,
     original,
     preview,
     parent,
   });
 
-  file.save();
+  await file.save();
 
   return file;
 };

@@ -7,16 +7,17 @@ import imageService from '../services/image.service.js';
 import cameraRepository from '../repositories/camera.repository.js';
 import cameraFileRepo from '../repositories/cameraFile.repository.js';
 
-import __dirname from '../dirname.js';
+// import __dirname from '../dirname.js';
+import { promisifyUploadStream } from '../utils/index.js';
 
-const getScreenshot = async ({ userId, cameraId, logger }) => {
-  logger(`cameraScreenshotController.getScreenshot cameraId: ${cameraId}`);
+const createScreenshot = async ({ userId, cameraId, logger }) => {
+  logger(`cameraScreenshotController.createScreenshot cameraId: ${cameraId}`);
 
   const name = uuidv4();
 
   const fileName = `${name}.jpg`;
-  const originalName = `${name}-orig.jpg`;
-  const previewName = `${name}-prev.jpg`;
+  const originalFileName = `${name}-orig.jpg`;
+  const previewFileName = `${name}-prev.jpg`;
 
   const camera = await cameraRepository.getOne({ userId, cameraId, logger });
 
@@ -27,43 +28,39 @@ const getScreenshot = async ({ userId, cameraId, logger }) => {
   //   .pipe(sharp().resize(200))
   //   .pipe(fs.createWriteStream(path.join(__dirname, 'image-preview.jpg')));
 
-  const originalSizeUloadStream = staticFileRepo.openUploadStream(originalName);
-  const previewSizeUloadStream = staticFileRepo.openUploadStream(previewName);
+  const originalFileUloadStream = staticFileRepo.openUploadStream({
+    fileName: originalFileName,
+    logger,
+  });
+
+  const previewFileUloadStream = staticFileRepo.openUploadStream({
+    fileName: previewFileName,
+    logger,
+  });
 
   const resizeImage = imageService.resize(200);
 
-  dataStream.pipe(originalSizeUloadStream);
-  dataStream.pipe(resizeImage).pipe(previewSizeUloadStream);
+  dataStream.pipe(originalFileUloadStream);
+  dataStream.pipe(resizeImage).pipe(previewFileUloadStream);
 
-  originalSizeUloadStream.on('error', () => {
-    console.log('error originalSizeUloadStream');
-  });
+  const p1 = promisifyUploadStream(originalFileUloadStream);
+  const p2 = promisifyUploadStream(previewFileUloadStream);
 
-  originalSizeUloadStream.on('close', async () => {
-    console.log('close originalSizeUloadStream');
-  });
-
-  previewSizeUloadStream.on('error', () => {
-    console.log('error previewSizeUloadStream');
-  });
-
-  previewSizeUloadStream.on('close', async () => {
-    console.log('close previewSizeUloadStream');
-  });
+  await Promise.all([p1, p2]);
 
   const file = await cameraFileRepo.createOne({
-    userId,
-    cameraId,
+    user: userId,
+    camera: cameraId,
     name: fileName,
-    original: originalName,
-    preview: previewName,
+    original: originalFileName,
+    preview: previewFileName,
     parent: camera.screenshotsFolder,
     logger,
   });
 
-  // console.log('cameraScreenshotController.getScreenshot file', file);
+  // console.log('cameraScreenshotController.createScreenshot file', file);
 
   return file;
 };
 
-export default { getScreenshot };
+export default { createScreenshot };

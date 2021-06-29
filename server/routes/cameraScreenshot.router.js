@@ -12,20 +12,20 @@ const router = express.Router({ mergeParams: true });
 router.use(authMiddleware);
 router.use(userCameraMiddleware);
 
-router.get(
+router.post(
   '/',
   asyncHandler(async (req, res) => {
-    req.logger('cameraScreenshotRouter.get api/cameras/:cameraId/screenshots');
+    req.logger('cameraScreenshotRouter.post api/cameras/:cameraId/screenshots');
 
-    const screenshot = await cameraScreenshotController.getScreenshot({
+    const screenshot = await cameraScreenshotController.createScreenshot({
       userId: req.userId,
       cameraId: req.cameraId,
       logger: req.logger,
     });
 
-    console.log('cameraScreenshotRouter screenshot:', screenshot);
+    // console.log('cameraScreenshotRouter screenshot:', screenshot);
 
-    res.status(200).send(screenshot);
+    res.status(201).send(screenshot);
 
     req.logger(
       `RES: ${req.method}-${req.originalUrl} -${res.statusCode} -${Date.now() - req.t1}ms`

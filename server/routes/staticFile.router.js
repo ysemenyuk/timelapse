@@ -47,7 +47,7 @@ router.delete(
     // find file in cameraFiles
     // if not res 404
     // else return fileId
-    // delete by fileId
+    // delete by fileId (prev and original)
 
     const file = await cameraFileRepo.getOneByName({
       userId: req.userId,

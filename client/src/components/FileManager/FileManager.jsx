@@ -1,17 +1,15 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
-import cameraRepository from '../../api/camera.repository.js';
-
 import fileThunks from '../../thunks/fileThunks.js';
-import folderThunks from '../../thunks/folderThunks.js';
+import cameraThunks from '../../thunks/cameraThunks.js';
 
 import useThunkStatus from '../../hooks/useThunkStatus.js';
 
-import { folderActions } from '../../store/folderSlice.js';
+import { fileActions } from '../../store/fileSlice.js';
 
 import ListBox from './ListBox.jsx';
-import FilesListItem from './FilesListItem.jsx';
+import FilesList from './FilesList.jsx';
 import FoldersList from './FoldersList.jsx';
 import Breadcrumbs from './Breadcrumbs.jsx';
 
@@ -22,18 +20,17 @@ import Error from '../Error.jsx';
 const CameraFiles = ({ selectedCamera }) => {
   const dispatch = useDispatch();
 
-  const fetchFiles = useThunkStatus(fileThunks.fetchAll);
-  const fetchFolders = useThunkStatus(folderThunks.fetchAll);
+  const fetchFiles = useThunkStatus(fileThunks.fetchFiles);
+  const fetchFolders = useThunkStatus(fileThunks.fetchFolders);
 
-  const { files } = useSelector((state) => state.files);
-  const { folders, currentFolder, stack } = useSelector((state) => state.folders);
+  const { files, folders, currentFolder, stack } = useSelector((state) => state.files);
 
   const cameraId = selectedCamera._id;
   const parentId = currentFolder ? currentFolder._id : selectedCamera.mainFolder;
 
   useEffect(() => {
-    dispatch(fileThunks.fetchAll({ cameraId, parentId }));
-    dispatch(folderThunks.fetchAll({ cameraId, parentId }));
+    dispatch(fileThunks.fetchFiles({ cameraId, parentId }));
+    dispatch(fileThunks.fetchFolders({ cameraId, parentId }));
   }, [currentFolder]);
 
   const clickFileHandler = (file) => {
@@ -41,21 +38,20 @@ const CameraFiles = ({ selectedCamera }) => {
   };
 
   const clickFolderHandler = (folder) => {
-    dispatch(folderActions.pushToStack(folder));
+    dispatch(fileActions.pushToStack(folder));
   };
 
-  const backClickHandler = () => {
-    dispatch(folderActions.popFromStack());
+  const backHandler = () => {
+    dispatch(fileActions.popFromStack());
   };
 
   const refreshHandler = () => {
-    dispatch(fileThunks.fetchAll({ cameraId, parentId }));
-    dispatch(folderThunks.fetchAll({ cameraId, parentId }));
+    dispatch(fileThunks.fetchFiles({ cameraId, parentId }));
+    dispatch(fileThunks.fetchFolders({ cameraId, parentId }));
   };
 
-  const getOneScreenshotHandler = async (e) => {
-    const { data } = await cameraRepository.getScreenshot(selectedCamera._id);
-    console.log(data);
+  const createScreenshotHandler = async (e) => {
+    dispatch(cameraThunks.createScreenshot(cameraId));
   };
 
   return (
@@ -66,26 +62,23 @@ const CameraFiles = ({ selectedCamera }) => {
         <button
           type='button'
           className='btn btn-sm btn-primary'
-          onClick={backClickHandler}
-          disabled={fetchFolders.isLoading || fetchFiles.isLoading}
-        >
+          onClick={backHandler}
+          disabled={fetchFolders.isLoading || fetchFiles.isLoading}>
           Back
         </button>
         <button
           type='button'
           className='btn btn-sm btn-primary'
           onClick={refreshHandler}
-          disabled={fetchFolders.isLoading || fetchFiles.isLoading}
-        >
+          disabled={fetchFolders.isLoading || fetchFiles.isLoading}>
           Refresh
         </button>
         <button
           type='button'
           className='btn btn-sm btn-primary'
-          onClick={getOneScreenshotHandler}
-          disabled={fetchFolders.isLoading || fetchFiles.isLoading}
-        >
-          GetOneScreenshot
+          onClick={createScreenshotHandler}
+          disabled={fetchFolders.isLoading || fetchFiles.isLoading}>
+          CreateScreenshot
         </button>
       </ButtonsGroup>
 
@@ -95,18 +88,11 @@ const CameraFiles = ({ selectedCamera }) => {
         {fetchFolders.isSuccess && fetchFiles.isSuccess ? (
           <>
             <FoldersList folders={folders} onClickFolder={clickFolderHandler} />
-            {files.map((file) => (
-              <FilesListItem
-                name={file.date}
-                icon={file.preview}
-                key={file._id}
-                onClickFile={clickFileHandler}
-              />
-            ))}
+            <FilesList files={files} onClickFile={clickFileHandler} />
           </>
         ) : fetchFolders.isLoading || fetchFiles.isLoading ? (
           <Spinner />
-        ) : fetchFolders.isError || fetchFiles.isLoading ? (
+        ) : fetchFolders.isError || fetchFiles.isError ? (
           <Error message={'error'} />
         ) : null}
       </ListBox>

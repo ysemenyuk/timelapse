@@ -12,11 +12,11 @@ const getOne = async ({ userId, fileId, logger }) => {
   return await UserFile.findOne({ user: userId, _id: fileId });
 };
 
-const createOne = async ({ userId, name, type, logger }) => {
+const createOne = async ({ user, name, type, logger }) => {
   logger(`userFileRepository.createOne fileName: ${name}`);
 
   const file = new UserFile({
-    user: userId,
+    user,
     type,
     name,
   });

@@ -1,20 +1,53 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
-import cameraRepo from '../api/camera.repository.js';
+import cameraFilesService from '../api/cameraFiles.service.js';
 
-const fetchAll = createAsyncThunk('file/fetchAll', async ({ cameraId, parentId }) => {
+const fetchFiles = createAsyncThunk('file/fetchFiles', async ({ cameraId, parentId }) => {
   try {
-    console.log('file/fetchAll cameraId, parentId -', { cameraId, parentId });
+    console.log('file/fetchFiles cameraId, parentId -', { cameraId, parentId });
 
-    const response = await cameraRepo.getFiles(cameraId, parentId);
+    const response = await cameraFilesService.getFiles(cameraId, parentId);
 
-    console.log('file/fetchAll response.data -', response.data);
+    console.log('file/fetchFiles response.data -', response.data);
 
     return response.data;
   } catch (e) {
-    console.log('file/fetchAll error -', e.message);
+    console.log('file/fetchFiles error -', e.message);
     throw e;
   }
 });
 
-export default { fetchAll };
+const fetchFolders = createAsyncThunk('folder/fetchFolders', async ({ cameraId, parentId }) => {
+  try {
+    console.log('folder/fetchFolders cameraId parentId -', { cameraId, parentId });
+
+    const response = await cameraFilesService.getFolders(cameraId, parentId);
+
+    console.log('folder/fetchFolders response.data -', response.data);
+
+    return response.data;
+  } catch (e) {
+    console.log('folder/fetchFolders error -', e.message);
+    throw e;
+  }
+});
+
+const fetchOneFolder = createAsyncThunk(
+  'folder/fetchOneFolder',
+  async ({ cameraId, parentId }) => {
+    try {
+      console.log('folder/fetchOneFolder cameraId parentId -', { cameraId, parentId });
+
+      const response = await cameraFilesService.getOneFolder(cameraId, parentId);
+
+      console.log('folder/fetchOneFolder response.data -', response.data);
+
+      return response.data;
+    } catch (e) {
+      console.log('folder/fetchOneFolder error -', e.message);
+      throw e;
+    }
+  }
+);
+
+export default { fetchFiles, fetchFolders, fetchOneFolder };

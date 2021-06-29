@@ -4,13 +4,13 @@ import _ from 'lodash';
 import { Readable } from 'stream';
 import { v4 as uuidv4 } from 'uuid';
 
-import staticFileRepo from '../repositories/staticFile.repository.js';
-
 import jwt from '../libs/token.js';
-
+import { promisifyUploadStream } from '../utils/index.js';
 import { BadRequestError } from '../middleware/errorHandlerMiddleware.js';
+
 import userRepository from '../repositories/user.repository.js';
 import userFileRepository from '../repositories/userFile.repository.js';
+import staticFileRepo from '../repositories/staticFile.repository.js';
 
 const singUp = async ({ payload, logger }) => {
   logger(`userController.singUp payload: ${payload}`);
@@ -92,35 +92,22 @@ const uploadAvatar = async ({ userId, file, logger }) => {
 
   Readable.from(fileData).pipe(uploadStream);
 
-  return new Promise((resolve, reject) => {
-    uploadStream.on('error', () => {
-      console.log('error uploadStream streem');
-      reject('file upload error');
-    });
+  await promisifyUploadStream(uploadStream);
 
-    uploadStream.on('finish', () => {
-      console.log('finish uploadStream streem');
-    });
-
-    uploadStream.on('close', async () => {
-      console.log('close uploadStream streem');
-
-      const avatar = await userFileRepository.createOne({
-        user: userId,
-        name: fileName,
-        type: file.mimetype,
-        logger,
-      });
-
-      // console.log('avatar', avatar);
-
-      // delete old file from gridfs
-
-      const user = await userRepository.updateAvatar({ userId, avatar, logger });
-
-      resolve({ user: _.pick(user, ['_id', 'name', 'email', 'avatar']) });
-    });
+  const avatar = await userFileRepository.createOne({
+    user: userId,
+    name: fileName,
+    type: file.mimetype,
+    logger,
   });
+
+  // console.log('avatar', avatar);
+
+  // delete old file from gridfs
+
+  const user = await userRepository.updateAvatar({ userId, avatar, logger });
+
+  return { user: _.pick(user, ['_id', 'name', 'email', 'avatar']) };
 };
 
 const deleteAvatar = async ({ userId, logger }) => {

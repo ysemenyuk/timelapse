@@ -13,7 +13,7 @@ const FilesList = ({ files, onClickFile }) => {
       role='button'
       onClick={() => onClickFile(file)}>
       <img src={`/files/${file.preview}`} width='190px' height='107px' className='img-thumbnail' />
-      <div>{file.name}</div>
+      <div>{file.date}</div>
     </div>
   ));
 };
