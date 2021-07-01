@@ -23,11 +23,6 @@ const createScreenshot = async ({ userId, cameraId, logger }) => {
 
   const dataStream = await cameraService.getScreenshot(camera.screenshotLink, 'stream');
 
-  // dataStream.pipe(fs.createWriteStream(path.join(__dirname, 'image-original.jpg')));
-  // dataStream
-  //   .pipe(sharp().resize(200))
-  //   .pipe(fs.createWriteStream(path.join(__dirname, 'image-preview.jpg')));
-
   const originalFileUloadStream = staticFileRepo.openUploadStream({
     fileName: originalFileName,
     logger,
@@ -43,10 +38,10 @@ const createScreenshot = async ({ userId, cameraId, logger }) => {
   dataStream.pipe(originalFileUloadStream);
   dataStream.pipe(resizeImage).pipe(previewFileUloadStream);
 
-  const p1 = promisifyUploadStream(originalFileUloadStream);
-  const p2 = promisifyUploadStream(previewFileUloadStream);
+  const s1 = promisifyUploadStream(originalFileUloadStream);
+  const s2 = promisifyUploadStream(previewFileUloadStream);
 
-  await Promise.all([p1, p2]);
+  await Promise.all([s1, s2]);
 
   const file = await cameraFileRepo.createOne({
     user: userId,
