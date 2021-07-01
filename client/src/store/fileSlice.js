@@ -7,14 +7,20 @@ const fileSlice = createSlice({
   name: 'file',
   initialState: {
     files: [],
-    selectedFile: null,
+    selectedFileIndex: null,
     folders: [],
     currentFolder: null,
     stack: [],
   },
   reducers: {
     selectFile: (state, action) => {
-      state.selectedFile = action.payload;
+      state.selectedFileIndex = action.payload;
+    },
+    selectNextFile: (state, action) => {
+      state.selectedFileIndex += 1;
+    },
+    selectPrewFile: (state, action) => {
+      state.selectedFileIndex -= 1;
     },
     setCurrentFolder: (state, action) => {
       state.currentFolder = action.payload;

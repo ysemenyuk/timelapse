@@ -1,4 +1,5 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+// import { Modal } from 'bootstrap';
 import { useSelector, useDispatch } from 'react-redux';
 
 import fileThunks from '../../thunks/fileThunks.js';
@@ -8,10 +9,11 @@ import useThunkStatus from '../../hooks/useThunkStatus.js';
 
 import { fileActions } from '../../store/fileSlice.js';
 
-import ListBox from './ListBox.jsx';
+import FilesListBox from './FilesListBox.jsx';
+import Breadcrumbs from './Breadcrumbs.jsx';
+import FilesListModal from './FilesListModal.jsx';
 import FilesList from './FilesList.jsx';
 import FoldersList from './FoldersList.jsx';
-import Breadcrumbs from './Breadcrumbs.jsx';
 
 import ButtonsGroup from '../ButtonsGroup.jsx';
 import Spinner from '../Spinner.jsx';
@@ -20,10 +22,14 @@ import Error from '../Error.jsx';
 const CameraFiles = ({ selectedCamera }) => {
   const dispatch = useDispatch();
 
+  const [modal, setModal] = useState(null);
+
   const fetchFiles = useThunkStatus(fileThunks.fetchFiles);
   const fetchFolders = useThunkStatus(fileThunks.fetchFolders);
 
-  const { files, folders, currentFolder, stack } = useSelector((state) => state.files);
+  const { files, folders, currentFolder, stack, selectedFileIndex } = useSelector(
+    (state) => state.files
+  );
 
   const cameraId = selectedCamera._id;
   const parentId = currentFolder ? currentFolder._id : selectedCamera.mainFolder;
@@ -33,8 +39,22 @@ const CameraFiles = ({ selectedCamera }) => {
     dispatch(fileThunks.fetchFolders({ cameraId, parentId }));
   }, [currentFolder]);
 
-  const clickFileHandler = (file) => {
-    console.log('click', file);
+  const clickFileHandler = (fileIndex) => {
+    dispatch(fileActions.selectFile(fileIndex));
+    modal.show();
+  };
+
+  const nextFileHandler = () => {
+    dispatch(fileActions.selectNextFile());
+  };
+
+  const prewFileHandler = () => {
+    dispatch(fileActions.selectPrewFile());
+  };
+
+  const closeModalHandler = () => {
+    dispatch(fileActions.selectFile(null));
+    modal.hide();
   };
 
   const clickFolderHandler = (folder) => {
@@ -63,69 +83,48 @@ const CameraFiles = ({ selectedCamera }) => {
           type='button'
           className='btn btn-sm btn-primary'
           onClick={backHandler}
-          disabled={fetchFolders.isLoading || fetchFiles.isLoading}>
+          disabled={fetchFolders.isLoading || fetchFiles.isLoading}
+        >
           Back
         </button>
         <button
           type='button'
           className='btn btn-sm btn-primary'
           onClick={refreshHandler}
-          disabled={fetchFolders.isLoading || fetchFiles.isLoading}>
+          disabled={fetchFolders.isLoading || fetchFiles.isLoading}
+        >
           Refresh
         </button>
         <button
           type='button'
           className='btn btn-sm btn-primary'
           onClick={createScreenshotHandler}
-          disabled={fetchFolders.isLoading || fetchFiles.isLoading}>
+          disabled={fetchFolders.isLoading || fetchFiles.isLoading}
+        >
           CreateScreenshot
+        </button>
+        <button
+          type='button'
+          className='btn btn-sm btn-primary'
+          data-bs-toggle='modal'
+          data-bs-target='#exampleModal'
+        >
+          Launch modal
         </button>
       </ButtonsGroup>
 
       <Breadcrumbs stack={stack} />
 
-      <button
-        type='button'
-        className='btn btn-primary'
-        data-bs-toggle='modal'
-        data-bs-target='#exampleModal'>
-        Launch demo modal
-      </button>
+      <FilesListModal
+        setModal={setModal}
+        files={files}
+        fileIndex={selectedFileIndex}
+        onNextFile={nextFileHandler}
+        onPrewFile={prewFileHandler}
+        onCloseModal={closeModalHandler}
+      />
 
-      <div
-        className='modal  fade'
-        id='exampleModal'
-        tabIndex='-1'
-        aria-labelledby='exampleModalLabel'
-        aria-hidden='true'>
-        <div className='modal-dialog modal-xl'>
-          <div className='modal-content'>
-            <div className='modal-header'>
-              <h5 className='modal-title' id='exampleModalLabel'>
-                Modal title
-              </h5>
-              <button
-                type='button'
-                className='btn-close'
-                data-bs-dismiss='modal'
-                aria-label='Close'></button>
-            </div>
-            <div className='modal-body'>
-              <img src={`/files/${files[0]?.original}`} />
-            </div>
-            <div className='modal-footer'>
-              <button type='button' className='btn btn-secondary' data-bs-dismiss='modal'>
-                Close
-              </button>
-              <button type='button' className='btn btn-primary'>
-                Save changes
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <ListBox>
+      <FilesListBox>
         {fetchFolders.isSuccess && fetchFiles.isSuccess ? (
           <>
             <FoldersList folders={folders} onClickFolder={clickFolderHandler} />
@@ -136,7 +135,7 @@ const CameraFiles = ({ selectedCamera }) => {
         ) : fetchFolders.isError || fetchFiles.isError ? (
           <Error message={'error'} />
         ) : null}
-      </ListBox>
+      </FilesListBox>
     </div>
   );
 };

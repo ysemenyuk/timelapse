@@ -1,6 +1,6 @@
 import React from 'react';
 
-const ListBox = ({ children }) => {
+const FilesListBox = ({ children }) => {
   return (
     <div className='vh-100 d-flex flex-wrap align-content-start border rounded overflow-auto'>
       {children}
@@ -8,4 +8,4 @@ const ListBox = ({ children }) => {
   );
 };
 
-export default ListBox;
+export default FilesListBox;
