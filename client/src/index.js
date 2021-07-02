@@ -5,7 +5,7 @@ import ReactDOM from 'react-dom';
 import 'regenerator-runtime/runtime.js';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
-import 'bootstrap/dist/js/bootstrap.min.js';
+import 'antd/dist/antd.css';
 
 import '../assets/favicon.ico';
 import '../assets/style.css';

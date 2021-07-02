@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 // import { Modal } from 'bootstrap';
 import { useSelector, useDispatch } from 'react-redux';
-
+import { Modal, Button } from 'antd';
 import fileThunks from '../../thunks/fileThunks.js';
 import cameraThunks from '../../thunks/cameraThunks.js';
 
@@ -9,11 +9,12 @@ import useThunkStatus from '../../hooks/useThunkStatus.js';
 
 import { fileActions } from '../../store/fileSlice.js';
 
-import FilesListBox from './FilesListBox.jsx';
 import Breadcrumbs from './Breadcrumbs.jsx';
-import FilesListModal from './FilesListModal.jsx';
+import FilesListBox from './FilesListBox.jsx';
 import FilesList from './FilesList.jsx';
 import FoldersList from './FoldersList.jsx';
+
+import AntModal from './AntModal.jsx';
 
 import ButtonsGroup from '../ButtonsGroup.jsx';
 import Spinner from '../Spinner.jsx';
@@ -22,14 +23,13 @@ import Error from '../Error.jsx';
 const CameraFiles = ({ selectedCamera }) => {
   const dispatch = useDispatch();
 
-  const [modal, setModal] = useState(null);
+  const [visible, setVisible] = useState(false);
+  const [fileIndex, setFileIndex] = useState(null);
 
   const fetchFiles = useThunkStatus(fileThunks.fetchFiles);
   const fetchFolders = useThunkStatus(fileThunks.fetchFolders);
 
-  const { files, folders, currentFolder, stack, selectedFileIndex } = useSelector(
-    (state) => state.files
-  );
+  const { files, folders, currentFolder, stack } = useSelector((state) => state.files);
 
   const cameraId = selectedCamera._id;
   const parentId = currentFolder ? currentFolder._id : selectedCamera.mainFolder;
@@ -40,21 +40,13 @@ const CameraFiles = ({ selectedCamera }) => {
   }, [currentFolder]);
 
   const clickFileHandler = (fileIndex) => {
-    dispatch(fileActions.selectFile(fileIndex));
-    modal.show();
-  };
-
-  const nextFileHandler = () => {
-    dispatch(fileActions.selectNextFile());
-  };
-
-  const prewFileHandler = () => {
-    dispatch(fileActions.selectPrewFile());
+    setFileIndex(fileIndex);
+    setVisible(true);
   };
 
   const closeModalHandler = () => {
-    dispatch(fileActions.selectFile(null));
-    modal.hide();
+    // setFileIndex(null);
+    setVisible(false);
   };
 
   const clickFolderHandler = (folder) => {
@@ -83,44 +75,38 @@ const CameraFiles = ({ selectedCamera }) => {
           type='button'
           className='btn btn-sm btn-primary'
           onClick={backHandler}
-          disabled={fetchFolders.isLoading || fetchFiles.isLoading}
-        >
+          disabled={fetchFolders.isLoading || fetchFiles.isLoading}>
           Back
         </button>
         <button
           type='button'
           className='btn btn-sm btn-primary'
           onClick={refreshHandler}
-          disabled={fetchFolders.isLoading || fetchFiles.isLoading}
-        >
+          disabled={fetchFolders.isLoading || fetchFiles.isLoading}>
           Refresh
         </button>
         <button
           type='button'
           className='btn btn-sm btn-primary'
           onClick={createScreenshotHandler}
-          disabled={fetchFolders.isLoading || fetchFiles.isLoading}
-        >
+          disabled={fetchFolders.isLoading || fetchFiles.isLoading}>
           CreateScreenshot
         </button>
         <button
           type='button'
           className='btn btn-sm btn-primary'
           data-bs-toggle='modal'
-          data-bs-target='#exampleModal'
-        >
+          data-bs-target='#exampleModal'>
           Launch modal
         </button>
       </ButtonsGroup>
 
       <Breadcrumbs stack={stack} />
 
-      <FilesListModal
-        setModal={setModal}
+      <AntModal
         files={files}
-        fileIndex={selectedFileIndex}
-        onNextFile={nextFileHandler}
-        onPrewFile={prewFileHandler}
+        fileIndex={fileIndex}
+        visible={visible}
         onCloseModal={closeModalHandler}
       />
 
