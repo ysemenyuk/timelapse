@@ -12,13 +12,13 @@ const getOne = async ({ userId, cameraId, fileId, logger }) => {
   return await CameraFile.findOne({ user: userId, camera: cameraId, _id: fileId });
 };
 
-const getOneByName = async ({ userId, cameraId, fileName, logger }) => {
+const getOneByName = async ({ fileName, logger }) => {
   logger(`cameraFileRepository.getOne fileName: ${fileName}`);
 
-  return await CameraFile.findOne({ user: userId, camera: cameraId, name: fileId });
+  return await CameraFile.findOne({ name: fileName });
 };
 
-const createOne = async ({ user, camera, name, original, preview, parent, logger }) => {
+const createOne = async ({ user, camera, name, original, thumbnail, parent, logger }) => {
   logger(`cameraFileRepository.createOne fileName: ${name}`);
 
   const file = new CameraFile({
@@ -26,7 +26,7 @@ const createOne = async ({ user, camera, name, original, preview, parent, logger
     camera,
     name,
     original,
-    preview,
+    thumbnail,
     parent,
   });
 

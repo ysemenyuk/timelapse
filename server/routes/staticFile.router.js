@@ -1,5 +1,7 @@
 import express from 'express';
 
+// import imageService from '../services/image.service.js';
+
 import { asyncHandler } from '../middleware/errorHandlerMiddleware.js';
 import staticFileRepo from '../repositories/staticFile.repository.js';
 import cameraFileRepo from '../repositories/cameraFile.repository.js';
@@ -11,26 +13,39 @@ router.get(
   asyncHandler(async (req, res) => {
     req.logger(`staticFileRouter.get /files/${req.params.fileName}`);
 
-    // find file in cameraFiles
-    // if not res 404
-    // else return fileId
-    // downloadStream by fileId
+    // const resizeImage = imageService.resize(200);
 
-    const downloadStream = staticFileRepo.openDownloadStreamByName({
+    const file = await cameraFileRepo.getOneByName({
       fileName: req.params.fileName,
       logger: req.logger,
     });
 
-    downloadStream.pipe(res);
-
-    downloadStream.on('error', () => {
+    if (!file) {
       res.sendStatus(404);
+      req.logger(
+        `RES: ${req.method}-${req.originalUrl} -${res.statusCode} -${Date.now() - req.t1}ms`
+      );
+      return;
+    }
+
+    const fileId = req.query?.size === 'thumbnail' ? file.thumbnail : file.original;
+
+    const stream = staticFileRepo.openDownloadStream({
+      fileId: fileId,
+      logger: req.logger,
+    });
+
+    stream.pipe(res);
+
+    stream.on('error', () => {
+      // console.log('error');
+      res.sendStatus(500);
       req.logger(
         `RES: ${req.method}-${req.originalUrl} -${res.statusCode} -${Date.now() - req.t1}ms`
       );
     });
 
-    downloadStream.on('end', () => {
+    stream.on('end', () => {
       // console.log('end');
       req.logger(
         `RES: ${req.method}-${req.originalUrl} -${res.statusCode} -${Date.now() - req.t1}ms`

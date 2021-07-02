@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
-// import { Modal } from 'bootstrap';
 import { useSelector, useDispatch } from 'react-redux';
-import { Modal, Button } from 'antd';
+
+import { Row, Col, Button, Space, Typography, Alert, Spin } from 'antd';
+const { Title } = Typography;
+
 import fileThunks from '../../thunks/fileThunks.js';
 import cameraThunks from '../../thunks/cameraThunks.js';
 
@@ -9,16 +11,10 @@ import useThunkStatus from '../../hooks/useThunkStatus.js';
 
 import { fileActions } from '../../store/fileSlice.js';
 
-import Breadcrumbs from './Breadcrumbs.jsx';
-import FilesListBox from './FilesListBox.jsx';
-import FilesList from './FilesList.jsx';
-import FoldersList from './FoldersList.jsx';
-
-import AntModal from './AntModal.jsx';
-
-import ButtonsGroup from '../ButtonsGroup.jsx';
-import Spinner from '../Spinner.jsx';
-import Error from '../Error.jsx';
+import Breadcrumbs from './Breadcrumbs/Breadcrumbs.jsx';
+import FilesList from './FileList/FilesList.jsx';
+import FoldersList from './FolderList/FoldersList.jsx';
+import ImgModal from './ImgModal/ImgModal.jsx';
 
 const CameraFiles = ({ selectedCamera }) => {
   const dispatch = useDispatch();
@@ -67,63 +63,56 @@ const CameraFiles = ({ selectedCamera }) => {
   };
 
   return (
-    <div className='col-12 mb-3'>
-      <h6 className='mb-3'>Files</h6>
+    <>
+      <Row>
+        <Col span={24}>
+          <Title level={5}>Files</Title>
+          <Space>
+            <Button
+              type='primary'
+              onClick={backHandler}
+              disabled={fetchFolders.isLoading || fetchFiles.isLoading}>
+              Back
+            </Button>
+            <Button
+              type='primary'
+              onClick={refreshHandler}
+              disabled={fetchFolders.isLoading || fetchFiles.isLoading}>
+              Refresh
+            </Button>
+            <Button
+              type='primary'
+              onClick={createScreenshotHandler}
+              disabled={fetchFolders.isLoading || fetchFiles.isLoading}>
+              CreateScreenshot
+            </Button>
+          </Space>
 
-      <ButtonsGroup>
-        <button
-          type='button'
-          className='btn btn-sm btn-primary'
-          onClick={backHandler}
-          disabled={fetchFolders.isLoading || fetchFiles.isLoading}>
-          Back
-        </button>
-        <button
-          type='button'
-          className='btn btn-sm btn-primary'
-          onClick={refreshHandler}
-          disabled={fetchFolders.isLoading || fetchFiles.isLoading}>
-          Refresh
-        </button>
-        <button
-          type='button'
-          className='btn btn-sm btn-primary'
-          onClick={createScreenshotHandler}
-          disabled={fetchFolders.isLoading || fetchFiles.isLoading}>
-          CreateScreenshot
-        </button>
-        <button
-          type='button'
-          className='btn btn-sm btn-primary'
-          data-bs-toggle='modal'
-          data-bs-target='#exampleModal'>
-          Launch modal
-        </button>
-      </ButtonsGroup>
+          <Breadcrumbs stack={stack} />
+        </Col>
+      </Row>
 
-      <Breadcrumbs stack={stack} />
+      {fetchFolders.isSuccess && fetchFiles.isSuccess ? (
+        <Row gutter={[16, 16]}>
+          <FoldersList folders={folders} onClickFolder={clickFolderHandler} />
+          <FilesList files={files} onClickFile={clickFileHandler} />
+        </Row>
+      ) : fetchFolders.isLoading || fetchFiles.isLoading ? (
+        <Spin />
+      ) : fetchFolders.isError || fetchFiles.isError ? (
+        <Alert message='Network error' type='error' />
+      ) : null}
 
-      <AntModal
+      <ImgModal
         files={files}
         fileIndex={fileIndex}
         visible={visible}
         onCloseModal={closeModalHandler}
       />
-
-      <FilesListBox>
-        {fetchFolders.isSuccess && fetchFiles.isSuccess ? (
-          <>
-            <FoldersList folders={folders} onClickFolder={clickFolderHandler} />
-            <FilesList files={files} onClickFile={clickFileHandler} />
-          </>
-        ) : fetchFolders.isLoading || fetchFiles.isLoading ? (
-          <Spinner />
-        ) : fetchFolders.isError || fetchFiles.isError ? (
-          <Error message={'error'} />
-        ) : null}
-      </FilesListBox>
-    </div>
+    </>
   );
 };
+
+//v1.pro.ant.design/docs/new-component
 
 export default CameraFiles;

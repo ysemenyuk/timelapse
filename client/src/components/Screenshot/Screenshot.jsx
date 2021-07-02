@@ -1,5 +1,7 @@
 import React from 'react';
 
+import ImgWrapper from '../ImgWrapper/ImgWrapper.jsx';
+
 const CameraScreen = ({ selectedCamera }) => {
   if (selectedCamera === null) {
     return null;
@@ -8,14 +10,17 @@ const CameraScreen = ({ selectedCamera }) => {
   return (
     <div className='col-12 mb-3'>
       <h6 className='mb-3'>Screenshot</h6>
-      <div className='mb-3'>
+
+      <ImgWrapper src={`/files/${selectedCamera.avatar}?size=thumbnail`} desc={'desc'} />
+
+      {/* <div className='mb-3'>
         <img
           // height='165px'
           width='250px'
-          src={`/files/${selectedCamera.avatar}`}
+          src={`/files/${selectedCamera.avatar}?size=thumbnail`}
           className='img-thumbnail'
         />
-      </div>
+      </div> */}
     </div>
   );
 };

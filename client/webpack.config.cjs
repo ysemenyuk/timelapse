@@ -27,7 +27,7 @@ module.exports = {
     //   '/api': 'http://localhost:4000',
     // },
     proxy: {
-      context: ['/auth', '/api', '/files'],
+      context: ['/auth', '/api', '/files', '/assets'],
       target: 'http://localhost:4000',
     },
     historyApiFallback: true,
@@ -45,6 +45,10 @@ module.exports = {
         test: /\.(js|jsx)$/,
         exclude: /node_modules/,
         use: 'babel-loader',
+      },
+      {
+        test: /\.less$/i,
+        use: [{ loader: 'css-loader' }, { loader: 'less-loader' }],
       },
       {
         test: /\.s?[ac]ss$/i,

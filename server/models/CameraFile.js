@@ -6,10 +6,8 @@ const CameraFileSchema = mongoose.Schema({
   user: { type: mongoose.ObjectId, ref: 'User' },
   camera: { type: mongoose.ObjectId, ref: 'Camera' },
   parent: { type: mongoose.ObjectId, ref: 'Folder' },
-  // original: { name: { type: String }, file: { type: mongoose.ObjectId } }, // file name original size
-  // preview: { name: { type: String }, file: { type: mongoose.ObjectId } }, // file name small size
-  original: { type: String }, // file name original size
-  preview: { type: String }, // file name small size
+  original: { type: mongoose.ObjectId },
+  thumbnail: { type: mongoose.ObjectId },
 });
 
 const CameraFile = mongoose.model('CameraFile', CameraFileSchema);

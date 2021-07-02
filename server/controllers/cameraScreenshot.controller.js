@@ -15,9 +15,8 @@ const createScreenshot = async ({ userId, cameraId, logger }) => {
 
   const name = uuidv4();
 
-  const fileName = `${name}.jpg`;
-  const originalFileName = `${name}-orig.jpg`;
-  const previewFileName = `${name}-prev.jpg`;
+  const originalFileName = `${name}.jpg`;
+  const thumbnailFileName = `${name}-thumbnail.jpg`;
 
   const camera = await cameraRepository.getOne({ userId, cameraId, logger });
 
@@ -29,7 +28,7 @@ const createScreenshot = async ({ userId, cameraId, logger }) => {
   });
 
   const previewFileUloadStream = staticFileRepo.openUploadStream({
-    fileName: previewFileName,
+    fileName: thumbnailFileName,
     logger,
   });
 
@@ -46,14 +45,14 @@ const createScreenshot = async ({ userId, cameraId, logger }) => {
   const file = await cameraFileRepo.createOne({
     user: userId,
     camera: cameraId,
-    name: fileName,
-    original: originalFileName,
-    preview: previewFileName,
+    name: originalFileName,
+    original: originalFileUloadStream.id,
+    thumbnail: previewFileUloadStream.id,
     parent: camera.screenshotsFolder,
     logger,
   });
 
-  // console.log('cameraScreenshotController.createScreenshot file', file);
+  console.log('cameraScreenshotController.createScreenshot file', file);
 
   return file;
 };

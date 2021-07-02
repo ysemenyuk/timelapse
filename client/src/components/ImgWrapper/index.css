@@ -1,0 +1,18 @@
+.imageWrapper {
+  /* padding: 0 20px 8px; */
+  border: 1px solid black;
+  background: #f2f4f5;
+  /* width: 400px; */
+  margin: 0 auto;
+  /* text-align: center; */
+  height: 130px;
+  width: 220px;
+}
+
+.img {
+  vertical-align: middle;
+  /* max-width: calc(100% - 32px); */
+  margin: 1px;
+  /* box-shadow: 0 8px 20px rgba(143, 168, 191, 0.35); */
+  border: rgba(143, 168, 191, 0.35);
+}

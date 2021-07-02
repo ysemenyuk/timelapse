@@ -2,6 +2,7 @@ import express from 'express';
 import mongoose from 'mongoose';
 import fileUpload from 'express-fileupload';
 import debug from 'debug';
+import path from 'path';
 
 import mongoClient from './dbConfig.js';
 
@@ -21,6 +22,7 @@ import debugMiddleware from './middleware/debugMiddleware.js';
 import { errorHandlerMiddleware } from './middleware/errorHandlerMiddleware.js';
 
 import __dirname from './dirname.js';
+console.log(__dirname);
 
 const app = express();
 const logger = debug('server');
@@ -36,6 +38,10 @@ if (process.env.NODE_ENV === 'development') {
 app.use(express.json());
 app.use(fileUpload());
 
+const staticPath = path.join(__dirname, 'assets');
+console.log(staticPath);
+
+app.use('/assets', express.static(staticPath));
 app.use('/files', staticFileRouter);
 // app.use('/files/userfiles', userFileMiddleware, userFileRouter);
 

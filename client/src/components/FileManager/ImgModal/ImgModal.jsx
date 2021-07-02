@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, Image, Spin } from 'antd';
 
-const AntModal = ({ files, fileIndex, visible, onCloseModal }) => {
+const ImgModal = ({ files, fileIndex, visible, onCloseModal }) => {
   if (fileIndex === null) {
     return null;
   }
@@ -14,7 +14,7 @@ const AntModal = ({ files, fileIndex, visible, onCloseModal }) => {
 
   return (
     <Modal
-      title={files[fileIndex].date}
+      title={files[fileIndex]?.date}
       footer={null}
       centered
       visible={visible}
@@ -24,8 +24,9 @@ const AntModal = ({ files, fileIndex, visible, onCloseModal }) => {
       <Spin spinning={!load}>
         <Image
           onLoad={() => setLoad(true)}
-          width={'100%'}
-          src={`/files/${files[fileIndex].original}`}
+          width='250px'
+          height='100px'
+          src={`/files/${files[fileIndex].name}`}
           preview={false}
           // placeholder={<Spin />}
         />
@@ -34,4 +35,4 @@ const AntModal = ({ files, fileIndex, visible, onCloseModal }) => {
   );
 };
 
-export default AntModal;
+export default ImgModal;
