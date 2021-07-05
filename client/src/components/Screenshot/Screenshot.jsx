@@ -11,16 +11,7 @@ const CameraScreen = ({ selectedCamera }) => {
     <div className='col-12 mb-3'>
       <h6 className='mb-3'>Screenshot</h6>
 
-      <ImgWrapper src={`/files/${selectedCamera.avatar}?size=thumbnail`} desc={'desc'} />
-
-      {/* <div className='mb-3'>
-        <img
-          // height='165px'
-          width='250px'
-          src={`/files/${selectedCamera.avatar}?size=thumbnail`}
-          className='img-thumbnail'
-        />
-      </div> */}
+      <ImgWrapper width={'80'} height={'56.25'} src={`/files/${selectedCamera.avatar}`} />
     </div>
   );
 };

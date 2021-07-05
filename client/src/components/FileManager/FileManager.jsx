@@ -93,10 +93,12 @@ const CameraFiles = ({ selectedCamera }) => {
       </Row>
 
       {fetchFolders.isSuccess && fetchFiles.isSuccess ? (
-        <Row gutter={[16, 16]}>
-          <FoldersList folders={folders} onClickFolder={clickFolderHandler} />
-          <FilesList files={files} onClickFile={clickFileHandler} />
-        </Row>
+        <>
+          <Row gutter={[16, 16]}>
+            <FoldersList folders={folders} onClickFolder={clickFolderHandler} />
+            <FilesList files={files} onClickFile={clickFileHandler} />
+          </Row>
+        </>
       ) : fetchFolders.isLoading || fetchFiles.isLoading ? (
         <Spin />
       ) : fetchFolders.isError || fetchFiles.isError ? (

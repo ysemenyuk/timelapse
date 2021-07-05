@@ -1,25 +1,30 @@
-import React, { useState, useEffect } from 'react';
-// import styles from './imgWrapper.less';
+import React, { useState, useEffect, useRef } from 'react';
 import './index.css';
 
-import { Row, Col, Button, Space, Typography, Alert, Spin } from 'antd';
-const { Title } = Typography;
+import { Spin } from 'antd';
 
-export default ({ src, desc, style }) => {
+export default ({ src, width, height, style, ...props }) => {
   const [load, setLoad] = useState(false);
 
-  // console.log(111, styles);
+  const wd = `${width}%`;
+  const pd = `${width * (height / 100)}%`;
+
   useEffect(() => {
     setLoad(false);
   }, [src]);
 
   return (
     <>
-      <Spin spinning={!load}>
-        <div style={style} className='imageWrapper'>
-          <img onLoad={() => setLoad(true)} className='img' src={src} alt={desc} />
+      <div style={{ width: wd, paddingBottom: pd, position: 'relative' }}>
+        <div
+          style={style}
+          style={{ width: '100%', height: '100%', position: 'absolute' }}
+          className='imageWrapper'>
+          <Spin spinning={!load}>
+            <img onLoad={() => setLoad(true)} className='imageWrapper-img' src={src} {...props} />
+          </Spin>
         </div>
-      </Spin>
+      </div>
     </>
   );
 };
