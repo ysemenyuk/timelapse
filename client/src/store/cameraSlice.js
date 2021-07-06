@@ -57,6 +57,6 @@ const cameraSlice = createSlice({
   },
 });
 
-export const cameraActions = cameraSlice.actions;
+export const cameraActions = { ...cameraSlice.actions, ...cameraThunks };
 
 export default cameraSlice.reducer;

@@ -12,8 +12,8 @@ const FilesList = ({ files, onClickFile }) => {
   return files.map((file, index) => (
     <Col span={4} key={file._id}>
       <ImgWrapper
-        width={'100'}
-        height={'56.25'}
+        width={100}
+        height={0.5625}
         src={`/files/${file.name}?size=thumbnail`}
         role='button'
         onClick={() => onClickFile(index)}

@@ -4,69 +4,63 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Row, Col, Button, Space, Typography, Alert, Spin } from 'antd';
 const { Title } = Typography;
 
-import fileThunks from '../../thunks/fileThunks.js';
-import cameraThunks from '../../thunks/cameraThunks.js';
-
 import useThunkStatus from '../../hooks/useThunkStatus.js';
 
-import { fileActions } from '../../store/fileSlice.js';
+import { cameraActions } from '../../store/cameraSlice.js';
+import { fileManagerActions } from '../../store/fileManagerSlice.js';
+import { imgViewerActions } from '../../store/imgViewerSlice.js';
 
 import Breadcrumbs from './Breadcrumbs/Breadcrumbs.jsx';
 import FilesList from './FileList/FilesList.jsx';
 import FoldersList from './FolderList/FoldersList.jsx';
-import ImgModal from './ImgModal/ImgModal.jsx';
 
-const CameraFiles = ({ selectedCamera }) => {
+const CameraFileManager = ({ selectedCamera }) => {
   const dispatch = useDispatch();
 
-  const [visible, setVisible] = useState(false);
-  const [fileIndex, setFileIndex] = useState(null);
+  const fetchFiles = useThunkStatus(fileManagerActions.fetchFiles);
+  const fetchFolders = useThunkStatus(fileManagerActions.fetchFolders);
 
-  const fetchFiles = useThunkStatus(fileThunks.fetchFiles);
-  const fetchFolders = useThunkStatus(fileThunks.fetchFolders);
-
-  const { files, folders, currentFolder, stack } = useSelector((state) => state.files);
+  const { files, folders, currentFolder, foldersStack } = useSelector(
+    (state) => state.fileManager
+  );
 
   const cameraId = selectedCamera._id;
   const parentId = currentFolder ? currentFolder._id : selectedCamera.mainFolder;
 
   useEffect(() => {
-    dispatch(fileThunks.fetchFiles({ cameraId, parentId }));
-    dispatch(fileThunks.fetchFolders({ cameraId, parentId }));
+    dispatch(fileManagerActions.fetchFiles({ cameraId, parentId }));
+    dispatch(fileManagerActions.fetchFolders({ cameraId, parentId }));
   }, [currentFolder]);
 
   const clickFileHandler = (fileIndex) => {
-    setFileIndex(fileIndex);
-    setVisible(true);
-  };
-
-  const closeModalHandler = () => {
-    // setFileIndex(null);
-    setVisible(false);
+    dispatch(fileManagerActions.setCurrentFileIndex(fileIndex));
+    dispatch(imgViewerActions.open());
   };
 
   const clickFolderHandler = (folder) => {
-    dispatch(fileActions.pushToStack(folder));
+    dispatch(fileManagerActions.pushToFoldersStack(folder));
   };
 
   const backHandler = () => {
-    dispatch(fileActions.popFromStack());
+    dispatch(fileManagerActions.popFromFoldersStack());
   };
 
   const refreshHandler = () => {
-    dispatch(fileThunks.fetchFiles({ cameraId, parentId }));
-    dispatch(fileThunks.fetchFolders({ cameraId, parentId }));
+    dispatch(fileManagerActions.fetchFiles({ cameraId, parentId }));
+    dispatch(fileManagerActions.fetchFolders({ cameraId, parentId }));
   };
 
   const createScreenshotHandler = async (e) => {
-    dispatch(cameraThunks.createScreenshot(cameraId));
+    dispatch(cameraActions.createScreenshot(cameraId));
   };
 
   return (
     <>
-      <Row>
+      <Row gutter={[0, 16]}>
         <Col span={24}>
           <Title level={5}>Files</Title>
+        </Col>
+        <Col span={24}>
           <Space>
             <Button
               type='primary'
@@ -87,34 +81,26 @@ const CameraFiles = ({ selectedCamera }) => {
               CreateScreenshot
             </Button>
           </Space>
+        </Col>
+        <Col span={24}>
+          <Breadcrumbs stack={foldersStack} />
+        </Col>
 
-          <Breadcrumbs stack={stack} />
+        <Col span={24}>
+          {fetchFolders.isSuccess && fetchFiles.isSuccess ? (
+            <Row gutter={[16, 16]}>
+              <FoldersList folders={folders} onClickFolder={clickFolderHandler} />
+              <FilesList files={files} onClickFile={clickFileHandler} />
+            </Row>
+          ) : fetchFolders.isLoading || fetchFiles.isLoading ? (
+            <Spin />
+          ) : fetchFolders.isError || fetchFiles.isError ? (
+            <Alert message='Network error' type='error' />
+          ) : null}
         </Col>
       </Row>
-
-      {fetchFolders.isSuccess && fetchFiles.isSuccess ? (
-        <>
-          <Row gutter={[16, 16]}>
-            <FoldersList folders={folders} onClickFolder={clickFolderHandler} />
-            <FilesList files={files} onClickFile={clickFileHandler} />
-          </Row>
-        </>
-      ) : fetchFolders.isLoading || fetchFiles.isLoading ? (
-        <Spin />
-      ) : fetchFolders.isError || fetchFiles.isError ? (
-        <Alert message='Network error' type='error' />
-      ) : null}
-
-      <ImgModal
-        files={files}
-        fileIndex={fileIndex}
-        visible={visible}
-        onCloseModal={closeModalHandler}
-      />
     </>
   );
 };
 
-//v1.pro.ant.design/docs/new-component
-
-export default CameraFiles;
+export default CameraFileManager;

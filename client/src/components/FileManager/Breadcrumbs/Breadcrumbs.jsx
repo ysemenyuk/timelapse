@@ -1,11 +1,9 @@
 import React from 'react';
 import { Breadcrumb } from 'antd';
 
-import './breadcrumbs.css';
-
-const Breadcrumbs = ({ stack }) => {
+const Breadcrumbs = ({ stack, style }) => {
   return (
-    <Breadcrumb style={{ margin: '16px 0' }}>
+    <Breadcrumb style={style}>
       <Breadcrumb.Item>Home</Breadcrumb.Item>
       {stack.map((folder) => (
         <Breadcrumb.Item key={folder._id}>

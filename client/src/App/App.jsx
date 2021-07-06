@@ -1,6 +1,11 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Redirect,
+} from 'react-router-dom';
 
 import userThunks from '../thunks/userThunks.js';
 
@@ -20,15 +25,16 @@ const App = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
 
-  // console.log('app user', user);
-
   useEffect(() => {
     user.tokenVerification && dispatch(userThunks.tokenVerification());
   }, []);
 
   const PrivateRoute = ({ children, ...rest }) => {
     return (
-      <Route {...rest} render={() => (user.isLoggedIn ? children : <Redirect to={'/login'} />)} />
+      <Route
+        {...rest}
+        render={() => (user.isLoggedIn ? children : <Redirect to={'/login'} />)}
+      />
     );
   };
 
@@ -46,7 +52,11 @@ const App = () => {
               <Route exact path='/user' component={ProfilePage} />
               <Route exact path='/form' component={CameraAddPage} />
               <Route exact path='/cameras/:id' component={CameraPage} />
-              <Route exact path={['/', '/cameras']} component={CameraListPage} />
+              <Route
+                exact
+                path={['/', '/cameras']}
+                component={CameraListPage}
+              />
             </PrivateRoute>
             <Redirect to='/' />
           </Switch>
