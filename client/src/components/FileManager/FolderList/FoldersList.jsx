@@ -5,7 +5,7 @@ const { Title, Text } = Typography;
 import ImgWrapper from '../../ImgWrapper/ImgWrapper.jsx';
 
 const FoldersList = ({ folders, onClickFolder }) => {
-  if (folders.length === 0) {
+  if (!folders || !folders.length) {
     return null;
   }
 

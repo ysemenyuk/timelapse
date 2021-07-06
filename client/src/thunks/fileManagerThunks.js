@@ -9,8 +9,11 @@ const fetchFiles = createAsyncThunk('file/fetchFiles', async ({ cameraId, parent
     const response = await fileManagerService.getFiles(cameraId, parentId);
 
     console.log('file/fetchFiles response.data -', response.data);
+    console.log({ [parentId]: response.data });
 
-    return response.data;
+    return { [parentId]: response.data };
+
+    // return response.data;
   } catch (e) {
     console.log('file/fetchFiles error -', e.message);
     throw e;
@@ -24,8 +27,9 @@ const fetchFolders = createAsyncThunk('folder/fetchFolders', async ({ cameraId, 
     const response = await fileManagerService.getFolders(cameraId, parentId);
 
     console.log('folder/fetchFolders response.data -', response.data);
+    console.log({ [parentId]: response.data });
 
-    return response.data;
+    return { [parentId]: response.data };
   } catch (e) {
     console.log('folder/fetchFolders error -', e.message);
     throw e;

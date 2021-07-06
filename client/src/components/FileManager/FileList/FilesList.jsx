@@ -5,7 +5,7 @@ const { Text } = Typography;
 import ImgWrapper from '../../ImgWrapper/ImgWrapper.jsx';
 
 const FilesList = ({ files, onClickFile }) => {
-  if (files.length === 0) {
+  if (!files || !files.length) {
     return null;
   }
 

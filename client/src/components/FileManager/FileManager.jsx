@@ -27,9 +27,13 @@ const CameraFileManager = ({ selectedCamera }) => {
   const cameraId = selectedCamera._id;
   const parentId = currentFolder ? currentFolder._id : selectedCamera.mainFolder;
 
+  const loaded = Object.keys(files).includes(parentId) && Object.keys(folders).includes(parentId);
+
   useEffect(() => {
-    dispatch(fileManagerActions.fetchFiles({ cameraId, parentId }));
-    dispatch(fileManagerActions.fetchFolders({ cameraId, parentId }));
+    if (!loaded) {
+      dispatch(fileManagerActions.fetchFiles({ cameraId, parentId }));
+      dispatch(fileManagerActions.fetchFolders({ cameraId, parentId }));
+    }
   }, [currentFolder]);
 
   const clickFileHandler = (fileIndex) => {
@@ -87,12 +91,12 @@ const CameraFileManager = ({ selectedCamera }) => {
         </Col>
 
         <Col span={24}>
-          {fetchFolders.isSuccess && fetchFiles.isSuccess ? (
+          {fetchFolders.isSuccess && fetchFiles.isSuccess && loaded ? (
             <Row gutter={[16, 16]}>
-              <FoldersList folders={folders} onClickFolder={clickFolderHandler} />
-              <FilesList files={files} onClickFile={clickFileHandler} />
+              <FoldersList folders={folders[parentId]} onClickFolder={clickFolderHandler} />
+              <FilesList files={files[parentId]} onClickFile={clickFileHandler} />
             </Row>
-          ) : fetchFolders.isLoading || fetchFiles.isLoading ? (
+          ) : fetchFolders.isLoading || fetchFiles.isLoading || !loaded ? (
             <Spin />
           ) : fetchFolders.isError || fetchFiles.isError ? (
             <Alert message='Network error' type='error' />

@@ -33,7 +33,7 @@ const CameraPage = () => {
 
   return fetchOneCamera.isSuccess || selectedCamera ? (
     <>
-      <ImgViewer />
+      <ImgViewer selectedCamera={selectedCamera} />
       <Row gutter={16}>
         <Col span={6}>
           <Screenshot selectedCamera={selectedCamera} />

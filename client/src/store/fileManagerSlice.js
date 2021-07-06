@@ -10,7 +10,7 @@ const fileManagerSlice = createSlice({
   initialState: {
     files: [],
     currentFileIndex: null,
-    folders: [],
+    folders: {},
     currentFolder: null,
     foldersStack: [],
   },
@@ -39,19 +39,23 @@ const fileManagerSlice = createSlice({
     },
   },
   extraReducers: {
-    [fetchFiles.fulfilled]: (state, action) => {
-      state.files = action.payload;
+    [fetchFiles.fulfilled]: (state, { payload }) => {
+      state.files = { ...state.files, ...payload };
+      // state.files = action.payload;
     },
-    [fetchFolders.fulfilled]: (state, action) => {
-      state.folders = action.payload;
+    [fetchFolders.fulfilled]: (state, { payload }) => {
+      state.folders = { ...state.folders, ...payload };
+      // state.folders = action.payload;
     },
     [deletehOneFile.fulfilled]: (state, action) => {
-      console.log(1, action.payload);
       state.files = state.files.filter((file) => file._id !== action.payload);
+      if (state.currentFileIndex > state.files.length - 1) {
+        state.currentFileIndex = state.files.length - 1;
+      }
     },
     [cameraActions.selectCamera]: (state, action) => {
       state.currentFolder = null;
-      state.stack = [];
+      state.foldersStack = [];
     },
   },
 });

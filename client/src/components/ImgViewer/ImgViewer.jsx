@@ -7,13 +7,20 @@ import ImgWrapper from '../ImgWrapper/ImgWrapper.jsx';
 import { fileManagerActions } from '../../store/fileManagerSlice.js';
 import { imgViewerActions } from '../../store/imgViewerSlice.js';
 
-const ImgViewer = () => {
+const ImgViewer = ({ selectedCamera }) => {
   const dispatch = useDispatch();
 
-  const { files, currentFileIndex } = useSelector((state) => state.fileManager);
+  const { files, currentFileIndex, currentFolder } = useSelector((state) => state.fileManager);
   const { visible } = useSelector((state) => state.imgViewer);
 
-  const nextImgBtnDisabled = currentFileIndex === files.length - 1;
+  if (currentFileIndex === null) {
+    return null;
+  }
+
+  const parentId = currentFolder ? currentFolder._id : selectedCamera.mainFolder;
+  const currentFile = files[parentId][currentFileIndex];
+
+  const nextImgBtnDisabled = currentFileIndex === files[parentId].length - 1;
   const prewImgBtnDisabled = currentFileIndex === 0;
 
   const closeModalHandler = () => {
@@ -29,8 +36,13 @@ const ImgViewer = () => {
   };
 
   const deleteImageHandler = () => {
-    console.log('delete', files[currentFileIndex]);
-    dispatch(fileManagerActions.deletehOneFile({ fileId: files[currentFileIndex]._id }));
+    // console.log('delete', currentFile);
+    dispatch(
+      fileManagerActions.deletehOneFile({
+        cameraId: selectedCamera._id,
+        fileId: currentFile._id,
+      })
+    );
   };
 
   if (currentFileIndex === null || !visible) {
@@ -39,7 +51,7 @@ const ImgViewer = () => {
 
   return (
     <Modal
-      title={files[currentFileIndex]?.date}
+      title={currentFile?.date}
       footer={[
         <Button key='prew' onClick={prewImageHandler} disabled={prewImgBtnDisabled}>
           PrewItem
@@ -59,7 +71,7 @@ const ImgViewer = () => {
       onOk={closeModalHandler}
       onCancel={closeModalHandler}
       width={900}>
-      <ImgWrapper width={100} height={0.5625} src={`/files/${files[currentFileIndex]?.name}`} />
+      <ImgWrapper width={100} height={0.5625} src={`/files/${currentFile?.name}`} />
     </Modal>
   );
 };
