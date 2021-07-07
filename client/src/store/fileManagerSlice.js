@@ -3,12 +3,12 @@ import { createSlice, createSelector } from '@reduxjs/toolkit';
 import fileManagerThunks from '../thunks/fileManagerThunks.js';
 import { cameraActions } from './cameraSlice.js';
 
-const { fetchFiles, fetchFolders, deletehOneFile } = fileManagerThunks;
+const { fetchFiles, fetchFolders, fetchOneFolder, deletehOneFile } = fileManagerThunks;
 
 const fileManagerSlice = createSlice({
   name: 'fileManager',
   initialState: {
-    files: [],
+    files: {},
     currentFileIndex: null,
     folders: {},
     currentFolder: null,
@@ -24,47 +24,38 @@ const fileManagerSlice = createSlice({
     prewFileIndex: (state, action) => {
       state.currentFileIndex -= 1;
     },
-    setCurrentFolder: (state, action) => {
+    setcurrentFolder: (state, action) => {
       state.currentFolder = action.payload;
     },
     pushToFoldersStack: (state, action) => {
-      state.currentFolder = action.payload;
       state.foldersStack.push(action.payload);
+      state.currentFolder = state.foldersStack[state.foldersStack.length - 1];
     },
     popFromFoldersStack: (state, action) => {
       state.foldersStack.pop();
-      state.currentFolder = state.foldersStack.length
-        ? state.foldersStack[state.foldersStack.length - 1]
-        : null;
+      state.currentFolder = state.foldersStack[state.foldersStack.length - 1];
     },
   },
   extraReducers: {
-    [fetchFiles.fulfilled]: (state, { payload }) => {
-      state.files = { ...state.files, ...payload };
-      // state.files = action.payload;
+    [fetchFiles.fulfilled]: (state, action) => {
+      state.files[state.currentFolder._id] = action.payload;
     },
-    [fetchFolders.fulfilled]: (state, { payload }) => {
-      state.folders = { ...state.folders, ...payload };
-      // state.folders = action.payload;
+    [fetchFolders.fulfilled]: (state, action) => {
+      state.folders[state.currentFolder._id] = action.payload;
+    },
+    [fetchOneFolder.fulfilled]: (state, action) => {
+      state.currentFolder = action.payload;
+      state.foldersStack.push(action.payload);
     },
     [deletehOneFile.fulfilled]: (state, action) => {
-      state.files = state.files.filter((file) => file._id !== action.payload);
-      if (state.currentFileIndex > state.files.length - 1) {
-        state.currentFileIndex = state.files.length - 1;
+      const key = state.currentFolder._id;
+      state.files[key] = state.files[key].filter((file) => file._id !== action.payload);
+      if (state.currentFileIndex > state.files[key].length - 1) {
+        state.currentFileIndex = state.files[key].length - 1;
       }
-    },
-    [cameraActions.selectCamera]: (state, action) => {
-      state.currentFolder = null;
-      state.foldersStack = [];
     },
   },
 });
-
-export const selectFilesByCurrentFolder = createSelector(
-  (state) => state.files.files,
-  (state) => state.files.currentFolder,
-  (files, currentFolder) => files.filter((file) => file.parent === currentFolder._id)
-);
 
 export const fileManagerActions = { ...fileManagerSlice.actions, ...fileManagerThunks };
 

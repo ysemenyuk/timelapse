@@ -20,17 +20,26 @@ const CameraFileManager = ({ selectedCamera }) => {
   const fetchFiles = useThunkStatus(fileManagerActions.fetchFiles);
   const fetchFolders = useThunkStatus(fileManagerActions.fetchFolders);
 
+  useEffect(() => {
+    dispatch(
+      fileManagerActions.fetchOneFolder({
+        cameraId: selectedCamera._id,
+        folderId: selectedCamera.mainFolder,
+      })
+    );
+  }, []);
+
   const { files, folders, currentFolder, foldersStack } = useSelector(
     (state) => state.fileManager
   );
 
-  const cameraId = selectedCamera._id;
-  const parentId = currentFolder ? currentFolder._id : selectedCamera.mainFolder;
+  const parentId = currentFolder?._id;
+  const cameraId = selectedCamera?._id;
 
   const loaded = Object.keys(files).includes(parentId) && Object.keys(folders).includes(parentId);
 
   useEffect(() => {
-    if (!loaded) {
+    if (!loaded && parentId) {
       dispatch(fileManagerActions.fetchFiles({ cameraId, parentId }));
       dispatch(fileManagerActions.fetchFolders({ cameraId, parentId }));
     }
@@ -69,7 +78,9 @@ const CameraFileManager = ({ selectedCamera }) => {
             <Button
               type='primary'
               onClick={backHandler}
-              disabled={fetchFolders.isLoading || fetchFiles.isLoading}>
+              disabled={
+                fetchFolders.isLoading || fetchFiles.isLoading || foldersStack.length === 1
+              }>
               Back
             </Button>
             <Button

@@ -9,11 +9,8 @@ const fetchFiles = createAsyncThunk('file/fetchFiles', async ({ cameraId, parent
     const response = await fileManagerService.getFiles(cameraId, parentId);
 
     console.log('file/fetchFiles response.data -', response.data);
-    console.log({ [parentId]: response.data });
 
-    return { [parentId]: response.data };
-
-    // return response.data;
+    return response.data;
   } catch (e) {
     console.log('file/fetchFiles error -', e.message);
     throw e;
@@ -27,9 +24,8 @@ const fetchFolders = createAsyncThunk('folder/fetchFolders', async ({ cameraId, 
     const response = await fileManagerService.getFolders(cameraId, parentId);
 
     console.log('folder/fetchFolders response.data -', response.data);
-    console.log({ [parentId]: response.data });
 
-    return { [parentId]: response.data };
+    return response.data;
   } catch (e) {
     console.log('folder/fetchFolders error -', e.message);
     throw e;
@@ -38,11 +34,11 @@ const fetchFolders = createAsyncThunk('folder/fetchFolders', async ({ cameraId, 
 
 const fetchOneFolder = createAsyncThunk(
   'folder/fetchOneFolder',
-  async ({ cameraId, parentId }) => {
+  async ({ cameraId, folderId }) => {
     try {
-      console.log('folder/fetchOneFolder cameraId parentId -', { cameraId, parentId });
+      console.log('folder/fetchOneFolder cameraId folderId -', { cameraId, folderId });
 
-      const response = await fileManagerService.getOneFolder(cameraId, parentId);
+      const response = await fileManagerService.getOneFolder(cameraId, folderId);
 
       console.log('folder/fetchOneFolder response.data -', response.data);
 
