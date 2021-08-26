@@ -1,25 +1,23 @@
 import React from 'react';
-import { Row, Col, Button, Space, Typography, Image, Spin } from 'antd';
-const { Title, Text } = Typography;
+import folderImg from '../../../assets/folder.png';
+import ImgWrapper from '../../UI/ImgWrapper/ImgWrapper.jsx';
 
-import ImgWrapper from '../../ImgWrapper/ImgWrapper.jsx';
-
-const FoldersList = ({ folders, onClickFolder }) => {
+const FoldersList = ({ className, folders, onClickFolder }) => {
   if (!folders || !folders.length) {
     return null;
   }
 
   return folders.map((folder) => (
-    <Col span={3} key={folder._id}>
+    <div className={className} key={folder._id}>
       <ImgWrapper
         width={100}
-        height={1}
-        src={`/assets/folder-img.png`}
+        height={0.5625}
+        src={folderImg}
         role='button'
         onClick={() => onClickFolder(folder)}
       />
-      <Text>{folder.name}</Text>
-    </Col>
+      <span>{folder.name}</span>
+    </div>
   ));
 };
 

@@ -1,16 +1,14 @@
 import React from 'react';
-import { Col, Typography } from 'antd';
-const { Text } = Typography;
 
-import ImgWrapper from '../../ImgWrapper/ImgWrapper.jsx';
+import ImgWrapper from '../../UI/ImgWrapper/ImgWrapper.jsx';
 
-const FilesList = ({ files, onClickFile }) => {
+const FilesList = ({ className, files, onClickFile }) => {
   if (!files || !files.length) {
     return null;
   }
 
   return files.map((file, index) => (
-    <Col span={4} key={file._id}>
+    <div className={className} key={file._id}>
       <ImgWrapper
         width={100}
         height={0.5625}
@@ -18,8 +16,8 @@ const FilesList = ({ files, onClickFile }) => {
         role='button'
         onClick={() => onClickFile(index)}
       />
-      <Text>{file.date}</Text>
-    </Col>
+      <span>{file.date}</span>
+    </div>
   ));
 };
 

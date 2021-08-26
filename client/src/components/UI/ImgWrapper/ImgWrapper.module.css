@@ -1,4 +1,4 @@
-.imageWrapper {
+.wrapper {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -9,8 +9,12 @@
   position: absolute;
 }
 
-.imageWrapper-img {
+.wrapper img {
   width: 100%;
-  height: auto;
+  max-height: 100%;
   border-radius: 2px;
+}
+
+.wrapper span {
+  position: absolute;
 }

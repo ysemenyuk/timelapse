@@ -9,8 +9,8 @@ import Screenshot from '../components/Screenshot/Screenshot.jsx';
 import CameraStatus from '../components/CameraStatus/CameraStatus.jsx';
 import CameraInfo from '../components/CameraInfo/CameraInfo.jsx';
 
-import Spinner from '../components/Spinner.jsx';
-import Error from '../components/Error.jsx';
+import Spinner from '../components/UI/Spinner.jsx';
+import Error from '../components/UI/Error.jsx';
 
 const CameraListPage = () => {
   const selectedCamera = useSelector((state) => state.camera.selectedCamera);

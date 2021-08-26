@@ -1,16 +1,11 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Redirect,
-} from 'react-router-dom';
+import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
 
 import userThunks from '../thunks/userThunks.js';
 
 import Navbar from '../components/Navbar/Navbar.jsx';
-import Spinner from '../components/Spinner.jsx';
+import Spinner from '../components/UI/Spinner.jsx';
 // import Error from './components/Error.jsx';
 
 import LoginPage from '../pages/LoginPage.jsx';
@@ -31,10 +26,7 @@ const App = () => {
 
   const PrivateRoute = ({ children, ...rest }) => {
     return (
-      <Route
-        {...rest}
-        render={() => (user.isLoggedIn ? children : <Redirect to={'/login'} />)}
-      />
+      <Route {...rest} render={() => (user.isLoggedIn ? children : <Redirect to={'/login'} />)} />
     );
   };
 
@@ -52,11 +44,7 @@ const App = () => {
               <Route exact path='/user' component={ProfilePage} />
               <Route exact path='/form' component={CameraAddPage} />
               <Route exact path='/cameras/:id' component={CameraPage} />
-              <Route
-                exact
-                path={['/', '/cameras']}
-                component={CameraListPage}
-              />
+              <Route exact path={['/', '/cameras']} component={CameraListPage} />
             </PrivateRoute>
             <Redirect to='/' />
           </Switch>

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
-import Message from '../components/Message.jsx';
+import Message from '../components/UI/Message.jsx';
 
 import userThunks from '../thunks/userThunks.js';
 
@@ -71,8 +71,7 @@ const ProfilePage = () => {
               type='file'
               name='avatar'
               id='file-input'
-              onChange={(e) => setFile(e.target.files[0])}
-            ></input>
+              onChange={(e) => setFile(e.target.files[0])}></input>
           </div>
 
           <div className='d-grid gap-2 d-flex justify-content-start'>
@@ -103,8 +102,7 @@ const ProfilePage = () => {
               autoComplete='text'
               className='form-control'
               onChange={(e) => setName(e.target.value)}
-              value={name}
-            ></input>
+              value={name}></input>
           </div>
 
           <div className='mb-3'>
@@ -118,8 +116,7 @@ const ProfilePage = () => {
               autoComplete='email'
               className='form-control'
               onChange={(e) => setEmail(e.target.value)}
-              value={email}
-            ></input>
+              value={email}></input>
           </div>
 
           <div className='mb-3'>
@@ -133,8 +130,7 @@ const ProfilePage = () => {
               autoComplete='password'
               className='form-control'
               onChange={(e) => setPassword(e.target.value)}
-              value={password}
-            ></input>
+              value={password}></input>
           </div>
 
           <div className='mb-3'>
@@ -148,8 +144,7 @@ const ProfilePage = () => {
               autoComplete='password'
               className='form-control'
               onChange={(e) => setConfirmPassword(e.target.value)}
-              value={confirmPassword}
-            ></input>
+              value={confirmPassword}></input>
           </div>
 
           <div className='d-grid gap-2 d-flex justify-content-start'>

@@ -1,13 +1,12 @@
 import React from 'react';
-import { Breadcrumb } from 'antd';
+import Breadcrumb from 'react-bootstrap/Breadcrumb';
 
 const Breadcrumbs = ({ stack, style }) => {
   return (
     <Breadcrumb style={style}>
-      {/* <Breadcrumb.Item>Home</Breadcrumb.Item> */}
       {stack.map((folder) => (
-        <Breadcrumb.Item key={folder._id}>
-          <a href='#'>{folder.name}</a>
+        <Breadcrumb.Item href='#' key={folder._id}>
+          {folder.name}
         </Breadcrumb.Item>
       ))}
     </Breadcrumb>

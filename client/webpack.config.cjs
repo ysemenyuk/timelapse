@@ -48,7 +48,7 @@ module.exports = {
       },
       {
         test: /\.less$/i,
-        use: [{ loader: 'css-loader' }, { loader: 'less-loader' }],
+        use: [{ loader: 'less-loader' }],
       },
       {
         test: /\.s?[ac]ss$/i,
@@ -61,14 +61,7 @@ module.exports = {
       },
       {
         test: /\.(jpe?g|png|gif|svg|ico)$/i,
-        use: [
-          {
-            loader: 'file-loader',
-            options: {
-              name: '[name].[ext]',
-            },
-          },
-        ],
+        use: [{ loader: 'url-loader' }],
       },
     ],
   },

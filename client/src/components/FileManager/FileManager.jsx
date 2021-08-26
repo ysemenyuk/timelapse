@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { Row, Col, Button, Space, Typography, Alert, Spin } from 'antd';
-const { Title } = Typography;
+import styles from './FileManager.module.css';
+
+import { Row, Col, Button, Spinner, Alert } from 'react-bootstrap';
 
 import useThunkStatus from '../../hooks/useThunkStatus.js';
 
@@ -13,6 +14,7 @@ import { imgViewerActions } from '../../store/imgViewerSlice.js';
 import Breadcrumbs from './Breadcrumbs/Breadcrumbs.jsx';
 import FilesList from './FileList/FilesList.jsx';
 import FoldersList from './FolderList/FoldersList.jsx';
+import ButtonsGroup from '../UI/ButtonsGroup.jsx';
 
 const CameraFileManager = ({ selectedCamera }) => {
   const dispatch = useDispatch();
@@ -69,14 +71,17 @@ const CameraFileManager = ({ selectedCamera }) => {
 
   return (
     <>
-      <Row gutter={[0, 16]}>
-        <Col span={24}>
-          <Title level={5}>Files</Title>
+      <Row className='mb-3'>
+        <Col>
+          <h6>Files</h6>
         </Col>
-        <Col span={24}>
-          <Space>
+      </Row>
+      <Row>
+        <Col className='mb-3'>
+          <ButtonsGroup>
             <Button
               type='primary'
+              size='sm'
               onClick={backHandler}
               disabled={
                 fetchFolders.isLoading || fetchFiles.isLoading || foldersStack.length === 1
@@ -85,30 +90,49 @@ const CameraFileManager = ({ selectedCamera }) => {
             </Button>
             <Button
               type='primary'
+              size='sm'
               onClick={refreshHandler}
               disabled={fetchFolders.isLoading || fetchFiles.isLoading}>
               Refresh
             </Button>
             <Button
               type='primary'
+              size='sm'
               onClick={createScreenshotHandler}
               disabled={fetchFolders.isLoading || fetchFiles.isLoading}>
               CreateScreenshot
             </Button>
-          </Space>
+            <Button
+              type='primary'
+              size='sm'
+              disabled={fetchFolders.isLoading || fetchFiles.isLoading}>
+              CreateVideoFile
+            </Button>
+          </ButtonsGroup>
         </Col>
-        <Col span={24}>
+      </Row>
+      <Row className='mb-3'>
+        <Col>
           <Breadcrumbs stack={foldersStack} />
         </Col>
-
-        <Col span={24}>
+      </Row>
+      <Row>
+        <Col>
           {fetchFolders.isSuccess && fetchFiles.isSuccess && loaded ? (
-            <Row gutter={[16, 16]}>
-              <FoldersList folders={folders[parentId]} onClickFolder={clickFolderHandler} />
-              <FilesList files={files[parentId]} onClickFile={clickFileHandler} />
-            </Row>
+            <div className={styles.container}>
+              <FoldersList
+                className={styles.item}
+                folders={folders[parentId]}
+                onClickFolder={clickFolderHandler}
+              />
+              <FilesList
+                className={styles.item}
+                files={files[parentId]}
+                onClickFile={clickFileHandler}
+              />
+            </div>
           ) : fetchFolders.isLoading || fetchFiles.isLoading || !loaded ? (
-            <Spin />
+            <Spinner animation='border' />
           ) : fetchFolders.isError || fetchFiles.isError ? (
             <Alert message='Network error' type='error' />
           ) : null}

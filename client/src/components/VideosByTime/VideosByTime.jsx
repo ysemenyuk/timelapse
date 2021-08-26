@@ -30,7 +30,7 @@ const VideoStatus = ({ selectedCamera }) => {
           </li>
         </ul>
       </div>
-      <div className='d-grid gap-2 d-flex justify-content-start'>
+      <div className='gap-2 d-flex justify-content-start'>
         <button type='button' className='btn btn-sm btn-primary'>
           Edit
         </button>

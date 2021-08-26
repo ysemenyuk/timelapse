@@ -5,10 +5,9 @@ import ReactDOM from 'react-dom';
 import 'regenerator-runtime/runtime.js';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
-import 'antd/dist/antd.css';
 
-import '../assets/favicon.ico';
-import '../assets/style.css';
+// import './assets/favicon.ico';
+// import './index.css';
 
 import initApp from './App/init.jsx';
 import createStore from './store/index.js';

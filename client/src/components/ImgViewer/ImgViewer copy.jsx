@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { Modal, Button } from 'react-bootstrap';
+import { Modal, Button, Image, Spin } from 'antd';
+
 import ImgWrapper from '../UI/ImgWrapper/ImgWrapper.jsx';
 
 import { fileManagerActions } from '../../store/fileManagerSlice.js';
@@ -44,32 +45,30 @@ const ImgViewer = ({ selectedCamera }) => {
       })
     );
   };
+
   return (
     <Modal
-      aria-labelledby='contained-modal-title-vcenter'
-      show={visible}
-      onHide={closeModalHandler}
-      size='xl'>
-      <Modal.Header closeButton>
-        <Modal.Title id='contained-modal-title-vcenter'>{currentFile?.date}</Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
-        <ImgWrapper width={100} height={0.5625} src={`/files/${currentFile?.name}`} />
-      </Modal.Body>
-      <Modal.Footer>
+      title={currentFile?.date}
+      footer={[
         <Button key='prew' onClick={prewImageHandler} disabled={prewImgBtnDisabled}>
           PrewItem
-        </Button>
+        </Button>,
         <Button key='next' onClick={nextImageHandler} disabled={nextImgBtnDisabled}>
           NextItem
-        </Button>
+        </Button>,
         <Button key='delete' onClick={deleteImageHandler}>
           Delete
-        </Button>
+        </Button>,
         <Button key='close' onClick={closeModalHandler}>
           Close
-        </Button>
-      </Modal.Footer>
+        </Button>,
+      ]}
+      centered
+      visible={visible}
+      onOk={closeModalHandler}
+      onCancel={closeModalHandler}
+      width={900}>
+      <ImgWrapper width={100} height={0.5625} src={`/files/${currentFile?.name}`} />
     </Modal>
   );
 };
