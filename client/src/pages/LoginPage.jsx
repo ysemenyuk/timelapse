@@ -33,7 +33,7 @@ const LoginPage = () => {
         .catch((e) => {
           setSubmitting(false);
           setFieldError('auth', e.message);
-          console.log('catch formik err -', e);
+          console.log('catch login formik err -', e);
         });
     },
   });
@@ -95,10 +95,7 @@ const LoginPage = () => {
               <div className='invalid-feedback'>{formik.errors.auth}</div>
             </div>
 
-            <button
-              type='submit'
-              className='w-100 mb-3 btn btn-outline-primary'
-            >
+            <button type='submit' className='w-100 mb-3 btn btn-outline-primary'>
               Submit
             </button>
           </form>

@@ -1,72 +1,84 @@
-import path from 'path';
 import express from 'express';
-import dotenv from 'dotenv';
-import morgan from 'morgan';
 import mongoose from 'mongoose';
+import fileUpload from 'express-fileupload';
+import debug from 'debug';
+import path from 'path';
 
-import cameraRoutes from './routes/camera.routes.js';
-import fileRoutes from './routes/file.routes.js';
-import userRoutes from './routes/user.routes.js';
+import mongoClient from './dbConfig.js';
 
-// import { errorHandlerMiddleware } from './middleware/errorHandlerMiddleware.js';
-// import { corsMiddleware } from './middleware/corsMiddleware.js';
+import userRouter from './routes/user.router.js';
+import cameraRouter from './routes/camera.router.js';
+import cameraScreenshotRouter from './routes/cameraScreenshot.router.js';
+import cameraFolderRouter from './routes/cameraFolder.router.js';
+import cameraFileRouter from './routes/cameraFile.router.js';
+import cameraTaskRouter from './routes/cameraTask.router.js';
 
-import { __dirname } from './initDirname.js';
+import staticFileRouter from './routes/staticFile.router.js';
 
-// import { fileURLToPath } from 'url';
-// import { dirname } from 'path';
+// import winstonMiddleware from './middleware/winstonMiddleware.js';
+import debugMiddleware from './middleware/debugMiddleware.js';
 
-// export const __filename = fileURLToPath(import.meta.url);
-// export const __dirname = dirname(__filename);
+// import userFileMiddleware from './middleware/userFileMiddleware.js';
+import { errorHandlerMiddleware } from './middleware/errorHandlerMiddleware.js';
 
-console.log('index');
-
-console.log('index __dirname - ', __dirname);
-console.log('index path.resolve() - ', path.resolve());
-
-dotenv.config({ path: path.join(__dirname, '.env') });
+import __dirname from './dirname.js';
+console.log(__dirname);
 
 const app = express();
+const logger = debug('server');
+
+const PORT = process.env.PORT || 4000;
+const dbUri = process.env.MONGO_URI;
 
 if (process.env.NODE_ENV === 'development') {
-  app.use(morgan('dev'));
+  // app.use(winstonMiddleware);
+  app.use(debugMiddleware);
 }
 
 app.use(express.json());
-// app.use(corsMiddleware);
+app.use(fileUpload());
 
-app.use('/files/assets', express.static(path.join(__dirname, 'assets')));
-app.use('/files', express.static(path.join(__dirname, '..', 'cameras')));
+const staticPath = path.join(__dirname, 'assets');
+console.log(staticPath);
 
-app.use('/api/cameras', cameraRoutes);
-app.use('/api/files', fileRoutes);
-app.use('/api/user', userRoutes);
+app.use('/assets', express.static(staticPath));
+app.use('/files', staticFileRouter);
+// app.use('/files/userfiles', userFileMiddleware, userFileRouter);
+
+app.use('/api/user', userRouter);
+
+app.use('/api/cameras/:cameraId/screenshots', cameraScreenshotRouter);
+app.use('/api/cameras/:cameraId/folders', cameraFolderRouter);
+app.use('/api/cameras/:cameraId/files', cameraFileRouter);
+app.use('/api/cameras/:cameraId/tasks', cameraTaskRouter);
+app.use('/api/cameras', cameraRouter);
 
 app.get('/', (req, res) => {
   res.send('API is running....');
 });
 
-// app.use(errorHandlerMiddleware);
+app.use((req, res, next) => {
+  res.status(404).send('Sorry cant find that!');
+});
 
-const PORT = process.env.PORT || 4000;
+app.use(errorHandlerMiddleware);
 
 const start = async () => {
   try {
-    const conn = await mongoose.connect(process.env.MONGO_URI, {
+    await mongoClient.connect();
+    logger(`MongoClient successfully Connected`);
+
+    await mongoose.connect(dbUri, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
       useFindAndModify: false,
     });
-    console.log(`MongoDB Connected: ${conn.connection.host}`);
 
-    app.listen(
-      PORT,
-      console.log(
-        `Server running in ${process.env.NODE_ENV} mode on port ${PORT}`
-      )
-    );
+    logger(`Mongoose successfully Connected`);
+
+    app.listen(PORT, logger(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`));
   } catch (e) {
-    console.log(e);
+    console.log('catch err', e);
   }
 };
 

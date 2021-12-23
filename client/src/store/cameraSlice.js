@@ -15,7 +15,6 @@ const cameraSlice = createSlice({
   },
   reducers: {
     selectCamera: (state, action) => {
-      // console.log('action', action);
       state.selectedCamera = action.payload;
     },
   },
@@ -41,18 +40,14 @@ const cameraSlice = createSlice({
     [updateOne.fulfilled]: (state, action) => {
       // console.log('action updateOne -', action);
       const updatedItem = action.payload;
-      const updatedItemIndex = state.allCameras.findIndex(
-        (item) => item._id === updatedItem._id
-      );
+      const updatedItemIndex = state.allCameras.findIndex((item) => item._id === updatedItem._id);
       state.allCameras[updatedItemIndex] = updatedItem;
       state.selectedCamera = updatedItem;
     },
     [deleteOne.fulfilled]: (state, action) => {
       // console.log('action deleteOne -', action);
       const deletedItem = action.payload;
-      state.allCameras = state.allCameras.filter(
-        (item) => item._id !== deletedItem._id
-      );
+      state.allCameras = state.allCameras.filter((item) => item._id !== deletedItem._id);
       if (state.allCameras.length === 0) {
         state.selectedCamera = null;
       } else {
@@ -62,6 +57,6 @@ const cameraSlice = createSlice({
   },
 });
 
-export const cameraActions = cameraSlice.actions;
+export const cameraActions = { ...cameraSlice.actions, ...cameraThunks };
 
 export default cameraSlice.reducer;

@@ -1,73 +1,82 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
 
-import apiRoutes from '../apiRoutes.js';
-import getAuthHeader from './authHeader.js';
+import cameraService from '../api/camera.service.js';
 
 const fetchAll = createAsyncThunk('camera/fetchAll', async () => {
   try {
-    const response = await axios.get(apiRoutes.camerasPath(), {
-      headers: getAuthHeader(),
-    });
-    console.log('fetchAll response.data -', response.data);
-    return response.data;
+    const { data } = await cameraService.getAll();
+    console.log('camera/fetchAll response.data -', data);
+    return data;
   } catch (e) {
-    console.log('fetchAll error -', e.message);
+    console.log('camera/fetchAll error -', e.message);
     throw e;
   }
 });
 
 const fetchOne = createAsyncThunk('camera/fetchOne', async (id) => {
   try {
-    const response = await axios.get(apiRoutes.cameraPath(id), {
-      headers: getAuthHeader(),
-    });
-    console.log('fetchOne response.data -', response.data);
-    return response.data;
+    const { data } = await cameraService.getOne(id);
+    console.log('camera/fetchOne response.data -', data);
+    return data;
   } catch (e) {
-    console.log('fetchOne error -', e.message);
+    console.log('camera/fetchOne error -', e.message);
     throw e;
   }
 });
 
 const createOne = createAsyncThunk('camera/createOne', async (values) => {
   try {
-    const response = await axios.post(apiRoutes.camerasPath(), values, {
-      headers: getAuthHeader(),
-    });
-    console.log('createOne response.data -', response.data);
-    return response.data;
+    console.log('camera/createOne values -', values);
+
+    const { data } = await cameraService.createOne(values);
+    console.log('createOne response.data -', data);
+    return data;
   } catch (e) {
-    console.log('createOne error -', e.message);
+    console.log('camera/createOne error -', e.message);
     throw e;
   }
 });
 
 const updateOne = createAsyncThunk('camera/updateOne', async (values) => {
   try {
-    console.log('updateOne values -', values);
-    const response = await axios.put(apiRoutes.cameraPath(values._id), values, {
-      headers: getAuthHeader(),
-    });
-    console.log('updateOne response.data -', response.data);
-    return response.data;
+    console.log('camera/updateOne values -', values);
+
+    const { data } = await cameraService.updateOne(values._id, values);
+
+    console.log('camera/updateOne response.data -', data);
+    return data;
   } catch (e) {
-    console.log('updateOne error -', e.message);
+    console.log('camera/updateOne error -', e.message);
     throw e;
   }
 });
 
 const deleteOne = createAsyncThunk('camera/deleteOne', async (camera) => {
   try {
-    const response = await axios.delete(apiRoutes.cameraPath(camera._id), {
-      headers: getAuthHeader(),
-    });
-    console.log('deleteOne response -', response);
+    console.log('camera/deleteOne camera -', camera);
+
+    const { data } = await cameraService.deleteOne(camera._id);
+
+    console.log('camera/deleteOne response -', data);
     return camera;
   } catch (e) {
-    console.log('deleteOne error -', e.message);
+    console.log('camera/deleteOne error -', e.message);
     throw e;
   }
 });
 
-export default { fetchAll, fetchOne, createOne, updateOne, deleteOne };
+const createScreenshot = createAsyncThunk('camera/createScreenshot', async (cameraId) => {
+  try {
+    console.log('camera/createScreenshot cameraId -', cameraId);
+
+    const { data } = await cameraService.createScreenshot(cameraId);
+
+    console.log('camera/createScreenshot response -', data);
+    return data;
+  } catch (e) {
+    console.log('camera/createScreenshot error -', e.message);
+    throw e;
+  }
+});
+
+export default { fetchAll, fetchOne, createOne, updateOne, deleteOne, createScreenshot };

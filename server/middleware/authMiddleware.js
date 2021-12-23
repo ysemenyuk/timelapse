@@ -1,21 +1,25 @@
-import jwt from 'jsonwebtoken';
+// import logger from '../libs/logger.js';
+import jwt from '../libs/token.js';
 
 export default (req, res, next) => {
-  if (req.method === 'OPTIONS') {
-    return next();
-  }
+  // console.log(req.headers.authorization);
 
   try {
-    const token = req.headers.authorization.split(' ')[1];
-
-    if (!token) {
-      return res.status(401).json({ message: 'Auth error' });
+    if (!req.headers.authorization) {
+      req.logger('authMiddleware no token');
+      return res.status(401).json({ message: 'authorizationerror' });
     }
 
-    const decoded = jwt.verify(token, process.env.SECRET_KEY);
-    req.user = decoded;
+    const token = req.headers.authorization.split(' ')[1];
+
+    const { userId } = jwt.verify(token);
+    req.userId = userId;
+
+    req.logger(`authMiddleware token ok userId: ${userId}`);
+
     next();
   } catch (e) {
-    return res.status(401).json({ message: 'Auth error' });
+    req.logger(`authMiddleware error: ${e.message}`);
+    return res.status(401).json({ message: e.message });
   }
 };

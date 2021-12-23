@@ -27,7 +27,7 @@ module.exports = {
     //   '/api': 'http://localhost:4000',
     // },
     proxy: {
-      context: ['/auth', '/api', '/files'],
+      context: ['/auth', '/api', '/files', '/assets'],
       target: 'http://localhost:4000',
     },
     historyApiFallback: true,
@@ -47,6 +47,10 @@ module.exports = {
         use: 'babel-loader',
       },
       {
+        test: /\.less$/i,
+        use: [{ loader: 'less-loader' }],
+      },
+      {
         test: /\.s?[ac]ss$/i,
         use: [
           { loader: MiniCssExtractPlugin.loader },
@@ -57,14 +61,7 @@ module.exports = {
       },
       {
         test: /\.(jpe?g|png|gif|svg|ico)$/i,
-        use: [
-          {
-            loader: 'file-loader',
-            options: {
-              name: '[name].[ext]',
-            },
-          },
-        ],
+        use: [{ loader: 'url-loader' }],
       },
     ],
   },
