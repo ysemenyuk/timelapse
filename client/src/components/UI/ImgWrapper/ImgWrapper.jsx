@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Spinner } from 'react-bootstrap';
-
 import styles from './ImgWrapper.module.css';
 
 export default ({ src, width, height, ...props }) => {

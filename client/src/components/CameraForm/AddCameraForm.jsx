@@ -4,7 +4,6 @@ import { unwrapResult } from '@reduxjs/toolkit';
 import { useHistory } from 'react-router-dom';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-
 import cameraThunks from '../../thunks/cameraThunks.js';
 
 const validationSchema = Yup.object({
@@ -48,8 +47,8 @@ const CameraForm = () => {
   });
 
   // console.log('selectedCamera -', selectedCamera);
-  console.log('formik.errors -', formik.errors);
-  console.log('formik.values -', formik.values);
+  // console.log('formik.errors -', formik.errors);
+  // console.log('formik.values -', formik.values);
 
   return (
     <div className='col-12 mb-3'>
@@ -81,7 +80,9 @@ const CameraForm = () => {
               id='description'
               name='description'
               type='text'
-              className={`form-control ${formik.errors?.description && 'is-invalid'}`}
+              className={`form-control ${
+                formik.errors?.description && 'is-invalid'
+              }`}
             ></input>
             <div className='invalid-feedback'>{formik.errors?.description}</div>
           </div>
@@ -96,10 +97,18 @@ const CameraForm = () => {
                 value={formik.values.screenshotLink}
                 name='screenshotLink'
                 type='text'
-                className={`form-control ${formik.errors?.screenshotLink && 'is-invalid'}`}
+                className={`form-control ${
+                  formik.errors?.screenshotLink && 'is-invalid'
+                }`}
               ></input>
-              <div className='invalid-feedback'>{formik.errors?.screenshotLink}</div>
-              <button className='btn btn-outline-secondary' type='button' id='button-addon2'>
+              <div className='invalid-feedback'>
+                {formik.errors?.screenshotLink}
+              </div>
+              <button
+                className='btn btn-outline-secondary'
+                type='button'
+                id='button-addon2'
+              >
                 Check
               </button>
             </div>

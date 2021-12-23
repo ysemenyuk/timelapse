@@ -1,16 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-
 import styles from './FileManager.module.css';
-
 import { Row, Col, Button, Spinner, Alert } from 'react-bootstrap';
-
 import useThunkStatus from '../../hooks/useThunkStatus.js';
-
 import { cameraActions } from '../../store/cameraSlice.js';
 import { fileManagerActions } from '../../store/fileManagerSlice.js';
 import { imgViewerActions } from '../../store/imgViewerSlice.js';
-
 import Breadcrumbs from './Breadcrumbs/Breadcrumbs.jsx';
 import FilesList from './FileList/FilesList.jsx';
 import FoldersList from './FolderList/FoldersList.jsx';
@@ -38,7 +33,9 @@ const CameraFileManager = ({ selectedCamera }) => {
   const parentId = currentFolder?._id;
   const cameraId = selectedCamera?._id;
 
-  const loaded = Object.keys(files).includes(parentId) && Object.keys(folders).includes(parentId);
+  const loaded =
+    Object.keys(files).includes(parentId) &&
+    Object.keys(folders).includes(parentId);
 
   useEffect(() => {
     if (!loaded && parentId) {
@@ -84,28 +81,34 @@ const CameraFileManager = ({ selectedCamera }) => {
               size='sm'
               onClick={backHandler}
               disabled={
-                fetchFolders.isLoading || fetchFiles.isLoading || foldersStack.length === 1
-              }>
+                fetchFolders.isLoading ||
+                fetchFiles.isLoading ||
+                foldersStack.length === 1
+              }
+            >
               Back
             </Button>
             <Button
               type='primary'
               size='sm'
               onClick={refreshHandler}
-              disabled={fetchFolders.isLoading || fetchFiles.isLoading}>
+              disabled={fetchFolders.isLoading || fetchFiles.isLoading}
+            >
               Refresh
             </Button>
             <Button
               type='primary'
               size='sm'
               onClick={createScreenshotHandler}
-              disabled={fetchFolders.isLoading || fetchFiles.isLoading}>
+              disabled={fetchFolders.isLoading || fetchFiles.isLoading}
+            >
               CreateScreenshot
             </Button>
             <Button
               type='primary'
               size='sm'
-              disabled={fetchFolders.isLoading || fetchFiles.isLoading}>
+              disabled={fetchFolders.isLoading || fetchFiles.isLoading}
+            >
               CreateVideoFile
             </Button>
           </ButtonsGroup>

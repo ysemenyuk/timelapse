@@ -1,20 +1,22 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
-
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Redirect,
+} from 'react-router-dom';
 import userThunks from '../thunks/userThunks.js';
-
 import Navbar from '../components/Navbar/Navbar.jsx';
 import Spinner from '../components/UI/Spinner.jsx';
 // import Error from './components/Error.jsx';
-
 import LoginPage from '../pages/LoginPage.jsx';
 import SignupPage from '../pages/SignupPage.jsx';
 import ProfilePage from '../pages/ProfilePage.jsx';
-
 import CameraListPage from '../pages/CamerasListPage.jsx';
 import CameraPage from '../pages/OneCameraPage.jsx';
 import CameraAddPage from '../pages/AddCameraPage.jsx';
+import { Container } from 'react-bootstrap';
 
 const App = () => {
   const dispatch = useDispatch();
@@ -26,12 +28,15 @@ const App = () => {
 
   const PrivateRoute = ({ children, ...rest }) => {
     return (
-      <Route {...rest} render={() => (user.isLoggedIn ? children : <Redirect to={'/login'} />)} />
+      <Route
+        {...rest}
+        render={() => (user.isLoggedIn ? children : <Redirect to={'/login'} />)}
+      />
     );
   };
 
   return (
-    <div className='container p-2'>
+    <Container>
       {user.tokenVerification ? (
         <Spinner />
       ) : (
@@ -44,13 +49,17 @@ const App = () => {
               <Route exact path='/user' component={ProfilePage} />
               <Route exact path='/form' component={CameraAddPage} />
               <Route exact path='/cameras/:id' component={CameraPage} />
-              <Route exact path={['/', '/cameras']} component={CameraListPage} />
+              <Route
+                exact
+                path={['/', '/cameras']}
+                component={CameraListPage}
+              />
             </PrivateRoute>
             <Redirect to='/' />
           </Switch>
         </Router>
       )}
-    </div>
+    </Container>
   );
 };
 

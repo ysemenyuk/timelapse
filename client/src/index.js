@@ -1,13 +1,10 @@
-import React from 'react';
 import ReactDOM from 'react-dom';
-
 // import 'core-js/stable/index.js';
 import 'regenerator-runtime/runtime.js';
-
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-// import './assets/favicon.ico';
-// import './index.css';
+import './assets/favicon.ico';
+import './index.css';
 
 import initApp from './App/init.jsx';
 import createStore from './store/index.js';

@@ -1,7 +1,6 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
-
 import { userActions } from '../../store/userSlice.js';
 
 const Navbar = () => {
@@ -33,7 +32,10 @@ const Navbar = () => {
             <Link className='' to='/user'>
               User
             </Link>
-            <button onClick={() => dispatch(userActions.logout())} className='btn btn-link'>
+            <button
+              onClick={() => dispatch(userActions.logout())}
+              className='btn btn-link'
+            >
               LogOut
             </button>
           </>

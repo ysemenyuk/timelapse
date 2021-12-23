@@ -1,6 +1,5 @@
 import React from 'react';
 // import {useSelector, useDispatch } from 'react-redux';
-
 // import { formActions } from '../store/formSlice.js';
 // import cameraThunks from '../thunks/cameraThunks.js';
 

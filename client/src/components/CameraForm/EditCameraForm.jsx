@@ -4,7 +4,6 @@ import { unwrapResult } from '@reduxjs/toolkit';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-
 // import { cameraActions } from '../store/cameraSlice.js';
 import { formActions } from '../../store/formSlice.js';
 import cameraThunks from '../../thunks/cameraThunks.js';
@@ -70,7 +69,9 @@ const CameraFormEdit = ({ selectedCamera }) => {
               id='name'
               name='name'
               type='text'
-              className={`form-control ${formik.errors?.name ? 'is-invalid' : ''}`}
+              className={`form-control ${
+                formik.errors?.name ? 'is-invalid' : ''
+              }`}
             ></input>
             <div className='invalid-feedback'>{formik.errors?.name}</div>
           </div>
@@ -86,7 +87,9 @@ const CameraFormEdit = ({ selectedCamera }) => {
               id='description'
               name='description'
               type='text'
-              className={`form-control ${formik.errors?.description && 'is-invalid'}`}
+              className={`form-control ${
+                formik.errors?.description && 'is-invalid'
+              }`}
             ></input>
             <div className='invalid-feedback'>{formik.errors?.description}</div>
           </div>
@@ -102,9 +105,13 @@ const CameraFormEdit = ({ selectedCamera }) => {
                 disabled={formik.isSubmitting}
                 name='screenshotLink'
                 type='text'
-                className={`form-control ${formik.errors?.screenshotLink && 'is-invalid'}`}
+                className={`form-control ${
+                  formik.errors?.screenshotLink && 'is-invalid'
+                }`}
               ></input>
-              <div className='invalid-feedback'>{formik.errors?.screenshotLink}</div>
+              <div className='invalid-feedback'>
+                {formik.errors?.screenshotLink}
+              </div>
               <button
                 className='btn btn-outline-secondary'
                 disabled
