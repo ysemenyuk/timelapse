@@ -42,9 +42,17 @@ const tokenVerification = createAsyncThunk('user/tokenVerification', async () =>
 
     console.log('user/tokenVerification response.data -', data);
 
+    const userInfo = {
+      userId: data.user._id,
+      token: data.token,
+    };
+
+    localStorage.setItem('userInfo', JSON.stringify(userInfo));
+
     return data;
   } catch (e) {
     console.log('user/tokenVerification error -', e.response.data);
+    localStorage.removeItem('userInfo');
     throw e.response.data;
   }
 });

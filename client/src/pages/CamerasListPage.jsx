@@ -23,11 +23,14 @@ const CameraListPage = () => {
       </Col>
 
       <Col sm={6}>
-        {formEdit.show ? (
-          <FormEditCamera selectedCamera={selectedCamera} />
-        ) : (
-          <CameraInfo selectedCamera={selectedCamera} />
-        )}
+        <Choose>
+          <When condition={formEdit.show}>
+            <FormEditCamera selectedCamera={selectedCamera} />
+          </When>
+          <Otherwise>
+            <CameraInfo selectedCamera={selectedCamera} />
+          </Otherwise>
+        </Choose>
         <CameraStatus selectedCamera={selectedCamera} />
       </Col>
 

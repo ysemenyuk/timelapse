@@ -4,7 +4,7 @@ import { unwrapResult } from '@reduxjs/toolkit';
 import { useHistory, Link, Redirect } from 'react-router-dom';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-
+import { Container, Row, Col, Form, Button, Spinner, Alert, Stack } from 'react-bootstrap';
 import userThunks from '../thunks/userThunks.js';
 
 const LoginPage = () => {
@@ -25,6 +25,7 @@ const LoginPage = () => {
     onSubmit: (values, { resetForm, setSubmitting, setFieldError }) => {
       dispatch(userThunks.login(values))
         .then((resp) => {
+          console.log('login formik resp -', resp);
           unwrapResult(resp);
           resetForm();
           setSubmitting(false);
@@ -46,67 +47,63 @@ const LoginPage = () => {
   }
 
   return (
-    <div className='container-fluid'>
-      <div className='row justify-content-center pt-5'>
-        <div className='col-3'>
+    <Container fluid>
+      <Row className='justify-content-center pt-5'>
+        <Col md={3}>
           <h3 className='text-center mb-3'>Log In</h3>
-          <form className='mb-3' onSubmit={formik.handleSubmit}>
-            <div className='mb-3'>
-              <label htmlFor='email' className='form-label'>
-                Email address
-              </label>
-              <input
-                type='email'
+          <Form className='mb-3' onSubmit={formik.handleSubmit}>
+            <Form.Group className='mb-3'>
+              <Form.Label htmlFor='email'>Email address</Form.Label>
+              <Form.Control
+                onChange={formik.handleChange}
+                value={formik.values.email}
                 name='email'
                 id='email'
                 autoComplete='email'
-                className={
-                  formik.errors.email || formik.errors.auth
-                    ? 'form-control is-invalid'
-                    : 'form-control'
-                }
-                onChange={formik.handleChange}
-                value={formik.values.email}
-                // required
-                // ref={inputRef}
-              ></input>
-              <div className='invalid-feedback'>{formik.errors.email}</div>
-            </div>
+                isInvalid={formik.errors && formik.errors.email}
+                required
+              />
+              <Form.Control.Feedback type='invalid'>
+                {formik.errors && formik.errors.email}
+              </Form.Control.Feedback>
+            </Form.Group>
 
-            <div className='mb-3'>
-              <label htmlFor='password' className='form-label'>
-                Password
-              </label>
-              <input
+            <Form.Group className='mb-3'>
+              <Form.Label>Password</Form.Label>
+              <Form.Control
                 type='password'
-                name='password'
-                id='password'
-                autoComplete='current-password'
-                className={
-                  formik.errors.password || formik.errors.auth
-                    ? 'form-control is-invalid'
-                    : 'form-control'
-                }
                 onChange={formik.handleChange}
                 value={formik.values.password}
-                // required
-              ></input>
-              <div className='invalid-feedback'>{formik.errors.password}</div>
-              <div className='invalid-feedback'>{formik.errors.auth}</div>
-            </div>
+                name='password'
+                autoComplete='current-password'
+                isInvalid={formik.errors && formik.errors.password}
+              />
+              <Form.Control.Feedback type='invalid'>
+                {formik.errors && formik.errors.password}
+              </Form.Control.Feedback>
+            </Form.Group>
 
-            <button type='submit' className='w-100 mb-3 btn btn-outline-primary'>
-              Submit
-            </button>
-          </form>
+            <Button
+              disabled={formik.isSubmitting || formik.errors.password || formik.errors.email}
+              type='submit'
+              variant='outline-primary'
+              className='w-100 mb-3 mt-3'
+            >
+              {formik.isSubmitting ? <Spinner as='span' animation='border' size='sm' /> : 'LogIn'}
+            </Button>
+          </Form>
 
-          <div className='d-flex flex-column align-items-center'>
-            <span className='small mb-2'>New user?</span>
+          <If condition={formik.errors && formik.errors.auth}>
+            <Alert variant={'danger'}>{formik.errors.auth}</Alert>
+          </If>
+
+          <Stack gap={2} className='align-items-center'>
+            <span>New user?</span>
             <Link to='/signup'>Sign Up</Link>
-          </div>
-        </div>
-      </div>
-    </div>
+          </Stack>
+        </Col>
+      </Row>
+    </Container>
   );
 };
 

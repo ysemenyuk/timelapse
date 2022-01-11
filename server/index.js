@@ -27,6 +27,8 @@ console.log(__dirname);
 const app = express();
 const logger = debug('server');
 
+
+const mode = process.env.NODE_ENV || 'development';
 const PORT = process.env.PORT || 4000;
 const dbUri = process.env.MONGO_URI;
 
@@ -76,7 +78,7 @@ const start = async () => {
 
     logger(`Mongoose successfully Connected`);
 
-    app.listen(PORT, logger(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`));
+    app.listen(PORT, logger(`Server running in ${mode} mode on port ${PORT}`));
   } catch (e) {
     console.log('catch err', e);
   }

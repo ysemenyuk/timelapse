@@ -24,24 +24,10 @@ const userSlice = createSlice({
   },
   extraReducers: {
     [singup.fulfilled]: (state, action) => {
-      const userInfo = {
-        userId: action.payload.user._id,
-        token: action.payload.token,
-      };
-
-      localStorage.setItem('userInfo', JSON.stringify(userInfo));
-
       state.isLoggedIn = true;
       state.user = action.payload.user;
     },
     [login.fulfilled]: (state, action) => {
-      // const userInfo = {
-      //   userId: action.payload.user._id,
-      //   token: action.payload.token,
-      // };
-
-      // localStorage.setItem('userInfo', JSON.stringify(userInfo));
-
       state.isLoggedIn = true;
       state.user = action.payload.user;
     },
@@ -55,20 +41,11 @@ const userSlice = createSlice({
       state.user = action.payload.user;
     },
     [tokenVerification.fulfilled]: (state, action) => {
-      const userInfo = {
-        userId: action.payload.user._id,
-        token: action.payload.token,
-      };
-
-      localStorage.setItem('userInfo', JSON.stringify(userInfo));
-
       state.tokenVerification = false;
       state.isLoggedIn = true;
       state.user = action.payload.user;
     },
     [tokenVerification.rejected]: (state, action) => {
-      localStorage.removeItem('userInfo');
-
       state.tokenVerification = false;
       state.isLoggedIn = false;
       state.user = null;
