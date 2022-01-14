@@ -26,10 +26,7 @@ router.post(
     // console.log('cameraScreenshotRouter screenshot:', screenshot);
 
     res.status(201).send(screenshot);
-
-    req.logger(
-      `RES: ${req.method}-${req.originalUrl} -${res.statusCode} -${Date.now() - req.t1}ms`
-    );
+    req.logResp(req);
   })
 );
 

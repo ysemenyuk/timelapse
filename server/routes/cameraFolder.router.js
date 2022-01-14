@@ -28,10 +28,7 @@ router.post(
     await folder.save();
 
     res.status(200).send(folder);
-
-    req.logger(
-      `RES: ${req.method}-${req.originalUrl} -${res.statusCode} -${Date.now() - req.t1}ms`
-    );
+    req.logResp(req);
   })
 );
 
@@ -50,10 +47,7 @@ router.get(
     });
 
     res.status(200).send(folders);
-
-    req.logger(
-      `RES: ${req.method}-${req.originalUrl} -${res.statusCode} -${Date.now() - req.t1}ms`
-    );
+    req.logResp(req);
   })
 );
 
@@ -70,10 +64,7 @@ router.get(
     });
 
     res.status(200).send(folder);
-
-    req.logger(
-      `RES: ${req.method}-${req.originalUrl} -${res.statusCode} -${Date.now() - req.t1}ms`
-    );
+    req.logResp(req);
   })
 );
 
@@ -90,10 +81,7 @@ router.delete(
     });
 
     res.status(204).send();
-
-    req.logger(
-      `RES: ${req.method}-${req.originalUrl} -${res.statusCode} -${Date.now() - req.t1}ms`
-    );
+    req.logResp(req);
   })
 );
 

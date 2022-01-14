@@ -1,9 +1,8 @@
 import axios from 'axios';
-
 import getAuthHeader from './authHeader.js';
 
 const instance = axios.create({
-  baseURL: `/api/user`,
+  baseURL: `/api/users`,
 });
 
 const singup = async (data) => await instance.post(`/singup`, data);
@@ -20,12 +19,12 @@ const updateOne = async (userId, data) =>
   });
 
 const uploadAvatar = async (userId, data) =>
-  await instance.post(`/${userId}/avatar`, data, {
+  await instance.post(`/${userId}/files/avatar`, data, {
     headers: { ...getAuthHeader(), 'Content-Type': 'multipart/form-data' },
   });
 
 const deleteAvatar = async (userId) =>
-  await instance.delete(`/${userId}/avatar`, {
+  await instance.delete(`/${userId}/files/avatar`, {
     headers: getAuthHeader(),
   });
 

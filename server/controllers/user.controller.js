@@ -1,23 +1,15 @@
 import bcrypt from 'bcryptjs';
 import _ from 'lodash';
-
-import { Readable } from 'stream';
-import { v4 as uuidv4 } from 'uuid';
-
 import jwt from '../libs/token.js';
-import { promisifyUploadStream } from '../utils/index.js';
 import { BadRequestError } from '../middleware/errorHandlerMiddleware.js';
-
 import userRepository from '../repositories/user.repository.js';
-import userFileRepository from '../repositories/userFile.repository.js';
-import staticFileRepo from '../repositories/staticFile.repository.js';
 
 const singUp = async ({ payload, logger }) => {
   logger(`userController.singUp payload: ${payload}`);
 
   const { email, password } = payload;
 
-  console.log('payload', payload);
+  // console.log('payload', payload);
 
   const user = await userRepository.getByEmail({ email, logger });
 
@@ -32,7 +24,7 @@ const singUp = async ({ payload, logger }) => {
     logger,
   });
 
-  console.log('newUser', newUser);
+  // console.log('newUser', newUser);
 
   const token = jwt.sign(newUser._id);
 
@@ -80,48 +72,6 @@ const getOne = async ({ userId, logger }) => {
   return { user: _.pick(user, ['_id', 'name', 'email', 'avatar']) };
 };
 
-const uploadAvatar = async ({ userId, file, logger }) => {
-  logger(`userController.uploadAvatar userId: ${userId}`);
-
-  // check file type
-
-  const fileData = file.data;
-  const fileName = `${uuidv4()}.${file.mimetype.split('/')[1]}`;
-
-  const uploadStream = staticFileRepo.openUploadStream({ fileName, logger });
-
-  Readable.from(fileData).pipe(uploadStream);
-
-  await promisifyUploadStream(uploadStream);
-
-  const avatar = await userFileRepository.createOne({
-    user: userId,
-    name: fileName,
-    type: file.mimetype,
-    logger,
-  });
-
-  // console.log('avatar', avatar);
-
-  // delete old file from gridfs
-
-  const user = await userRepository.updateAvatar({ userId, avatar, logger });
-
-  return { user: _.pick(user, ['_id', 'name', 'email', 'avatar']) };
-};
-
-const deleteAvatar = async ({ userId, logger }) => {
-  logger(`userController.deleteAvatar userId: ${userId}`);
-
-  // delete old file fom gridfs
-
-  const avatar = { name: 'no_img.jpg' };
-
-  const user = await userRepository.updateAvatar({ userId, avatar, logger });
-
-  return { user: _.pick(user, ['_id', 'name', 'email', 'avatar']) };
-};
-
 const updateOne = async ({ userId, payload, logger }) => {
   logger(`userController.updateOne userId: ${userId}`);
 
@@ -140,8 +90,6 @@ export default {
   singUp,
   logIn,
   auth,
-  uploadAvatar,
-  deleteAvatar,
   getOne,
   updateOne,
   deleteOne,

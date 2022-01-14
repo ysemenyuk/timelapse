@@ -3,7 +3,7 @@ export default async (req, res, next) => {
 
   try {
     const file = await File.findOne({ filename: fileName });
-    console.log(file);
+    // console.log(file);
 
     if (file.userId !== req.userId) {
       return res.sendStatus(401);

@@ -4,9 +4,50 @@ import express from 'express';
 
 import { asyncHandler } from '../middleware/errorHandlerMiddleware.js';
 import staticFileRepo from '../repositories/staticFile.repository.js';
+import userFileRepo from '../repositories/userFile.repository.js';
 import cameraFileRepo from '../repositories/cameraFile.repository.js';
 
 const router = express.Router();
+
+router.get(
+  '/user-files/:fileName',
+  asyncHandler(async (req, res) => {
+    req.logger(`staticFileRouter.get /files/user-files/${req.params.fileName}`);
+
+    const file = await userFileRepo.getOneByName({
+      fileName: req.params.fileName,
+      logger: req.logger,
+    });
+
+    // console.log('user-files file', file);
+
+    if (!file) {
+      res.sendStatus(404);
+      req.logResp(req);
+      return;
+    }
+
+    console.log(2222, file._id);
+
+    const stream = staticFileRepo.openDownloadStream({
+      fileId: file.fileId,
+      logger: req.logger,
+    });
+
+    stream.pipe(res);
+
+    stream.on('error', () => {
+      // console.log('error');
+      res.sendStatus(500);
+      req.logResp(req);
+    });
+
+    stream.on('end', () => {
+      // console.log('end');
+      req.logResp(req);
+    });
+  })
+);
 
 router.get(
   '/:fileName',
@@ -20,11 +61,11 @@ router.get(
       logger: req.logger,
     });
 
+    // console.log('file', file);
+
     if (!file) {
       res.sendStatus(404);
-      req.logger(
-        `RES: ${req.method}-${req.originalUrl} -${res.statusCode} -${Date.now() - req.t1}ms`
-      );
+      req.logResp(req);
       return;
     }
 
@@ -40,16 +81,12 @@ router.get(
     stream.on('error', () => {
       // console.log('error');
       res.sendStatus(500);
-      req.logger(
-        `RES: ${req.method}-${req.originalUrl} -${res.statusCode} -${Date.now() - req.t1}ms`
-      );
+      req.logResp(req);
     });
 
     stream.on('end', () => {
       // console.log('end');
-      req.logger(
-        `RES: ${req.method}-${req.originalUrl} -${res.statusCode} -${Date.now() - req.t1}ms`
-      );
+      req.logResp(req);
     });
   })
 );

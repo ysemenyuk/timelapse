@@ -12,13 +12,20 @@ const getOne = async ({ userId, fileId, logger }) => {
   return await UserFile.findOne({ user: userId, _id: fileId });
 };
 
-const createOne = async ({ user, name, type, logger }) => {
+const getOneByName = async ({ fileName, logger }) => {
+  logger(`userFileRepository.getOneByName fileName: ${fileName}`);
+
+  return await UserFile.findOne({ name: fileName });
+};
+
+const createOne = async ({ user, name, type, fileId, logger }) => {
   logger(`userFileRepository.createOne fileName: ${name}`);
 
   const file = new UserFile({
     user,
     type,
     name,
+    fileId,
   });
 
   await file.save();
@@ -32,4 +39,4 @@ const deleteOne = async ({ userId, fileId, logger }) => {
   return await UserFile.findOneAndDelete({ user: userId, _id: fileId });
 };
 
-export default { getAll, getOne, createOne, deleteOne };
+export default { getAll, getOne, getOneByName, createOne, deleteOne };

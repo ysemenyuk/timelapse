@@ -7,7 +7,6 @@ export default (req, res, next) => {
 
   req.requestId = requestId;
   req.logger = logger.child({ requestId });
-  req.t1 = Date.now();
   req.logger(`REQ: ${req.method} - ${req.originalUrl}`);
 
   next();

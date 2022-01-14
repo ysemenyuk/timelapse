@@ -9,16 +9,7 @@ const router = express.Router({ mergeParams: true });
 router.use(authMiddleware);
 
 router.get(
-
-
-
-
-
-
-
-  
   '/',
-
   asyncHandler(async (req, res) => {
     req.logger('cameraRouter GET /api/cameras/');
 
@@ -28,12 +19,7 @@ router.get(
     });
 
     res.status(200).send(cameras);
-
-    req.logger(
-      `RES: ${req.method}-${req.originalUrl} -${res.statusCode} -${
-        Date.now() - req.t1
-      }ms`
-    );
+    req.logResp(req);
   })
 );
 
@@ -49,12 +35,7 @@ router.get(
     });
 
     res.status(200).send(camera);
-
-    req.logger(
-      `RES: ${req.method}-${req.originalUrl} -${res.statusCode} -${
-        Date.now() - req.t1
-      }ms`
-    );
+    req.logResp(req);
   })
 );
 
@@ -71,12 +52,7 @@ router.post(
     });
 
     res.status(201).send(camera);
-
-    req.logger(
-      `RES: ${req.method}-${req.originalUrl} -${res.statusCode} -${
-        Date.now() - req.t1
-      }ms`
-    );
+    req.logResp(req);
   })
 );
 
@@ -94,12 +70,7 @@ router.put(
     });
 
     res.status(201).send(camera);
-
-    req.logger(
-      `RES: ${req.method}-${req.originalUrl} -${res.statusCode} -${
-        Date.now() - req.t1
-      }ms`
-    );
+    req.logResp(req);
   })
 );
 
@@ -115,12 +86,7 @@ router.delete(
     });
 
     res.status(204).send();
-
-    req.logger(
-      `RES: ${req.method}-${req.originalUrl} -${res.statusCode} -${
-        Date.now() - req.t1
-      }ms`
-    );
+    req.logResp(req);
   })
 );
 
