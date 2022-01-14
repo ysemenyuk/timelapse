@@ -51,6 +51,7 @@ const LoginPage = () => {
       <Row className='justify-content-center pt-5'>
         <Col md={3}>
           <h3 className='text-center mb-3'>Log In</h3>
+
           <Form className='mb-3' onSubmit={formik.handleSubmit}>
             <Form.Group className='mb-3'>
               <Form.Label htmlFor='email'>Email address</Form.Label>
@@ -61,7 +62,6 @@ const LoginPage = () => {
                 id='email'
                 autoComplete='email'
                 isInvalid={formik.errors && formik.errors.email}
-                required
               />
               <Form.Control.Feedback type='invalid'>
                 {formik.errors && formik.errors.email}

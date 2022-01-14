@@ -21,13 +21,9 @@ const CamerasList = ({ cameras, selectedCamera }) => {
 
   return (
     <div className='col-12 mb-3'>
-      <h6 className='mb-3'>List</h6>
+      <h6 className='mb-3'>Cameras</h6>
       <div className='list-group mb-3'>
-        <List
-          cameras={cameras}
-          selectedCamera={selectedCamera}
-          onSelectItem={handleSelectItem}
-        />
+        <List cameras={cameras} selectedCamera={selectedCamera} onSelectItem={handleSelectItem} />
       </div>
       <div>
         <Link className='btn btn-sm btn-primary' to='/form'>

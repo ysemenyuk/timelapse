@@ -16,33 +16,39 @@ const CameraListPage = () => {
 
   const { cameras, fetchStatus } = useCamerasList();
 
-  return fetchStatus.isSuccess ? (
-    <Row>
-      <Col sm={3}>
-        <CamerasList cameras={cameras} selectedCamera={selectedCamera} />
-      </Col>
+  return (
+    <Choose>
+      <When condition={fetchStatus.isSuccess}>
+        <Row>
+          <Col sm={3}>
+            <CamerasList cameras={cameras} selectedCamera={selectedCamera} />
+          </Col>
+          <Col sm={6}>
+            <CameraStatus selectedCamera={selectedCamera} />
+            <Choose>
+              <When condition={formEdit.show}>
+                <FormEditCamera selectedCamera={selectedCamera} />
+              </When>
+              <Otherwise>
+                <CameraInfo selectedCamera={selectedCamera} />
+              </Otherwise>
+            </Choose>
+          </Col>
+          <Col sm={3}>
+            <Screenshot selectedCamera={selectedCamera} />
+          </Col>
+        </Row>
+      </When>
 
-      <Col sm={6}>
-        <Choose>
-          <When condition={formEdit.show}>
-            <FormEditCamera selectedCamera={selectedCamera} />
-          </When>
-          <Otherwise>
-            <CameraInfo selectedCamera={selectedCamera} />
-          </Otherwise>
-        </Choose>
-        <CameraStatus selectedCamera={selectedCamera} />
-      </Col>
+      <When condition={fetchStatus.isLoading}>
+        <Spinner />
+      </When>
 
-      <Col sm={3}>
-        <Screenshot selectedCamera={selectedCamera} />
-      </Col>
-    </Row>
-  ) : fetchStatus.isLoading ? (
-    <Spinner />
-  ) : fetchStatus.isError ? (
-    <Error />
-  ) : null;
+      <When condition={fetchStatus.isError}>
+        <Error />
+      </When>
+    </Choose>
+  );
 };
 
 export default CameraListPage;

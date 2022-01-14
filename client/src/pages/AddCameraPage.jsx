@@ -9,20 +9,28 @@ import { Col, Row } from 'react-bootstrap';
 const AddCameraPage = () => {
   const { cameras, fetchStatus } = useCamerasList();
 
-  return fetchStatus.isSuccess ? (
-    <Row>
-      <Col sm={3}>
-        <CamerasList cameras={cameras} selectedCamera={null} />
-      </Col>
-      <Col sm={6}>
-        <AddCameraForm />
-      </Col>
-    </Row>
-  ) : fetchStatus.isLoading ? (
-    <Spinner />
-  ) : fetchStatus.isError ? (
-    <Error />
-  ) : null;
+  return (
+    <Choose>
+      <When condition={fetchStatus.isSuccess}>
+        <Row>
+          <Col sm={3}>
+            <CamerasList cameras={cameras} selectedCamera={null} />
+          </Col>
+          <Col sm={6}>
+            <AddCameraForm />
+          </Col>
+        </Row>
+      </When>
+
+      <When condition={fetchStatus.isLoading}>
+        <Spinner />
+      </When>
+
+      <When condition={fetchStatus.isError}>
+        <Error />
+      </When>
+    </Choose>
+  );
 };
 
 export default AddCameraPage;
