@@ -30,7 +30,7 @@ const deleteOne = async ({ userId, cameraId, fileId, logger }) => {
     throw new Error('file not found');
   }
 
-  // delete file from gridfs
+  // TODO: delete file from gridfs
 
   return await cameraFileRepo.deleteOne({ userId, cameraId, fileId, logger });
 };

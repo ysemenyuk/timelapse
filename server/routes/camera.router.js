@@ -45,6 +45,8 @@ router.post(
   asyncHandler(async (req, res) => {
     req.logger('cameraRouter.post /api/cameras');
 
+    console.log(1111, req.body);
+
     const camera = await cameraController.createOne({
       userId: req.userId,
       payload: req.body,

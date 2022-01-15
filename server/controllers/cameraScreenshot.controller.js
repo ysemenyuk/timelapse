@@ -1,12 +1,9 @@
 import { v4 as uuidv4 } from 'uuid';
 import staticFileRepo from '../repositories/staticFile.repository.js';
-
 import cameraService from '../services/camera.service.js';
 import imageService from '../services/image.service.js';
-
 import cameraRepository from '../repositories/camera.repository.js';
 import cameraFileRepo from '../repositories/cameraFile.repository.js';
-
 // import __dirname from '../dirname.js';
 import { promisifyUploadStream } from '../utils/index.js';
 

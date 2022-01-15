@@ -2,27 +2,16 @@ import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Row, Col, Form, Button } from 'react-bootstrap';
 import Message from '../components/UI/Message.jsx';
+import CamerasList from '../components/CamerasList/CamerasList.jsx';
+import Spinner from '../components/UI/Spinner.jsx';
+import Error from '../components/UI/Error.jsx';
 import userThunks from '../thunks/userThunks.js';
+import useCamerasList from '../hooks/useCamerasList.js';
 
 const ProfilePage = () => {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.user);
-
-  const [file, setFile] = useState(null);
-
-  const handleUploadAvatar = async (e) => {
-    e.preventDefault();
-
-    const formData = new FormData();
-    formData.append('avatar', file);
-
-    dispatch(userThunks.uploadAvatar({ userId: user._id, formData }));
-  };
-
-  const handleDeleteAvatar = async (e) => {
-    e.preventDefault();
-    dispatch(userThunks.deleteAvatar({ userId: user._id }));
-  };
+  const { cameras, fetchStatus } = useCamerasList();
 
   const [name, setName] = useState(user.name);
   const [email, setEmail] = useState(user.email);
@@ -49,99 +38,88 @@ const ProfilePage = () => {
   };
 
   return (
-    <Row>
-      <Col sm={4}>
-        <h6 className='mb-3'>Avatar</h6>
-        <div className='mb-3'>
-          <img
-            width='200px'
-            height='200px'
-            src={`/files/user-files/${user.avatar}`}
-            className='img-thumbnail'
-          />
-        </div>
+    <Choose>
+      <When condition={fetchStatus.isSuccess}>
+        <Row>
+          <Col sm={3}>
+            <CamerasList cameras={cameras} selectedCamera={null} />
+          </Col>
 
-        <Form className='mb-3' onSubmit={handleUploadAvatar}>
-          <Form.Group controlId='formFile' className='mb-3'>
-            <Form.Control type='file' name='avatar' onChange={(e) => setFile(e.target.files[0])} />
-          </Form.Group>
+          <Col sm={6}>
+            <h6 className='mb-3'>User Profile</h6>
 
-          <>
-            <Button variant='primary' onClick={handleDeleteAvatar} size='sm' className='me-2'>
-              Delete
-            </Button>
-            <Button variant='primary' type='submit' size='sm' className='me-2'>
-              Save
-            </Button>
-          </>
-        </Form>
-      </Col>
+            {message && <Message variant='danger'>{message}</Message>}
 
-      <Col sm={4}>
-        <h6 className='mb-3'>User Profile</h6>
+            <Form className='mb-3' onSubmit={handleUpdateUser}>
+              <Form.Group className='mb-3'>
+                <Form.Label htmlFor='username'>Username</Form.Label>
+                <Form.Control
+                  type='username'
+                  name='username'
+                  id='username'
+                  autoComplete='username'
+                  onChange={(e) => setName(e.target.value)}
+                  value={name}
+                />
+              </Form.Group>
 
-        {message && <Message variant='danger'>{message}</Message>}
+              <Form.Group className='mb-3'>
+                <Form.Label htmlFor='email'>Email address</Form.Label>
+                <Form.Control
+                  type='email'
+                  name='email'
+                  id='email'
+                  autoComplete='email'
+                  onChange={(e) => setEmail(e.target.value)}
+                  value={email}
+                />
+              </Form.Group>
 
-        <Form className='mb-3' onSubmit={handleUpdateUser}>
-          <Form.Group className='mb-3'>
-            <Form.Label htmlFor='username'>Username</Form.Label>
-            <Form.Control
-              type='username'
-              name='username'
-              id='username'
-              autoComplete='username'
-              onChange={(e) => setName(e.target.value)}
-              value={name}
-            />
-          </Form.Group>
+              <Form.Group className='mb-3'>
+                <Form.Label htmlFor='password'>Password</Form.Label>
+                <Form.Control
+                  type='password'
+                  name='password'
+                  id='password'
+                  autoComplete='current-password'
+                  onChange={(e) => setPassword(e.target.value)}
+                  value={password}
+                />
+              </Form.Group>
 
-          <Form.Group className='mb-3'>
-            <Form.Label htmlFor='email'>Email address</Form.Label>
-            <Form.Control
-              type='email'
-              name='email'
-              id='email'
-              autoComplete='email'
-              onChange={(e) => setEmail(e.target.value)}
-              value={email}
-            />
-          </Form.Group>
+              <Form.Group className='mb-3'>
+                <Form.Label htmlFor='confirmPassword'>Confirm password</Form.Label>
+                <Form.Control
+                  type='password'
+                  name='confirmPassword'
+                  id='confirmPassword'
+                  autoComplete='current-password'
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  value={confirmPassword}
+                />
+              </Form.Group>
 
-          <Form.Group className='mb-3'>
-            <Form.Label htmlFor='password'>Password</Form.Label>
-            <Form.Control
-              type='password'
-              name='password'
-              id='password'
-              autoComplete='current-password'
-              onChange={(e) => setPassword(e.target.value)}
-              value={password}
-            />
-          </Form.Group>
+              <>
+                <Button variant='primary' onClick={handleDeleteUser} size='sm' className='me-2'>
+                  Delete
+                </Button>
+                <Button variant='primary' type='submit' size='sm' className='me-2'>
+                  Update
+                </Button>
+              </>
+            </Form>
+          </Col>
+        </Row>
+      </When>
 
-          <Form.Group className='mb-3'>
-            <Form.Label htmlFor='confirmPassword'>Confirm password</Form.Label>
-            <Form.Control
-              type='password'
-              name='confirmPassword'
-              id='confirmPassword'
-              autoComplete='current-password'
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              value={confirmPassword}
-            />
-          </Form.Group>
+      <When condition={fetchStatus.isLoading}>
+        <Spinner />
+      </When>
 
-          <>
-            <Button variant='primary' onClick={handleDeleteUser} size='sm' className='me-2'>
-              Delete
-            </Button>
-            <Button variant='primary' type='submit' size='sm' className='me-2'>
-              Save
-            </Button>
-          </>
-        </Form>
-      </Col>
-    </Row>
+      <When condition={fetchStatus.isError}>
+        <Error />
+      </When>
+    </Choose>
   );
 };
 

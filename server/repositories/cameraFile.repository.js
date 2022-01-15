@@ -2,19 +2,16 @@ import CameraFile from '../models/CameraFile.js';
 
 const getAll = async ({ userId, cameraId, parentId, logger }) => {
   logger(`cameraFileRepository.getAll cameraId: ${cameraId}`);
-
   return await CameraFile.find({ user: userId, camera: cameraId, parent: parentId });
 };
 
 const getOne = async ({ userId, cameraId, fileId, logger }) => {
   logger(`cameraFileRepository.getOne fileId: ${fileId}`);
-
   return await CameraFile.findOne({ user: userId, camera: cameraId, _id: fileId });
 };
 
 const getOneByName = async ({ fileName, logger }) => {
   logger(`cameraFileRepository.getOne fileName: ${fileName}`);
-
   return await CameraFile.findOne({ name: fileName });
 };
 
@@ -31,13 +28,11 @@ const createOne = async ({ user, camera, name, original, thumbnail, parent, logg
   });
 
   await file.save();
-
   return file;
 };
 
 const deleteOne = async ({ userId, cameraId, fileId, logger }) => {
   logger(`cameraFileRepository.deleteOne fileId: ${fileId}`);
-
   return await CameraFile.findOneAndDelete({ user: userId, camera: cameraId, _id: fileId });
 };
 

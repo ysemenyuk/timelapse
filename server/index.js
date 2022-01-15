@@ -5,13 +5,13 @@ import debug from 'debug';
 import path from 'path';
 import mongoClient from './dbConfig.js';
 import userRouter from './routes/user.router.js';
-import userFileRouter from './routes/userFile.router.js';
 import cameraRouter from './routes/camera.router.js';
 import cameraScreenshotRouter from './routes/cameraScreenshot.router.js';
 import cameraFolderRouter from './routes/cameraFolder.router.js';
 import cameraFileRouter from './routes/cameraFile.router.js';
 import cameraTaskRouter from './routes/cameraTask.router.js';
 import debugMiddleware from './middleware/debugMiddleware.js';
+// import winstonMiddleware from './middleware/winstonMiddleware.js';
 import staticFileRouter from './routes/staticFile.router.js';
 import { errorHandlerMiddleware } from './middleware/errorHandlerMiddleware.js';
 
@@ -30,6 +30,7 @@ const dbUri = process.env.MONGO_URI;
 
 if (process.env.NODE_ENV === 'development') {
   app.use(debugMiddleware);
+  // app.use(winstonMiddleware);
 }
 
 app.use(express.json());
@@ -38,7 +39,6 @@ app.use(fileUpload());
 app.use('/assets', express.static(staticPath));
 app.use('/files', staticFileRouter);
 
-app.use('/api/users/:userId/files', userFileRouter);
 app.use('/api/users', userRouter);
 
 app.use('/api/cameras/:cameraId/screenshots', cameraScreenshotRouter);

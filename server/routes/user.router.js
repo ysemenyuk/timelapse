@@ -24,6 +24,8 @@ router.post(
   asyncHandler(async (req, res) => {
     req.logger('userRouter.post /api/user/login');
 
+    console.log(1111, req.body);
+
     const { token, user } = await userController.logIn({ payload: req.body, logger: req.logger });
     res.status(200).send({ token, user });
     req.logResp(req);

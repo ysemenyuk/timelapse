@@ -18,14 +18,9 @@ const updateOne = async (userId, data) =>
     headers: getAuthHeader(),
   });
 
-const uploadAvatar = async (userId, data) =>
-  await instance.post(`/${userId}/files/avatar`, data, {
-    headers: { ...getAuthHeader(), 'Content-Type': 'multipart/form-data' },
-  });
-
-const deleteAvatar = async (userId) =>
-  await instance.delete(`/${userId}/files/avatar`, {
-    headers: getAuthHeader(),
-  });
-
-export default { singup, login, tokenVerification, updateOne, uploadAvatar, deleteAvatar };
+export default {
+  singup,
+  login,
+  tokenVerification,
+  updateOne,
+};

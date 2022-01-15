@@ -1,10 +1,7 @@
 import express from 'express';
-
 import cameraScreenshotController from '../controllers/cameraScreenshot.controller.js';
-
 import authMiddleware from '../middleware/authMiddleware.js';
 import userCameraMiddleware from '../middleware/userCameraMiddleware.js';
-
 import { asyncHandler } from '../middleware/errorHandlerMiddleware.js';
 
 const router = express.Router({ mergeParams: true });

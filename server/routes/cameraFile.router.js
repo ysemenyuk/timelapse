@@ -1,7 +1,5 @@
 import express from 'express';
-
 import cameraFileController from '../controllers/cameraFile.controller.js';
-
 import authMiddleware from '../middleware/authMiddleware.js';
 import userCameraMiddleware from '../middleware/userCameraMiddleware.js';
 import { asyncHandler } from '../middleware/errorHandlerMiddleware.js';

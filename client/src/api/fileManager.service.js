@@ -1,5 +1,4 @@
 import axios from 'axios';
-
 import getAuthHeader from './authHeader.js';
 
 const host = 'http://localhost:3000/';

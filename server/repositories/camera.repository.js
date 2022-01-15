@@ -10,6 +10,11 @@ const getOne = async ({ userId, cameraId, logger }) => {
   return await Camera.findOne({ user: userId, _id: cameraId });
 };
 
+const getOneById = async ({ cameraId, logger }) => {
+  logger(`cameraRepository.getOneById cameraId: ${cameraId}`);
+  return await Camera.findOne({ _id: cameraId });
+};
+
 const createOne = async ({ userId, payload, logger }) => {
   logger(`cameraRepository.createOne payload: ${payload}`);
   const camera = new Camera({ user: userId, ...payload });
@@ -27,4 +32,4 @@ const deleteOne = async ({ userId, cameraId, logger }) => {
   return await camera.remove();
 };
 
-export default { getAll, getOne, createOne, updateOne, deleteOne };
+export default { getAll, getOne, getOneById, createOne, updateOne, deleteOne };

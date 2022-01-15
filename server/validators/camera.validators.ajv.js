@@ -13,7 +13,7 @@ const createOneSchema = {
 };
 
 const createOne = (req, res, next) => {
-  // console.log('- validator createOne req.body -', req.body);
+  console.log('- validator createOne req.body -', req.body);
 
   const validate = ajv.compile(createOneSchema);
   const valid = validate(req.body);

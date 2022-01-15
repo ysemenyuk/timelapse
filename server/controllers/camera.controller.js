@@ -20,7 +20,7 @@ const getOne = async ({ userId, cameraId, logger }) => {
 const createOne = async ({ userId, payload, logger }) => {
   logger(`cameraController.createOne payload: ${payload}`);
 
-  // create default folders for camera
+  // TODO: create default folders for camera
 
   return await cameraRepository.createOne({ userId, payload, logger });
 };
@@ -47,7 +47,7 @@ const deleteOne = async ({ userId, cameraId, logger }) => {
     throw new Error('camera not found');
   }
 
-  // delete all camera folders and files
+  // TODO: delete all camera folders and files
 
   return await cameraRepository.deleteOne({ userId, cameraId, logger });
 };

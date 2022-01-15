@@ -38,12 +38,12 @@ const logInSchema = {
 };
 
 const logIn = (req, res, next) => {
-  // console.log('- validator logIn req.body -', req.body);
+  console.log('- validator logIn req.body -', req.body);
   const validate = ajv.compile(logInSchema);
   const valid = validate(req.body);
 
   if (!valid) {
-    // console.log('- logInValidate.errors -', validate.errors);
+    console.log('- logInValidate.errors -', validate.errors);
     throw new ValidateError('not valid request', validate.errors);
   }
 
