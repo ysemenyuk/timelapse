@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
 import userThunks from '../thunks/userThunks.js';
-import Navbar from '../components/Navbar/Navbar.jsx';
+import NavBar from '../components/Navbar/Navbar.jsx';
 import Spinner from '../components/UI/Spinner.jsx';
 import LoginPage from '../pages/LoginPage.jsx';
 import SignupPage from '../pages/SignupPage.jsx';
@@ -35,7 +35,7 @@ const App = () => {
         </When>
         <Otherwise>
           <Router>
-            <Navbar />
+            <NavBar />
             <Switch>
               <Route exact path='/login' component={LoginPage} />
               <Route exact path='/signup' component={SignupPage} />

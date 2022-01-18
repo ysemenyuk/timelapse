@@ -1,7 +1,6 @@
 import { createSlice, createSelector } from '@reduxjs/toolkit';
-
 import fileManagerThunks from '../thunks/fileManagerThunks.js';
-import { cameraActions } from './cameraSlice.js';
+// import { cameraActions } from './cameraSlice.js';
 
 const { fetchFiles, fetchFolders, fetchOneFolder, deletehOneFile } = fileManagerThunks;
 

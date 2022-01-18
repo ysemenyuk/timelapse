@@ -27,7 +27,7 @@ const CameraPage = () => {
 
   return (
     <Choose>
-      <When condition={fetchOneCamera.isSuccess || selectedCamera}>
+      <When condition={!fetchOneCamera.isLoading && !fetchOneCamera.isError && selectedCamera}>
         <Row>
           <Col sm={3}>
             <Screenshot selectedCamera={selectedCamera} />

@@ -1,6 +1,7 @@
 import React from 'react';
 import ImgWrapper from '../UI/ImgWrapper/ImgWrapper.jsx';
-import { Row, Col, Form, Button } from 'react-bootstrap';
+import { Col } from 'react-bootstrap';
+import Heading from '../UI/Heading.jsx';
 
 const CameraScreen = ({ selectedCamera }) => {
   if (selectedCamera === null) {
@@ -12,8 +13,10 @@ const CameraScreen = ({ selectedCamera }) => {
     : `/assets/no_img.png`;
 
   return (
-    <Col sm={12}>
-      <h6 className='mb-3'>Screenshot</h6>
+    <Col md={12} className='mb-4'>
+      <Heading lvl={6} className='mb-3'>
+        Screenshot
+      </Heading>
       <ImgWrapper width={100} height={0.5625} src={imageSrc} />
       <span>{selectedCamera.name}</span>
     </Col>

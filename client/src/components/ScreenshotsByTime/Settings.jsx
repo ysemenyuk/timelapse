@@ -24,7 +24,7 @@ const ScreenshotsSettings = ({ screenshotsData, onGetOneScreenshot }) => {
     },
     validationSchema,
     onSubmit: (values) => {
-      console.log('values', values);
+      // console.log('values', values);
       setRunning(true);
     },
   });
@@ -32,9 +32,6 @@ const ScreenshotsSettings = ({ screenshotsData, onGetOneScreenshot }) => {
   const handleStop = (e) => {
     setRunning(false);
   };
-
-  // console.log('formik.errors -', formik.errors);
-  // console.log('formik.values -', formik.values);
 
   return (
     <div>
@@ -50,7 +47,8 @@ const ScreenshotsSettings = ({ screenshotsData, onGetOneScreenshot }) => {
             name='start'
             type='text'
             disabled={running}
-            className={`form-control ${formik.errors?.start && 'is-invalid'}`}></input>
+            className={`form-control ${formik.errors?.start && 'is-invalid'}`}
+          ></input>
           <div className='invalid-feedback'>{formik.errors?.start}</div>
         </div>
 
@@ -65,7 +63,8 @@ const ScreenshotsSettings = ({ screenshotsData, onGetOneScreenshot }) => {
             name='finish'
             type='text'
             disabled={running}
-            className={`form-control ${formik.errors?.finish && 'is-invalid'}`}></input>
+            className={`form-control ${formik.errors?.finish && 'is-invalid'}`}
+          ></input>
           <div className='invalid-feedback'>{formik.errors?.finish}</div>
         </div>
 
@@ -80,7 +79,8 @@ const ScreenshotsSettings = ({ screenshotsData, onGetOneScreenshot }) => {
             name='interval'
             type='text'
             disabled={running}
-            className={`form-control ${formik.errors?.interval && 'is-invalid'}`}></input>
+            className={`form-control ${formik.errors?.interval && 'is-invalid'}`}
+          ></input>
           <div className='invalid-feedback'>{formik.errors?.interval}</div>
         </div>
 

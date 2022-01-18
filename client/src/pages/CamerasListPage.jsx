@@ -4,7 +4,6 @@ import useCamerasList from '../hooks/useCamerasList.js';
 import CamerasList from '../components/CamerasList/CamerasList.jsx';
 import FormEditCamera from '../components/CameraForm/EditCameraForm.jsx';
 import Screenshot from '../components/Screenshot/Screenshot.jsx';
-import CameraStatus from '../components/CameraStatus/CameraStatus.jsx';
 import CameraInfo from '../components/CameraInfo/CameraInfo.jsx';
 import Spinner from '../components/UI/Spinner.jsx';
 import Error from '../components/UI/Error.jsx';
@@ -24,7 +23,6 @@ const CameraListPage = () => {
             <CamerasList cameras={cameras} selectedCamera={selectedCamera} />
           </Col>
           <Col sm={6}>
-            <CameraStatus selectedCamera={selectedCamera} />
             <Choose>
               <When condition={formEdit.show}>
                 <FormEditCamera selectedCamera={selectedCamera} />

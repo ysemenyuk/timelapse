@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-
 import { Modal, Button } from 'react-bootstrap';
 import ImgWrapper from '../UI/ImgWrapper/ImgWrapper.jsx';
-
 import { fileManagerActions } from '../../store/fileManagerSlice.js';
 import { imgViewerActions } from '../../store/imgViewerSlice.js';
 
@@ -49,7 +47,8 @@ const ImgViewer = ({ selectedCamera }) => {
       aria-labelledby='contained-modal-title-vcenter'
       show={visible}
       onHide={closeModalHandler}
-      size='xl'>
+      size='xl'
+    >
       <Modal.Header closeButton>
         <Modal.Title id='contained-modal-title-vcenter'>{currentFile?.date}</Modal.Title>
       </Modal.Header>
