@@ -8,8 +8,8 @@ const fileManagerSlice = createSlice({
   name: 'fileManager',
   initialState: {
     files: {},
-    currentFileIndex: null,
     folders: {},
+    currentFileIndex: null,
     currentFolder: null,
     foldersStack: [],
   },
@@ -23,7 +23,13 @@ const fileManagerSlice = createSlice({
     prewFileIndex: (state, action) => {
       state.currentFileIndex -= 1;
     },
-    setcurrentFolder: (state, action) => {
+    resetCurrentFolder: (state, action) => {
+      state.foldersStack = [];
+      state.currentFolder = null;
+    },
+    setCurrentFolder: (state, action) => {
+      const index = state.foldersStack.findIndex((folder) => folder._id === action.payload._id);
+      state.foldersStack = state.foldersStack.slice(0, index + 1);
       state.currentFolder = action.payload;
     },
     pushToFoldersStack: (state, action) => {

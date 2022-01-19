@@ -1,5 +1,5 @@
 import React from 'react';
-import folderImg from '../../../assets/folder.png';
+import folderImg from '../../../assets/folder2.png';
 import ImgWrapper from '../../UI/ImgWrapper/ImgWrapper.jsx';
 
 const FoldersList = ({ className, folders, onClickFolder }) => {
