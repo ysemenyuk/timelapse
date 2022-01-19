@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Row, Col, Form, Button } from 'react-bootstrap';
 import Message from '../components/UI/Message.jsx';
+import Heading from '../components/UI/Heading.jsx';
 import CamerasList from '../components/CamerasList/CamerasList.jsx';
 import Spinner from '../components/UI/Spinner.jsx';
 import Error from '../components/UI/Error.jsx';
@@ -46,7 +47,9 @@ const ProfilePage = () => {
           </Col>
 
           <Col sm={6}>
-            <h6 className='mb-3'>User Profile</h6>
+            <Heading lvl={3} className='mb-3'>
+              User Profile
+            </Heading>
 
             {message && <Message variant='danger'>{message}</Message>}
 

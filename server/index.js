@@ -15,6 +15,7 @@ import debugMiddleware from './middleware/debugMiddleware.js';
 import staticFileRouter from './routes/staticFile.router.js';
 import { errorHandlerMiddleware } from './middleware/errorHandlerMiddleware.js';
 import { Server } from 'socket.io';
+import http from 'http';
 
 import __dirname from './dirname.js';
 console.log('__dirname', __dirname);
@@ -23,7 +24,8 @@ const staticPath = path.join(__dirname, 'assets');
 console.log('staticPath', staticPath);
 
 const app = express();
-const io = new Server(app);
+const httpServer = http.createServer(app);
+const io = new Server(httpServer);
 const logger = debug('server');
 
 const mode = process.env.NODE_ENV || 'development';
@@ -85,7 +87,7 @@ const startServer = async () => {
 
     logger(`Mongoose successfully Connected`);
 
-    app.listen(PORT, logger(`Server running in ${mode} mode on port ${PORT}`));
+    httpServer.listen(PORT, logger(`Server running in ${mode} mode on port ${PORT}`));
   } catch (e) {
     console.log('catch err', e);
   }
