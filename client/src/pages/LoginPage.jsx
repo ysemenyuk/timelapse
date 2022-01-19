@@ -50,7 +50,9 @@ const LoginPage = () => {
     <Container fluid>
       <Row className='justify-content-center pt-5'>
         <Col md={3}>
-          <h3 className='text-center mb-3'>Log In</h3>
+          <Heading lvl={3} className='text-center mb-3'>
+            Log In
+          </Heading>
 
           <Form className='mb-3' onSubmit={formik.handleSubmit}>
             <Form.Group className='mb-3'>

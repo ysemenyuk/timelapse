@@ -13,10 +13,10 @@ const AddCameraPage = () => {
     <Choose>
       <When condition={fetchStatus.isSuccess}>
         <Row>
-          <Col sm={3}>
+          <Col md={3}>
             <CamerasList cameras={cameras} selectedCamera={null} />
           </Col>
-          <Col sm={6}>
+          <Col md={6}>
             <AddCameraForm />
           </Col>
         </Row>

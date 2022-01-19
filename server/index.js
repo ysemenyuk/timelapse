@@ -14,6 +14,7 @@ import debugMiddleware from './middleware/debugMiddleware.js';
 // import winstonMiddleware from './middleware/winstonMiddleware.js';
 import staticFileRouter from './routes/staticFile.router.js';
 import { errorHandlerMiddleware } from './middleware/errorHandlerMiddleware.js';
+import { Server } from 'socket.io';
 
 import __dirname from './dirname.js';
 console.log('__dirname', __dirname);
@@ -22,6 +23,7 @@ const staticPath = path.join(__dirname, 'assets');
 console.log('staticPath', staticPath);
 
 const app = express();
+const io = new Server(app);
 const logger = debug('server');
 
 const mode = process.env.NODE_ENV || 'development';
@@ -32,6 +34,19 @@ if (process.env.NODE_ENV === 'development') {
   app.use(debugMiddleware);
   // app.use(winstonMiddleware);
 }
+
+app.use((req, res, next) => {
+  req.io = io;
+  return next();
+});
+
+io.on('connection', (socket) => {
+  console.log('user connected');
+
+  socket.on('disconnect', () => {
+    console.log('user disconnected');
+  });
+});
 
 app.use(express.json());
 app.use(fileUpload());
@@ -57,7 +72,7 @@ app.use((req, res, next) => {
 
 app.use(errorHandlerMiddleware);
 
-const start = async () => {
+const startServer = async () => {
   try {
     await mongoClient.connect();
     logger(`MongoClient successfully Connected`);
@@ -76,4 +91,4 @@ const start = async () => {
   }
 };
 
-start();
+startServer();

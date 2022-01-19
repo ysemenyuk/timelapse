@@ -5,6 +5,9 @@ import { useHistory } from 'react-router-dom';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import cameraThunks from '../../thunks/cameraThunks.js';
+import { Col, Form, Button, Spinner, InputGroup } from 'react-bootstrap';
+import Heading from '../UI/Heading.jsx';
+import Error from '../UI/Error.jsx';
 
 const validationSchema = Yup.object({
   name: Yup.string().required().min(3).max(20),
@@ -14,7 +17,6 @@ const validationSchema = Yup.object({
 const CameraForm = () => {
   const dispatch = useDispatch();
   const history = useHistory();
-
   const cameras = useSelector((state) => state.camera.allCameras);
 
   const handleCancel = () => {
@@ -51,89 +53,86 @@ const CameraForm = () => {
   // console.log('formik.values -', formik.values);
 
   return (
-    <div className='col-12 mb-3'>
-      <h6 className='mb-3'>Add new camera</h6>
-      <div>
-        <form className='row g-3' onSubmit={formik.handleSubmit}>
-          <div className='col-md-12'>
-            <label htmlFor='name' className='form-label'>
-              Name
-            </label>
-            <input
-              onChange={formik.handleChange}
-              value={formik.values.name}
-              id='name'
-              name='name'
-              type='text'
-              className={`form-control ${formik.errors?.name && 'is-invalid'}`}
-            ></input>
-            <div className='invalid-feedback'>{formik.errors?.name}</div>
-          </div>
+    <Col md={12} className='mb-4'>
+      <Heading lvl={6} className='mb-3'>
+        Add new camera
+      </Heading>
 
-          <div className='col-md-12'>
-            <label htmlFor='description' className='form-label'>
-              Description
-            </label>
-            <input
-              onChange={formik.handleChange}
-              value={formik.values.description}
-              id='description'
-              name='description'
-              type='text'
-              className={`form-control ${
-                formik.errors?.description && 'is-invalid'
-              }`}
-            ></input>
-            <div className='invalid-feedback'>{formik.errors?.description}</div>
-          </div>
+      <Form className='mb-3' onSubmit={formik.handleSubmit}>
+        <Form.Group className='mb-3'>
+          <Form.Label htmlFor='name'>Name</Form.Label>
+          <Form.Control
+            onChange={formik.handleChange}
+            value={formik.values.name}
+            name='name'
+            id='name'
+            type='text'
+            isInvalid={formik.errors && formik.errors.name}
+          />
+          <Form.Control.Feedback type='invalid'>
+            {formik.errors && formik.errors.name}
+          </Form.Control.Feedback>
+        </Form.Group>
 
-          <div className='col-md-12'>
-            <label htmlFor='name' className='form-label'>
-              Screenshot Link
-            </label>
-            <div className='input-group'>
-              <input
-                onChange={formik.handleChange}
-                value={formik.values.screenshotLink}
-                name='screenshotLink'
-                type='text'
-                className={`form-control ${
-                  formik.errors?.screenshotLink && 'is-invalid'
-                }`}
-              ></input>
-              <div className='invalid-feedback'>
-                {formik.errors?.screenshotLink}
-              </div>
-              <button
-                className='btn btn-outline-secondary'
-                type='button'
-                id='button-addon2'
-              >
-                Check
-              </button>
-            </div>
-          </div>
+        <Form.Group className='mb-3'>
+          <Form.Label htmlFor='description'>Description</Form.Label>
+          <Form.Control
+            onChange={formik.handleChange}
+            value={formik.values.description}
+            name='description'
+            id='description'
+            type='text'
+            isInvalid={formik.errors && formik.errors.description}
+          />
+          <Form.Control.Feedback type='invalid'>
+            {formik.errors && formik.errors.description}
+          </Form.Control.Feedback>
+        </Form.Group>
 
-          <div className='d-grid gap-2 d-flex justify-content-start'>
-            <button
-              className='btn btn-sm btn-primary'
-              type='button'
-              onClick={handleCancel}
-              disabled={formik.isSubmitting}
-            >
-              Cancel
-            </button>
-            <button
-              className='btn btn-sm btn-primary'
-              type='submit'
-              disabled={formik.isSubmitting}
-            >
-              Submit
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
+        <Form.Label htmlFor='screenshotLink'>Screenshot Link</Form.Label>
+        <InputGroup className='mb-3'>
+          <Form.Control
+            onChange={formik.handleChange}
+            value={formik.values.screenshotLink}
+            name='screenshotLink'
+            id='screenshotLink'
+            type='text'
+            isInvalid={formik.errors && formik.errors.screenshotLink}
+          />
+          <Form.Control.Feedback type='invalid'>
+            {formik.errors && formik.errors.screenshotLink}
+          </Form.Control.Feedback>
+          <Button variant='outline-secondary' id='button-addon1'>
+            Check
+          </Button>
+        </InputGroup>
+
+        <>
+          <Button
+            onClick={handleCancel}
+            disabled={formik.isSubmitting}
+            variant='primary'
+            size='sm'
+            className='me-2'
+          >
+            Cancel
+          </Button>
+          <Button
+            type='submit'
+            disabled={formik.isSubmitting}
+            variant='primary'
+            size='sm'
+            className='me-2'
+          >
+            Submit {formik.isSubmitting && <Spinner as='span' animation='border' size='sm' />}
+          </Button>
+        </>
+      </Form>
+
+      <If condition={formik.errors && formik.errors.network}>
+        <Error message={'Networ error ..'} />
+      </If>
+    </Col>
   );
 };
 
