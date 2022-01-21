@@ -1,10 +1,10 @@
 import axios from 'axios';
 import getAuthHeader from './authHeader.js';
 
-const host = 'http://localhost:3000/';
+const host = 'http://localhost:3000';
 
 const instance = axios.create({
-  baseURL: `${host}api/cameras`,
+  baseURL: `${host}/api/cameras`,
 });
 
 const getFiles = async (cameraId, parentId) =>

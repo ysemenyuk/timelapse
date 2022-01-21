@@ -16,6 +16,7 @@ import staticFileRouter from './routes/staticFile.router.js';
 import { errorHandlerMiddleware } from './middleware/errorHandlerMiddleware.js';
 import { Server } from 'socket.io';
 import http from 'http';
+import cors from 'cors';
 
 import __dirname from './dirname.js';
 console.log('__dirname', __dirname);
@@ -23,10 +24,14 @@ console.log('__dirname', __dirname);
 const staticPath = path.join(__dirname, 'assets');
 console.log('staticPath', staticPath);
 
+const logger = debug('server');
+
 const app = express();
 const httpServer = http.createServer(app);
-const io = new Server(httpServer);
-const logger = debug('server');
+
+const io = new Server(httpServer, {
+  cors: { origin: '*' },
+});
 
 const mode = process.env.NODE_ENV || 'development';
 const PORT = process.env.PORT || 4000;
@@ -37,16 +42,33 @@ if (process.env.NODE_ENV === 'development') {
   // app.use(winstonMiddleware);
 }
 
+app.use(cors());
+
 app.use((req, res, next) => {
   req.io = io;
   return next();
 });
 
+const messages = [1, 2, 3];
+
 io.on('connection', (socket) => {
-  console.log('user connected');
+  logger('user connected');
+
+  socket.on('messages:get', () => {
+    console.log('messages:get', messages);
+
+    io.emit('messages', messages);
+  });
+
+  socket.on('message:add', (message) => {
+    console.log('message:add', message);
+
+    messages.push(message);
+    io.emit('messages', messages);
+  });
 
   socket.on('disconnect', () => {
-    console.log('user disconnected');
+    logger('user disconnected');
   });
 });
 
@@ -87,7 +109,8 @@ const startServer = async () => {
 
     logger(`Mongoose successfully Connected`);
 
-    httpServer.listen(PORT, logger(`Server running in ${mode} mode on port ${PORT}`));
+    app.listen(PORT, logger(`Api server running in ${mode} mode on port ${PORT}`));
+    httpServer.listen(5000, logger(`Socket server running in ${mode} mode on port ${5000}`));
   } catch (e) {
     console.log('catch err', e);
   }

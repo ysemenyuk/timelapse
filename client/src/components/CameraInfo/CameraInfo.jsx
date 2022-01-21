@@ -6,10 +6,13 @@ import { formActions } from '../../store/formSlice.js';
 import cameraThunks from '../../thunks/cameraThunks.js';
 import { Col, Button, ListGroup, Badge } from 'react-bootstrap';
 import Heading from '../UI/Heading.jsx';
+import { useSocket } from '../../hooks/useSocket.js';
 
 const CameraInfo = ({ selectedCamera }) => {
   const dispatch = useDispatch();
   const history = useHistory();
+
+  const [messages, sendMessage] = useSocket();
 
   const handleDelete = async () => {
     dispatch(cameraThunks.deleteOne(selectedCamera));
@@ -91,6 +94,9 @@ const CameraInfo = ({ selectedCamera }) => {
           Files
         </Button>
       </>
+      <Button onClick={sendMessage} variant='info' size='sm' className='me-2'>
+        Message
+      </Button>
     </Col>
   );
 };
