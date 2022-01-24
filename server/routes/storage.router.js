@@ -1,7 +1,6 @@
 import express from 'express';
-// import imageService from '../services/image.service.js';
 import { asyncHandler } from '../middleware/errorHandlerMiddleware.js';
-import staticFileRepo from '../repositories/staticFile.repository.js';
+import storage from '../storage/index.js';
 import cameraFileRepo from '../repositories/cameraFile.repository.js';
 
 const router = express.Router();
@@ -9,16 +8,12 @@ const router = express.Router();
 router.get(
   '/:fileName',
   asyncHandler(async (req, res) => {
-    req.logger(`staticFileRouter.get /files/${req.params.fileName}`);
-
-    // const resizeImage = imageService.resize(200);
+    req.logger(`storage.router.get /files/${req.params.fileName}`);
 
     const file = await cameraFileRepo.getOneByName({
       fileName: req.params.fileName,
       logger: req.logger,
     });
-
-    // console.log('file', file);
 
     if (!file) {
       res.sendStatus(404);
@@ -26,29 +21,20 @@ router.get(
       return;
     }
 
-    // if (file.user.toString() !== req.userId) {
-    //   res.sendStatus(401);
-    //   req.logResp(req);
-    //   return;
-    // }
+    const isThumbnail = req.query && req.query.size && req.query.size === 'thumbnail';
 
-    const fileId = req.query?.size === 'thumbnail' ? file.thumbnail : file.original;
-
-    const stream = staticFileRepo.openDownloadStream({
-      fileId: fileId,
-      logger: req.logger,
-    });
+    const stream = storage.openDownloadStream({ file, isThumbnail }, req.logger);
 
     stream.pipe(res);
 
-    stream.on('error', () => {
-      // console.log('error');
+    stream.on('error', (e) => {
+      console.log('error', e);
       res.sendStatus(500);
       req.logResp(req);
     });
 
     stream.on('end', () => {
-      // console.log('end');
+      console.log('end');
       req.logResp(req);
     });
   })
@@ -64,7 +50,7 @@ router.get(
 //     const file = req.files.file.data;
 //     const fileName = req.files.file.name;
 
-//     const uploadStream = staticFileRepo.openUploadStream({ fileName, logger });
+//     const uploadStream = storage.openUploadStream({ fileName, logger });
 
 //     Readable.from(file).pipe(uploadStream);
 

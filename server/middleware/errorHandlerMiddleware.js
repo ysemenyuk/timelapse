@@ -18,7 +18,7 @@ class ValidateError extends Error {
 }
 
 const errorHandlerMiddleware = (err, req, res, next) => {
-  console.log('- errorHandlerMiddleware err -', err);
+  console.log('- errorHandlerMiddleware err -', err.message);
 
   if (err instanceof BadRequestError) {
     return res.status(err.status).send({ message: err.message });

@@ -1,7 +1,4 @@
 import express from 'express';
-
-// import Task from '../models/task.js';
-
 import authMiddleware from '../middleware/authMiddleware.js';
 import { asyncHandler } from '../middleware/errorHandlerMiddleware.js';
 

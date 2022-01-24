@@ -4,4 +4,8 @@ const resize = (size) => {
   return sharp().resize(size);
 };
 
-export default { resize };
+const resizeImage = (path, size) => {
+  return sharp(path).resize(size).toBuffer();
+};
+
+export default { resize, resizeImage };

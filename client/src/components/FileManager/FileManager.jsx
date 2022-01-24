@@ -23,6 +23,8 @@ const CameraFileManager = ({ selectedCamera }) => {
     (state) => state.fileManager
   );
 
+  console.log(1111112, currentFolder);
+
   useEffect(() => {
     return () => {
       dispatch(fileManagerActions.resetCurrentFolder());

@@ -15,16 +15,18 @@ const getOneByName = async ({ fileName, logger }) => {
   return await CameraFile.findOne({ name: fileName });
 };
 
-const createOne = async ({ user, camera, name, original, thumbnail, parent, logger }) => {
+const createOne = async ({ date, name, user, camera, parent, storage, path }, logger) => {
   logger(`cameraFileRepository.createOne fileName: ${name}`);
 
+  // console.log('storageData', storageData);
   const file = new CameraFile({
+    date,
+    name,
     user,
     camera,
-    name,
-    original,
-    thumbnail,
     parent,
+    storage,
+    path,
   });
 
   await file.save();

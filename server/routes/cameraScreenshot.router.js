@@ -1,5 +1,5 @@
 import express from 'express';
-import cameraScreenshotController from '../controllers/cameraScreenshot.controller.js';
+import cameraFileController from '../controllers/cameraFile.controller.js';
 import authMiddleware from '../middleware/authMiddleware.js';
 import userCameraMiddleware from '../middleware/userCameraMiddleware.js';
 import { asyncHandler } from '../middleware/errorHandlerMiddleware.js';
@@ -14,7 +14,7 @@ router.post(
   asyncHandler(async (req, res) => {
     req.logger('cameraScreenshotRouter.post api/cameras/:cameraId/screenshots');
 
-    const screenshot = await cameraScreenshotController.createScreenshot({
+    const screenshot = await cameraFileController.createScreenshot({
       userId: req.userId,
       cameraId: req.cameraId,
       logger: req.logger,
