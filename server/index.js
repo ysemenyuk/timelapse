@@ -3,11 +3,9 @@ import mongoose from 'mongoose';
 import fileUpload from 'express-fileupload';
 import debug from 'debug';
 import path from 'path';
-// import mime from 'mime';
 import mongoClient from './dbConfig.js';
 import userRouter from './routes/user.router.js';
 import cameraRouter from './routes/camera.router.js';
-import cameraScreenshotRouter from './routes/cameraScreenshot.router.js';
 import cameraFolderRouter from './routes/cameraFolder.router.js';
 import cameraFileRouter from './routes/cameraFile.router.js';
 import cameraTaskRouter from './routes/cameraTask.router.js';
@@ -18,9 +16,6 @@ import { errorHandlerMiddleware } from './middleware/errorHandlerMiddleware.js';
 import { Server } from 'socket.io';
 import http from 'http';
 import cors from 'cors';
-// import imageService from './services/image.service.js';
-// import fileServise from './services/file.service.js';
-// import { createReadStream } from 'fs';
 
 import __dirname from './dirname.js';
 console.log('__dirname', __dirname);
@@ -63,14 +58,12 @@ io.on('connection', (socket) => {
   logger('user connected');
 
   socket.on('messages:get', () => {
-    console.log('messages:get', messages);
-
+    // console.log('messages:get', messages);
     io.emit('messages', messages);
   });
 
   socket.on('message:add', (message) => {
-    console.log('message:add', message);
-
+    // console.log('message:add', message);
     messages.push(message);
     io.emit('messages', messages);
   });
@@ -83,50 +76,11 @@ io.on('connection', (socket) => {
 app.use(express.json());
 app.use(fileUpload());
 
-// app.use('/assets/1', (req, res, next) => {
-//   const imagePath = path.join(__dirname, 'assets', 'img--2022-01-22--02-29-16.jpg');
-
-//   console.log(11111111);
-
-//   const stream = createReadStream(imagePath);
-//   stream.pipe(res);
-
-//   stream.on('error', (e) => {
-//     console.log('error', e);
-//     res.sendStatus(500);
-//     req.logResp(req);
-//   });
-
-//   stream.on('end', () => {
-//     console.log('end');
-//     req.logResp(req);
-//   });
-
-// fileServise
-//   .readFile(imagePath)
-//   .then((buffer) => {
-//     // Success. Send the image
-//     res.set('Content-type', mime.getType(imagePath)); // using 'mime-types' package
-//     res.send(buffer);
-//   })
-//   .catch(next); // File not found or resizing failed
-
-// imageService
-//   .resizeImage(imagePath, 300)
-//   .then((buffer) => {
-//     // Success. Send the image
-//     res.set('Content-type', mime.getType(imagePath)); // using 'mime-types' package
-//     res.send(buffer);
-//   })
-//   .catch(next); // File not found or resizing failed
-// });
-
 app.use('/assets', express.static(assetsPath));
 app.use('/files', storageRouter);
 
 app.use('/api/users', userRouter);
 
-app.use('/api/cameras/:cameraId/screenshots', cameraScreenshotRouter);
 app.use('/api/cameras/:cameraId/folders', cameraFolderRouter);
 app.use('/api/cameras/:cameraId/files', cameraFileRouter);
 app.use('/api/cameras/:cameraId/tasks', cameraTaskRouter);

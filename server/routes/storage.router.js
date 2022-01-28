@@ -2,6 +2,8 @@ import express from 'express';
 import { asyncHandler } from '../middleware/errorHandlerMiddleware.js';
 import storage from '../storage/index.js';
 import cameraFileRepo from '../repositories/cameraFile.repository.js';
+import imageService from '../services/image.service.js';
+import * as consts from '../utils/constants.js';
 
 const router = express.Router();
 
@@ -23,18 +25,25 @@ router.get(
 
     const isThumbnail = req.query && req.query.size && req.query.size === 'thumbnail';
 
-    const stream = storage.openDownloadStream({ file, isThumbnail }, req.logger);
+    const stream = storage.openDownloadStream({
+      file,
+      logger: req.logger,
+    });
 
-    stream.pipe(res);
+    if (isThumbnail) {
+      stream.pipe(imageService.resize(consts.THUMBNAIL_SIZE)).pipe(res);
+    } else {
+      stream.pipe(res);
+    }
 
     stream.on('error', (e) => {
-      console.log('error', e);
+      // console.log('stream.on error', e);
       res.sendStatus(500);
       req.logResp(req);
     });
 
     stream.on('end', () => {
-      console.log('end');
+      // console.log('stream.on end');
       req.logResp(req);
     });
   })

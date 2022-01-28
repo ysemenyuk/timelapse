@@ -64,4 +64,23 @@ router.delete(
   })
 );
 
+router.post(
+  '/screenshot',
+  asyncHandler(async (req, res) => {
+    req.logger('cameraScreenshotRouter.post api/cameras/:cameraId/files/screenshot');
+
+    const screenshot = await cameraFileController.createScreenshot({
+      userId: req.userId,
+      cameraId: req.cameraId,
+      folderName: 'screenshots',
+      logger: req.logger,
+    });
+
+    // console.log('cameraScreenshotRouter screenshot:', screenshot);
+
+    res.status(201).send(screenshot);
+    req.logResp(req);
+  })
+);
+
 export default router;

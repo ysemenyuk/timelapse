@@ -2,7 +2,11 @@ import CameraFile from '../models/CameraFile.js';
 
 const getAll = async ({ userId, cameraId, parentId, logger }) => {
   logger(`cameraFileRepository.getAll cameraId: ${cameraId}`);
-  return await CameraFile.find({ user: userId, camera: cameraId, parent: parentId });
+  return await CameraFile.find({
+    user: userId,
+    camera: cameraId,
+    parent: parentId,
+  });
 };
 
 const getOne = async ({ userId, cameraId, fileId, logger }) => {
@@ -15,10 +19,9 @@ const getOneByName = async ({ fileName, logger }) => {
   return await CameraFile.findOne({ name: fileName });
 };
 
-const createOne = async ({ date, name, user, camera, parent, storage, path }, logger) => {
+const createOne = async ({ date, name, user, camera, parent, storage, path, logger }) => {
   logger(`cameraFileRepository.createOne fileName: ${name}`);
 
-  // console.log('storageData', storageData);
   const file = new CameraFile({
     date,
     name,

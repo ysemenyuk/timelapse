@@ -1,9 +1,5 @@
 import express from 'express';
-
-import CameraFolder from '../models/CameraFolder.js';
-
 import cameraFolderController from '../controllers/cameraFolder.controller.js';
-
 import authMiddleware from '../middleware/authMiddleware.js';
 import userCameraMiddleware from '../middleware/userCameraMiddleware.js';
 import { asyncHandler } from '../middleware/errorHandlerMiddleware.js';
@@ -18,14 +14,13 @@ router.post(
   asyncHandler(async (req, res) => {
     req.logger('cameraFolderRouter.post api/cameras/:cameraId/folders');
 
-    const folder = new CameraFolder({
-      name: req.body.name,
-      user: req.userId,
-      camera: req.cameraId,
-      parent: req.body.parentId,
+    const folder = await cameraFolderController.createOne({
+      folderName: req.body.name,
+      userId: req.userId,
+      cameraId: req.cameraId,
+      parentId: req.body.parentId,
+      logger: req.logger,
     });
-
-    await folder.save();
 
     res.status(200).send(folder);
     req.logResp(req);

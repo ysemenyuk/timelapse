@@ -21,6 +21,12 @@ const getOne = async ({ userId, cameraId, folderId, logger }) => {
   return folder;
 };
 
+const createOne = async ({ userId, cameraId, parentId, folderName, logger }) => {
+  logger(`cameraFolderController.createOne`);
+
+  return await cameraFolderRepo.createOne({ userId, cameraId, parentId, folderName, logger });
+};
+
 const deleteOne = async ({ userId, cameraId, folderId, logger }) => {
   logger(`cameraFolderController.deleteOne folderId: ${folderId}`);
 
@@ -44,4 +50,4 @@ const deleteMany = async ({ userId, cameraId, foldersIds, logger }) => {
   return await cameraFolderRepo.deleteMany({ userId, cameraId, foldersIds, logger });
 };
 
-export default { getAll, getOne, deleteOne, deleteMany };
+export default { getAll, getOne, createOne, deleteOne, deleteMany };

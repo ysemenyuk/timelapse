@@ -5,7 +5,6 @@ import cameraRepository from '../repositories/camera.repository.js';
 import cameraFileRepo from '../repositories/cameraFile.repository.js';
 import cameraFolderRepo from '../repositories/cameraFolder.repository.js';
 import { makeFileName, promisifyUploadStream } from '../utils/index.js';
-import * as consts from '../utils/constants.js';
 import { storageType } from '../storage/index.js';
 
 const getAll = async ({ userId, cameraId, parentId, logger }) => {
@@ -46,28 +45,27 @@ const deleteOne = async ({ userId, cameraId, fileId, logger }) => {
 const deleteMany = async ({ userId, cameraId, filesIds, logger }) => {
   logger(`cameraFileController.deleteMany`);
 
-  // delete files from storage
+  // TODO: delete files from storage
 
   return await cameraFileRepo.deleteMany({ userId, cameraId, filesIds, logger });
 };
 
-const createScreenshot = async ({ userId, cameraId, logger }) => {
+const createScreenshot = async ({ userId, cameraId, folderName, logger }) => {
   logger(`cameraFileController.createScreenshot cameraId: ${cameraId}`);
-
-  const folderName = consts.SCREENSHOTS;
 
   const camera = await cameraRepository.getOne({ userId, cameraId, logger });
 
-  const parentFolder = cameraFolderRepo.getOneByName({ userId, cameraId, folderName }, logger);
+  const parentFolder = cameraFolderRepo.getOneByName({ userId, cameraId, folderName, logger });
 
-  // TODO: parent folder if not exist create
+  // TODO: folder if not exist create
+
+  const filePath = path.join(camera._id.toString(), parentFolder.name);
 
   const date = new Date();
   const fileName = makeFileName(date);
-  const filePath = path.join(camera._id.toString(), parentFolder.name);
 
   const dataStream = await cameraService.getScreenshot(camera.screenshotLink, 'stream');
-  const uploadStream = storage.openUploadStream({ filePath, fileName }, logger);
+  const uploadStream = storage.openUploadStream({ filePath, fileName, logger });
 
   dataStream.pipe(uploadStream);
 
@@ -75,18 +73,16 @@ const createScreenshot = async ({ userId, cameraId, logger }) => {
 
   console.log('date', date, date.toLocaleString());
 
-  const file = await cameraFileRepo.createOne(
-    {
-      name: fileName,
-      date,
-      user: userId,
-      camera: cameraId,
-      parent: parentFolder._id,
-      path: filePath,
-      storage: storageType,
-    },
-    logger
-  );
+  const file = await cameraFileRepo.createOne({
+    name: fileName,
+    date,
+    user: userId,
+    camera: cameraId,
+    parent: parentFolder._id,
+    path: filePath,
+    storage: storageType,
+    logger,
+  });
 
   console.log('cameraFileController.createScreenshot file', file);
 
