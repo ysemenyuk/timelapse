@@ -1,6 +1,4 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
-
 import userService from '../api/user.service.js';
 
 const singup = createAsyncThunk('user/singup', async (values) => {

@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import React from 'react';
+import { useDispatch } from 'react-redux';
 import styles from './FileManager.module.css';
 import { Breadcrumb, Col, Button, Spinner } from 'react-bootstrap';
-import useThunkStatus from '../../hooks/useThunkStatus.js';
+// import useThunkStatus from '../../hooks/useThunkStatus.js';
 import { cameraActions } from '../../store/cameraSlice.js';
 import { fileManagerActions } from '../../store/fileManagerSlice.js';
 import { imgViewerActions } from '../../store/imgViewerSlice.js';
@@ -11,83 +11,45 @@ import FoldersList from './FolderList/FoldersList.jsx';
 import ButtonsGroup from '../UI/ButtonsGroup.jsx';
 import Heading from '../UI/Heading.jsx';
 import Error from '../UI/Error';
+import useFileManager from '../../hooks/useFileManager';
 
 const CameraFileManager = ({ selectedCamera }) => {
   const dispatch = useDispatch();
 
-  const fetchOneFolder = useThunkStatus(fileManagerActions.fetchOneFolder);
-  const fetchFiles = useThunkStatus(fileManagerActions.fetchFiles);
-  const fetchFolders = useThunkStatus(fileManagerActions.fetchFolders);
+  const cameraId = selectedCamera._id;
 
-  const { files, folders, currentFolder, foldersStack } = useSelector(
-    (state) => state.fileManager
-  );
-
-  console.log(1111112, currentFolder);
-
-  useEffect(() => {
-    return () => {
-      dispatch(fileManagerActions.resetCurrentFolder());
-    };
-  }, []);
-
-  useEffect(() => {
-    if (!currentFolder && selectedCamera.mainFolder) {
-      dispatch(
-        fileManagerActions.fetchOneFolder({
-          cameraId: selectedCamera._id,
-          folderId: selectedCamera.mainFolder,
-        })
-      );
-    }
-  }, [currentFolder]);
-
-  useEffect(() => {
-    if (currentFolder && !folders[currentFolder._id] && !files[currentFolder._id]) {
-      dispatch(
-        fileManagerActions.fetchFiles({
-          cameraId: selectedCamera._id,
-          parentId: currentFolder._id,
-        })
-      );
-      dispatch(
-        fileManagerActions.fetchFolders({
-          cameraId: selectedCamera._id,
-          parentId: currentFolder._id,
-        })
-      );
-    }
-  }, [currentFolder]);
+  const { folders, files, parentFolder, foldersStack, fetchStatus, fetchMainFolder } =
+    useFileManager(selectedCamera);
 
   const clickFileHandler = (fileIndex) => {
-    dispatch(fileManagerActions.setCurrentFileIndex(fileIndex));
+    dispatch(fileManagerActions.setCurrentFileIndex({ cameraId, fileIndex }));
     dispatch(imgViewerActions.open());
   };
 
   const clickFolderHandler = (folder) => {
-    dispatch(fileManagerActions.pushToFoldersStack(folder));
+    dispatch(fileManagerActions.pushToFoldersStack({ cameraId, folder }));
   };
 
   const breadcrumbClickHandler = (folder) => {
-    dispatch(fileManagerActions.setCurrentFolder(folder));
+    dispatch(fileManagerActions.setCurrentFolder({ cameraId, folder }));
   };
 
   const backHandler = () => {
-    dispatch(fileManagerActions.popFromFoldersStack());
+    dispatch(fileManagerActions.popFromFoldersStack({ cameraId }));
   };
 
   const refreshHandler = () => {
-    if (currentFolder) {
+    if (parentFolder) {
       dispatch(
         fileManagerActions.fetchFiles({
           cameraId: selectedCamera._id,
-          parentId: currentFolder._id,
+          parentId: parentFolder._id,
         })
       );
       dispatch(
         fileManagerActions.fetchFolders({
           cameraId: selectedCamera._id,
-          parentId: currentFolder._id,
+          parentId: parentFolder._id,
         })
       );
     }
@@ -109,13 +71,7 @@ const CameraFileManager = ({ selectedCamera }) => {
             type='primary'
             size='sm'
             onClick={backHandler}
-            disabled={
-              !currentFolder ||
-              fetchOneFolder.isLoading ||
-              fetchFolders.isLoading ||
-              fetchFiles.isLoading ||
-              foldersStack.length === 1
-            }
+            disabled={!parentFolder || fetchStatus.isLoading || foldersStack.length === 1}
           >
             Back
           </Button>
@@ -123,12 +79,7 @@ const CameraFileManager = ({ selectedCamera }) => {
             type='primary'
             size='sm'
             onClick={refreshHandler}
-            disabled={
-              !currentFolder ||
-              fetchOneFolder.isLoading ||
-              fetchFolders.isLoading ||
-              fetchFiles.isLoading
-            }
+            disabled={!parentFolder || fetchStatus.isLoading}
           >
             Refresh
           </Button>
@@ -136,68 +87,65 @@ const CameraFileManager = ({ selectedCamera }) => {
             type='primary'
             size='sm'
             onClick={createScreenshotHandler}
-            disabled={
-              !currentFolder ||
-              fetchOneFolder.isLoading ||
-              fetchFolders.isLoading ||
-              fetchFiles.isLoading
-            }
+            disabled={!parentFolder || fetchStatus.isLoading}
           >
             CreateScreenshot
           </Button>
         </ButtonsGroup>
       </Col>
 
-      <Col md={12} className='mb-4'>
-        <Breadcrumb>
-          {foldersStack.map((folder) => (
-            <Breadcrumb.Item onClick={() => breadcrumbClickHandler(folder)} key={folder._id}>
-              {folder.name}
-            </Breadcrumb.Item>
-          ))}
-        </Breadcrumb>
-      </Col>
+      <Choose>
+        <When condition={fetchMainFolder.isError}>
+          <Error message='Network error main folder' type='error' />
+        </When>
 
-      <Col md={12} className='mb-4'>
-        <Choose>
-          <When condition={!currentFolder && !selectedCamera.mainFolder}>
-            <div className={styles.container}>No files or folders..</div>
-          </When>
+        <When condition={!folders || !files || !parentFolder || !foldersStack}>
+          <Spinner animation='border' />
+        </When>
 
-          <When condition={fetchOneFolder.isError || fetchFolders.isError || fetchFiles.isError}>
-            <Error message='Network error' type='error' />
-          </When>
+        <Otherwise>
+          <Col md={12} className='mb-4'>
+            <Breadcrumb>
+              {foldersStack.map((folder) => (
+                <Breadcrumb.Item onClick={() => breadcrumbClickHandler(folder)} key={folder._id}>
+                  {folder.name}
+                </Breadcrumb.Item>
+              ))}
+            </Breadcrumb>
+          </Col>
 
-          <When
-            condition={!currentFolder || !folders[currentFolder._id] || !files[currentFolder._id]}
-          >
-            <Spinner animation='border' />
-          </When>
+          <Col md={12} className='mb-4'>
+            <Choose>
+              <When condition={fetchStatus.isError}>
+                <Error message='Network error folders and files' type='error' />
+              </When>
 
-          <When
-            condition={
-              folders[currentFolder._id].length === 0 && files[currentFolder._id].length === 0
-            }
-          >
-            <div className={styles.container}>No files or folders..</div>
-          </When>
+              <When condition={fetchStatus.isLoading}>
+                <Spinner animation='border' />
+              </When>
 
-          <When condition={fetchFolders.isSuccess && fetchFiles.isSuccess}>
-            <div className={styles.container}>
-              <FoldersList
-                className={styles.item}
-                folders={folders[currentFolder._id]}
-                onClickFolder={clickFolderHandler}
-              />
-              <FilesList
-                className={styles.item}
-                files={files[currentFolder._id]}
-                onClickFile={clickFileHandler}
-              />
-            </div>
-          </When>
-        </Choose>
-      </Col>
+              <When condition={folders.length === 0 && files.length === 0}>
+                <div className={styles.container}>No files or folders..</div>
+              </When>
+
+              <When condition={fetchStatus.isSuccess}>
+                <div className={styles.container}>
+                  <FoldersList
+                    className={styles.item}
+                    folders={folders}
+                    onClickFolder={clickFolderHandler} //
+                  />
+                  <FilesList
+                    className={styles.item}
+                    files={files}
+                    onClickFile={clickFileHandler} //
+                  />
+                </div>
+              </When>
+            </Choose>
+          </Col>
+        </Otherwise>
+      </Choose>
     </>
   );
 };

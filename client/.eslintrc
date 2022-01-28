@@ -1,0 +1,29 @@
+{
+  "plugins": [
+    "react",
+    "react-hooks",
+    "jsx-control-statements" //
+  ],
+  "extends": [
+    "airbnb",
+    "plugin:jsx-control-statements/recommended" //
+  ],
+  "parser": "@babel/eslint-parser",
+  "parserOptions": {
+    "ecmaVersion": 2017,
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "jsx": true,
+      "legacyDecorators": true
+    }
+  },
+  "env": {
+    "node": true,
+    "es6": true,
+    "jest": true
+  },
+  "rules": {
+    "no-param-reassign": ["error", { "props": false }],
+    "no-underscore-dangle": ["error", { "enforceInMethodNames": true }]
+  }
+}

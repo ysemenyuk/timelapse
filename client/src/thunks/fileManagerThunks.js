@@ -1,5 +1,4 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-
 import fileManagerService from '../api/fileManager.service.js';
 
 const fetchFiles = createAsyncThunk('file/fetchFiles', async ({ cameraId, parentId }) => {
@@ -10,7 +9,7 @@ const fetchFiles = createAsyncThunk('file/fetchFiles', async ({ cameraId, parent
 
     console.log('file/fetchFiles response.data -', response.data);
 
-    return response.data;
+    return { cameraId, parentId, data: response.data };
   } catch (e) {
     console.log('file/fetchFiles error -', e.message);
     throw e;
@@ -25,26 +24,26 @@ const fetchFolders = createAsyncThunk('folder/fetchFolders', async ({ cameraId, 
 
     console.log('folder/fetchFolders response.data -', response.data);
 
-    return response.data;
+    return { cameraId, parentId, data: response.data };
   } catch (e) {
     console.log('folder/fetchFolders error -', e.message);
     throw e;
   }
 });
 
-const fetchOneFolder = createAsyncThunk(
-  'folder/fetchOneFolder',
+const fetchMainFolder = createAsyncThunk(
+  'folder/fetchMainFolder',
   async ({ cameraId, folderId }) => {
     try {
-      console.log('folder/fetchOneFolder cameraId folderId -', { cameraId, folderId });
+      console.log('folder/fetchMainFolder cameraId folderId -', { cameraId, folderId });
 
       const response = await fileManagerService.getOneFolder(cameraId, folderId);
 
-      console.log('folder/fetchOneFolder response.data -', response.data);
+      console.log('folder/fetchMainFolder response.data -', response.data);
 
-      return response.data;
+      return { cameraId, data: response.data };
     } catch (e) {
-      console.log('folder/fetchOneFolder error -', e.message);
+      console.log('folder/fetchMainFolder error -', e.message);
       throw e;
     }
   }
@@ -65,4 +64,4 @@ const deletehOneFile = createAsyncThunk('file/deleteOneFile', async ({ cameraId,
   }
 });
 
-export default { fetchFiles, fetchFolders, fetchOneFolder, deletehOneFile };
+export default { fetchFiles, fetchFolders, fetchMainFolder, deletehOneFile };
