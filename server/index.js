@@ -6,9 +6,8 @@ import path from 'path';
 import mongoClient from './dbConfig.js';
 import userRouter from './routes/user.router.js';
 import cameraRouter from './routes/camera.router.js';
-import cameraFolderRouter from './routes/cameraFolder.router.js';
-import cameraFileRouter from './routes/cameraFile.router.js';
-import cameraTaskRouter from './routes/cameraTask.router.js';
+import fileRouter from './routes/file.router.js';
+import taskRouter from './routes/task.router.js';
 import debugMiddleware from './middleware/debugMiddleware.js';
 // import winstonMiddleware from './middleware/winstonMiddleware.js';
 import storageRouter from './routes/storage.router.js';
@@ -80,10 +79,8 @@ app.use('/assets', express.static(assetsPath));
 app.use('/files', storageRouter);
 
 app.use('/api/users', userRouter);
-
-app.use('/api/cameras/:cameraId/folders', cameraFolderRouter);
-app.use('/api/cameras/:cameraId/files', cameraFileRouter);
-app.use('/api/cameras/:cameraId/tasks', cameraTaskRouter);
+app.use('/api/cameras/:cameraId/files', fileRouter);
+app.use('/api/cameras/:cameraId/tasks', taskRouter);
 app.use('/api/cameras', cameraRouter);
 
 app.get('/', (req, res) => {

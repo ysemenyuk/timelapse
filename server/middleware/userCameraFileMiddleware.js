@@ -1,10 +1,10 @@
-import CameraFileRepo from '../repositories/cameraFile.repository.js';
+import fileRepository from '../repositories/file.repository.js';
 
 export default async (req, res, next) => {
   req.logger(`userCameraFileMiddleware fileName: ${req.params.fileName}`);
 
   try {
-    const file = await CameraFileRepo.getOneByName({ filename: req.params.fileName });
+    const file = await fileRepository.getOneByName({ name: req.params.fileName });
     // console.log(file);
 
     if (!file) {

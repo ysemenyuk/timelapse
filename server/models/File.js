@@ -1,15 +1,16 @@
 import mongoose from 'mongoose';
 
-const CameraFileSchema = mongoose.Schema({
+const FileSchema = mongoose.Schema({
   name: { type: String, required: true },
   date: { type: Date, default: Date.now() },
   user: { type: mongoose.ObjectId, ref: 'User' },
   camera: { type: mongoose.ObjectId, ref: 'Camera' },
   parent: { type: mongoose.ObjectId, ref: 'Folder' },
-  storage: { type: String },
+  storage: { type: String }, // disk, gridfs
   path: { type: String },
+  type: { type: String }, // folder, image, screenshot, video
 });
 
-const CameraFile = mongoose.model('CameraFile', CameraFileSchema);
+const File = mongoose.model('CameraFile', FileSchema);
 
-export default CameraFile;
+export default File;
