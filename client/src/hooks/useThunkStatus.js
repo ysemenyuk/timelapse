@@ -1,6 +1,6 @@
 import { useSelector } from 'react-redux';
 
-export default (thunk) => {
+export default function useThunkStatus(thunk) {
   const thunkStatus = useSelector((state) => state.thunk[thunk.typePrefix]) || 'uninitialized';
 
   const isLoading = thunkStatus === 'pending';
@@ -8,4 +8,4 @@ export default (thunk) => {
   const isError = thunkStatus === 'rejected';
 
   return { thunkStatus, isLoading, isSuccess, isError };
-};
+}

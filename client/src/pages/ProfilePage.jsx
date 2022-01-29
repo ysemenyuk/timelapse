@@ -9,7 +9,7 @@ import Error from '../components/UI/Error.jsx';
 import userThunks from '../thunks/userThunks.js';
 import useCamerasList from '../hooks/useCamerasList.js';
 
-const ProfilePage = () => {
+function ProfilePage() {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.user);
   const { cameras, fetchStatus } = useCamerasList();
@@ -47,66 +47,66 @@ const ProfilePage = () => {
           </Col>
 
           <Col sm={6}>
-            <Heading lvl={3} className='mb-3'>
+            <Heading lvl={3} className="mb-3">
               User Profile
             </Heading>
 
-            {message && <Message variant='danger'>{message}</Message>}
+            {message && <Message variant="danger">{message}</Message>}
 
-            <Form className='mb-3' onSubmit={handleUpdateUser}>
-              <Form.Group className='mb-3'>
-                <Form.Label htmlFor='username'>Username</Form.Label>
+            <Form className="mb-3" onSubmit={handleUpdateUser}>
+              <Form.Group className="mb-3">
+                <Form.Label htmlFor="username">Username</Form.Label>
                 <Form.Control
-                  type='username'
-                  name='username'
-                  id='username'
-                  autoComplete='username'
+                  type="username"
+                  name="username"
+                  id="username"
+                  autoComplete="username"
                   onChange={(e) => setName(e.target.value)}
                   value={name}
                 />
               </Form.Group>
 
-              <Form.Group className='mb-3'>
-                <Form.Label htmlFor='email'>Email address</Form.Label>
+              <Form.Group className="mb-3">
+                <Form.Label htmlFor="email">Email address</Form.Label>
                 <Form.Control
-                  type='email'
-                  name='email'
-                  id='email'
-                  autoComplete='email'
+                  type="email"
+                  name="email"
+                  id="email"
+                  autoComplete="email"
                   onChange={(e) => setEmail(e.target.value)}
                   value={email}
                 />
               </Form.Group>
 
-              <Form.Group className='mb-3'>
-                <Form.Label htmlFor='password'>Password</Form.Label>
+              <Form.Group className="mb-3">
+                <Form.Label htmlFor="password">Password</Form.Label>
                 <Form.Control
-                  type='password'
-                  name='password'
-                  id='password'
-                  autoComplete='current-password'
+                  type="password"
+                  name="password"
+                  id="password"
+                  autoComplete="current-password"
                   onChange={(e) => setPassword(e.target.value)}
                   value={password}
                 />
               </Form.Group>
 
-              <Form.Group className='mb-3'>
-                <Form.Label htmlFor='confirmPassword'>Confirm password</Form.Label>
+              <Form.Group className="mb-3">
+                <Form.Label htmlFor="confirmPassword">Confirm password</Form.Label>
                 <Form.Control
-                  type='password'
-                  name='confirmPassword'
-                  id='confirmPassword'
-                  autoComplete='current-password'
+                  type="password"
+                  name="confirmPassword"
+                  id="confirmPassword"
+                  autoComplete="current-password"
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   value={confirmPassword}
                 />
               </Form.Group>
 
               <>
-                <Button variant='primary' onClick={handleDeleteUser} size='sm' className='me-2'>
+                <Button variant="primary" onClick={handleDeleteUser} size="sm" className="me-2">
                   Delete
                 </Button>
-                <Button variant='primary' type='submit' size='sm' className='me-2'>
+                <Button variant="primary" type="submit" size="sm" className="me-2">
                   Update
                 </Button>
               </>
@@ -124,6 +124,6 @@ const ProfilePage = () => {
       </When>
     </Choose>
   );
-};
+}
 
 export default ProfilePage;

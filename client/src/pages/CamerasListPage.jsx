@@ -1,15 +1,15 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
+import { Col, Row } from 'react-bootstrap';
 import useCamerasList from '../hooks/useCamerasList.js';
 import CamerasList from '../components/CamerasList/CamerasList.jsx';
 import FormEditCamera from '../components/CameraForm/EditCameraForm.jsx';
-import Screenshot from '../components/Screenshot/Screenshot.jsx';
+// import Screenshot from '../components/Screenshot/Screenshot.jsx';
 import CameraInfo from '../components/CameraInfo/CameraInfo.jsx';
 import Spinner from '../components/UI/Spinner.jsx';
 import Error from '../components/UI/Error.jsx';
-import { Col, Row } from 'react-bootstrap';
 
-const CameraListPage = () => {
+function CameraListPage() {
   const selectedCamera = useSelector((state) => state.camera.selectedCamera);
   const formEdit = useSelector((state) => state.form);
 
@@ -32,9 +32,9 @@ const CameraListPage = () => {
               </Otherwise>
             </Choose>
           </Col>
-          <Col sm={3}>
+          {/* <Col sm={3}>
             <Screenshot selectedCamera={selectedCamera} />
-          </Col>
+          </Col> */}
         </Row>
       </When>
 
@@ -47,6 +47,6 @@ const CameraListPage = () => {
       </When>
     </Choose>
   );
-};
+}
 
 export default CameraListPage;

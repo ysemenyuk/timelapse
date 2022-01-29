@@ -2,7 +2,7 @@ import React from 'react';
 import folderImg from '../../../assets/folder2.png';
 import ImgWrapper from '../../UI/ImgWrapper/ImgWrapper.jsx';
 
-const FoldersList = ({ className, folders, onClickFolder }) => {
+function FoldersList({ className, folders, onClickFolder }) {
   if (!folders || !folders.length) {
     return null;
   }
@@ -13,12 +13,12 @@ const FoldersList = ({ className, folders, onClickFolder }) => {
         width={100}
         height={0.5625}
         src={folderImg}
-        role='button'
+        role="button"
         onClick={() => onClickFolder(folder)}
       />
       <span>{folder.name}</span>
     </div>
   ));
-};
+}
 
 export default FoldersList;

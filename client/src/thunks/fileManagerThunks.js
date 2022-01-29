@@ -46,7 +46,7 @@ const fetchMainFolder = createAsyncThunk(
       console.log('folder/fetchMainFolder error -', e.message);
       throw e;
     }
-  }
+  },
 );
 
 const deletehOneFile = createAsyncThunk('file/deleteOneFile', async ({ cameraId, fileId }) => {
@@ -64,4 +64,6 @@ const deletehOneFile = createAsyncThunk('file/deleteOneFile', async ({ cameraId,
   }
 });
 
-export default { fetchFiles, fetchFolders, fetchMainFolder, deletehOneFile };
+export default {
+  fetchFiles, fetchFolders, fetchMainFolder, deletehOneFile,
+};

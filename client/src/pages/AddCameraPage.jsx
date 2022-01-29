@@ -1,12 +1,12 @@
 import React from 'react';
+import { Col, Row } from 'react-bootstrap';
 import useCamerasList from '../hooks/useCamerasList.js';
 import CamerasList from '../components/CamerasList/CamerasList.jsx';
 import AddCameraForm from '../components/CameraForm/AddCameraForm.jsx';
 import Spinner from '../components/UI/Spinner.jsx';
 import Error from '../components/UI/Error.jsx';
-import { Col, Row } from 'react-bootstrap';
 
-const AddCameraPage = () => {
+function AddCameraPage() {
   const { cameras, fetchStatus } = useCamerasList();
 
   return (
@@ -31,6 +31,6 @@ const AddCameraPage = () => {
       </When>
     </Choose>
   );
-};
+}
 
 export default AddCameraPage;

@@ -2,7 +2,7 @@ import React from 'react';
 
 import ImgWrapper from '../../UI/ImgWrapper/ImgWrapper.jsx';
 
-const FilesList = ({ className, files, onClickFile }) => {
+function FilesList({ className, files, onClickFile }) {
   if (!files || !files.length) {
     return null;
   }
@@ -13,12 +13,12 @@ const FilesList = ({ className, files, onClickFile }) => {
         width={100}
         height={0.5625}
         src={`/files/${file.name}?size=thumbnail`}
-        role='button'
+        role="button"
         onClick={() => onClickFile(index)}
       />
       <span>{file.date}</span>
     </div>
   ));
-};
+}
 
 export default FilesList;

@@ -94,4 +94,6 @@ const updateOne = createAsyncThunk('user/updateOne', async ({ userId, values }) 
   }
 });
 
-export default { singup, login, tokenVerification, uploadAvatar, deleteAvatar, updateOne };
+export default {
+  singup, login, tokenVerification, uploadAvatar, deleteAvatar, updateOne,
+};

@@ -7,14 +7,14 @@ const router = express.Router();
 router.use(authMiddleware);
 
 router.get(
-  '/:id/tasks',
+  '/',
   asyncHandler(async (req, res) => {
     req.logger('task.routes get api/cameras/:id/tasks');
   })
 );
 
 router.post(
-  '/:id/tasks',
+  '/',
   asyncHandler(async (req, res) => {
     req.logger('task.routes post api/cameras/:id/tasks');
   })

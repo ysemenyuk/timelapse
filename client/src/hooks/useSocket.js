@@ -3,7 +3,7 @@ import io from 'socket.io-client';
 
 const SERVER_URL = 'http://localhost:5000';
 
-export const useSocket = () => {
+export default function useSocket() {
   const [messages, setMessages] = useState([]);
 
   const socketRef = useRef(null);
@@ -13,8 +13,8 @@ export const useSocket = () => {
 
     socketRef.current.emit('messages:get');
 
-    socketRef.current.on('messages', (messages) => {
-      setMessages(messages);
+    socketRef.current.on('messages', (mes) => {
+      setMessages(mes);
     });
 
     return () => {
@@ -26,8 +26,8 @@ export const useSocket = () => {
     socketRef.current.emit('message:add', 5);
   };
 
-  console.log(1111222, socketRef.current);
-  console.log(1111222, messages);
+  // console.log(1111222, socketRef.current);
+  // console.log(1111222, messages);
 
   return [messages, sendMessage];
-};
+}

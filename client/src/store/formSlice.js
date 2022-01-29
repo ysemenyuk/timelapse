@@ -17,7 +17,7 @@ const formSlice = createSlice({
     },
   },
   extraReducers: {
-    [updateOne.fulfilled]: (state, action) => {
+    [updateOne.fulfilled]: (state) => {
       state.show = false;
     },
   },

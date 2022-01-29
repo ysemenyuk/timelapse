@@ -8,7 +8,7 @@ import { Container, Row, Col, Form, Button, Spinner, Alert, Stack } from 'react-
 import Heading from '../components/UI/Heading.jsx';
 import userThunks from '../thunks/userThunks.js';
 
-const LoginPage = () => {
+function LoginPage() {
   const dispatch = useDispatch();
   const history = useHistory();
 
@@ -44,70 +44,73 @@ const LoginPage = () => {
   // console.log('formik.errors -', formik.errors);
 
   if (isLoggedIn) {
-    return <Redirect to='/' />;
+    return <Redirect to="/" />;
   }
 
   return (
     <Container fluid>
-      <Row className='justify-content-center pt-5'>
+      <Row className="justify-content-center pt-5">
         <Col md={3}>
-          <Heading lvl={3} className='text-center mb-3'>
+          <Heading lvl={3} className="text-center mb-3">
             Log In
           </Heading>
 
-          <Form className='mb-3' onSubmit={formik.handleSubmit}>
-            <Form.Group className='mb-3'>
-              <Form.Label htmlFor='email'>Email address</Form.Label>
+          <Form className="mb-3" onSubmit={formik.handleSubmit}>
+            <Form.Group className="mb-3">
+              <Form.Label htmlFor="email">Email address</Form.Label>
               <Form.Control
                 onChange={formik.handleChange}
                 value={formik.values.email}
-                name='email'
-                id='email'
-                autoComplete='email'
+                name="email"
+                id="email"
+                autoComplete="email"
                 isInvalid={formik.errors && formik.errors.email}
               />
-              <Form.Control.Feedback type='invalid'>
+              <Form.Control.Feedback type="invalid">
                 {formik.errors && formik.errors.email}
               </Form.Control.Feedback>
             </Form.Group>
 
-            <Form.Group className='mb-3'>
+            <Form.Group className="mb-3">
               <Form.Label>Password</Form.Label>
               <Form.Control
-                type='password'
+                type="password"
                 onChange={formik.handleChange}
                 value={formik.values.password}
-                name='password'
-                autoComplete='current-password'
+                name="password"
+                autoComplete="current-password"
                 isInvalid={formik.errors && formik.errors.password}
               />
-              <Form.Control.Feedback type='invalid'>
+              <Form.Control.Feedback type="invalid">
                 {formik.errors && formik.errors.password}
               </Form.Control.Feedback>
             </Form.Group>
 
             <Button
               disabled={formik.isSubmitting || formik.errors.password || formik.errors.email}
-              type='submit'
-              variant='outline-primary'
-              className='w-100 mb-3 mt-3'
+              type="submit"
+              variant="outline-primary"
+              className="w-100 mb-3 mt-3"
             >
-              {formik.isSubmitting ? <Spinner as='span' animation='border' size='sm' /> : 'LogIn'}
+              LogIn
+              <If condition={formik.isSubmitting}>
+                <Spinner as="span" animation="border" size="sm" />
+              </If>
             </Button>
           </Form>
 
           <If condition={formik.errors && formik.errors.auth}>
-            <Alert variant={'danger'}>{formik.errors.auth}</Alert>
+            <Alert variant="danger">{formik.errors.auth}</Alert>
           </If>
 
-          <Stack gap={2} className='align-items-center'>
+          <Stack gap={2} className="align-items-center">
             <span>New user?</span>
-            <Link to='/signup'>Sign Up</Link>
+            <Link to="/signup">Sign Up</Link>
           </Stack>
         </Col>
       </Row>
     </Container>
   );
-};
+}
 
 export default LoginPage;

@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Modal, Button } from 'react-bootstrap';
 import ImgWrapper from '../UI/ImgWrapper/ImgWrapper.jsx';
 import { fileManagerActions } from '../../store/fileManagerSlice.js';
 import { imgViewerActions } from '../../store/imgViewerSlice.js';
 
-const ImgViewer = ({ selectedCamera }) => {
+function ImgViewer({ selectedCamera }) {
   const dispatch = useDispatch();
 
   const { files, currentFileIndex, currentFolder } = useSelector((state) => state.fileManager);
@@ -39,38 +39,39 @@ const ImgViewer = ({ selectedCamera }) => {
       fileManagerActions.deletehOneFile({
         cameraId: selectedCamera._id,
         fileId: currentFile._id,
-      })
+      }),
     );
   };
+
   return (
     <Modal
-      aria-labelledby='contained-modal-title-vcenter'
+      aria-labelledby="contained-modal-title-vcenter"
       show={visible}
       onHide={closeModalHandler}
-      size='xl'
+      size="xl"
     >
       <Modal.Header closeButton>
-        <Modal.Title id='contained-modal-title-vcenter'>{currentFile?.date}</Modal.Title>
+        <Modal.Title id="contained-modal-title-vcenter">{currentFile?.date}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <ImgWrapper width={100} height={0.5625} src={`/files/${currentFile?.name}`} />
       </Modal.Body>
       <Modal.Footer>
-        <Button key='prew' onClick={prewImageHandler} disabled={prewImgBtnDisabled}>
+        <Button key="prew" onClick={prewImageHandler} disabled={prewImgBtnDisabled}>
           PrewItem
         </Button>
-        <Button key='next' onClick={nextImageHandler} disabled={nextImgBtnDisabled}>
+        <Button key="next" onClick={nextImageHandler} disabled={nextImgBtnDisabled}>
           NextItem
         </Button>
-        <Button key='delete' onClick={deleteImageHandler}>
+        <Button key="delete" onClick={deleteImageHandler}>
           Delete
         </Button>
-        <Button key='close' onClick={closeModalHandler}>
+        <Button key="close" onClick={closeModalHandler}>
           Close
         </Button>
       </Modal.Footer>
     </Modal>
   );
-};
+}
 
 export default ImgViewer;

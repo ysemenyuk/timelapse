@@ -78,4 +78,6 @@ const createScreenshot = createAsyncThunk('camera/createScreenshot', async (came
   }
 });
 
-export default { fetchAll, fetchOne, createOne, updateOne, deleteOne, createScreenshot };
+export default {
+  fetchAll, fetchOne, createOne, updateOne, deleteOne, createScreenshot,
+};

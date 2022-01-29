@@ -7,19 +7,35 @@ const instance = axios.create({
   baseURL: `${host}/api/cameras`,
 });
 
-const getAll = async () => await instance.get(`/`, { headers: getAuthHeader() });
+const getAll = async () => {
+  const response = await instance.get('/', { headers: getAuthHeader() });
+  return response;
+};
 
-const getOne = async (id) => await instance.get(`/${id}`, { headers: getAuthHeader() });
+const getOne = async (id) => {
+  const response = await instance.get(`/${id}`, { headers: getAuthHeader() });
+  return response;
+};
 
-const createOne = async (data) => await instance.post(`/`, data, { headers: getAuthHeader() });
+const createOne = async (data) => {
+  const response = await instance.post('/', data, { headers: getAuthHeader() });
+  return response;
+};
 
-const updateOne = async (id, data) =>
-  await instance.put(`/${id}`, data, { headers: getAuthHeader() });
+const updateOne = async (id, data) => {
+  const response = await instance.put(`/${id}`, data, { headers: getAuthHeader() });
+  return response;
+};
 
-const deleteOne = async (id) => await instance.delete(`/${id}`, { headers: getAuthHeader() });
+const deleteOne = async (id) => {
+  const response = await instance.delete(`/${id}`, { headers: getAuthHeader() });
+  return response;
+};
 
-const createScreenshot = async (cameraId) =>
-  await instance.post(`/${cameraId}/screenshots`, null, { headers: getAuthHeader() });
+const createScreenshot = async (cameraId) => {
+  const response = await instance.post(`/${cameraId}/screenshots`, null, { headers: getAuthHeader() });
+  return response;
+};
 
 export default {
   getAll,

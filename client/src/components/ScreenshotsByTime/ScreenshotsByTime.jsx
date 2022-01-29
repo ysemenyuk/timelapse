@@ -1,20 +1,18 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Col, Button, ListGroup, Badge } from 'react-bootstrap';
 import Heading from '../UI/Heading.jsx';
+import EditSettingsModal from './EditSettingsModal.jsx';
+import { getFilesPerDay } from '../../utils/utils.js';
 
-const screenshotsData = {
+const data = {
   status: 'Stopped',
   startTime: '08:00',
   stopTime: '20:00',
   screenshotInterval: 60,
 };
 
-const ScreenshotsByTime = ({ selectedCamera }) => {
-  // const dispatch = useDispatch();
-
-  // const [screenshotsData, setScreenshotsData] = useState(null);
-
-  const { status, startTime, stopTime, screenshotInterval } = screenshotsData;
+function ScreenshotsByTime({ selectedCamera }) {
+  const [screenshotsData, setScreenshotsData] = useState(data);
 
   // useEffect(async () => {
   //   const { data } = await cameraService.getScreenshotByTimeData(selectedCamera._id);
@@ -22,53 +20,79 @@ const ScreenshotsByTime = ({ selectedCamera }) => {
   //   setScreenshotsData(data);
   // }, []);
 
-  // const getOneScreenshot = async (e) => {
-  //   const { data } = await cameraService.getScreenshot(selectedCamera._id);
-  //   console.log(data);
-  // };
+  const [running, setRunning] = useState(false);
+  const [visible, setVisible] = useState(false);
+
+  const { startTime, stopTime, screenshotInterval } = screenshotsData;
+
+  const handleCloseSettings = () => {
+    setVisible(false);
+  };
+
+  const handleOpenSettings = () => {
+    setVisible(true);
+  };
+
+  const handleStart = () => {
+    setRunning(true);
+  };
+
+  const handleStop = () => {
+    setRunning(false);
+  };
 
   if (!selectedCamera) {
     return null;
   }
 
   return (
-    <Col md={12} className='mb-4'>
-      <Heading lvl={6} className='mb-3'>
+    <Col md={12} className="mb-4">
+      <Heading lvl={6} className="mb-3">
         Get screenshots by time
       </Heading>
 
-      <ListGroup className='mb-3'>
-        <ListGroup.Item className='d-flex'>
-          <div className='me-3 w-50'>Status</div>
-          <Badge bg='secondary'>{status}</Badge>
+      <ListGroup className="mb-3">
+        <ListGroup.Item className="d-flex">
+          <div className="me-3 w-50">Status</div>
+          <Badge bg={running ? 'success' : 'secondary'}>{running ? 'Running' : 'Stopped'}</Badge>
         </ListGroup.Item>
-        <ListGroup.Item className='d-flex'>
-          <div className='me-3 w-50'>Start time</div>
+        <ListGroup.Item className="d-flex">
+          <div className="me-3 w-50">Start time</div>
           <span>{startTime}</span>
         </ListGroup.Item>
-        <ListGroup.Item className='d-flex'>
-          <div className='me-3 w-50'>Stop time</div>
+        <ListGroup.Item className="d-flex">
+          <div className="me-3 w-50">Stop time</div>
           <span>{stopTime}</span>
         </ListGroup.Item>
-        <ListGroup.Item className='d-flex'>
-          <div className='me-3 w-50'>Interval, sec</div>
+        <ListGroup.Item className="d-flex">
+          <div className="me-3 w-50">Interval, sec</div>
           <span>{screenshotInterval}</span>
         </ListGroup.Item>
-        <ListGroup.Item className='d-flex'>
-          <div className='me-3 w-50'>Files/day</div>
-          <span>720</span>
+        <ListGroup.Item className="d-flex">
+          <div className="me-3 w-50">Files/day</div>
+          <span>{getFilesPerDay(screenshotsData)}</span>
         </ListGroup.Item>
       </ListGroup>
       <>
-        <Button variant='primary' size='sm' className='me-2'>
+        <Button onClick={handleOpenSettings} variant="primary" size="sm" className="me-2">
           Edit
         </Button>
-        <Button variant='primary' size='sm' className='me-2'>
+        <Button disabled={!running} onClick={handleStop} variant="primary" size="sm" className="me-2">
+          Stop
+        </Button>
+        <Button disabled={running} onClick={handleStart} variant="primary" size="sm" className="me-2">
           Start
         </Button>
       </>
+
+      <EditSettingsModal
+        screenshotsData={screenshotsData}
+        visible={visible}
+        onClose={handleCloseSettings}
+        onSubmit={setScreenshotsData}
+      />
     </Col>
   );
-};
+}
 
 export default ScreenshotsByTime;

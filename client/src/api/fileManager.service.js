@@ -7,23 +7,35 @@ const instance = axios.create({
   baseURL: `${host}/api/cameras`,
 });
 
-const getFiles = async (cameraId, parentId) =>
-  await instance.get(`/${cameraId}/files?parentId=${parentId}`, { headers: getAuthHeader() });
+const getFiles = async (cameraId, parentId) => {
+  const response = await instance.get(`/${cameraId}/files?parentId=${parentId}`, { headers: getAuthHeader() });
+  return response;
+};
 
-const getOneFile = async (cameraId, fileId) =>
-  await instance.get(`/${cameraId}/files/${fileId}`, { headers: getAuthHeader() });
+const getOneFile = async (cameraId, fileId) => {
+  const response = await instance.get(`/${cameraId}/files/${fileId}`, { headers: getAuthHeader() });
+  return response;
+};
 
-const deleteOneFile = async (cameraId, fileId) =>
-  await instance.delete(`/${cameraId}/files/${fileId}`, { headers: getAuthHeader() });
+const deleteOneFile = async (cameraId, fileId) => {
+  const response = await instance.delete(`/${cameraId}/files/${fileId}`, { headers: getAuthHeader() });
+  return response;
+};
 
-const getFolders = async (cameraId, parentId) =>
-  await instance.get(`/${cameraId}/folders?parentId=${parentId}`, { headers: getAuthHeader() });
+const getFolders = async (cameraId, parentId) => {
+  const response = await instance.get(`/${cameraId}/folders?parentId=${parentId}`, { headers: getAuthHeader() });
+  return response;
+};
 
-const getOneFolder = async (cameraId, folderId) =>
-  await instance.get(`/${cameraId}/folders/${folderId}`, { headers: getAuthHeader() });
+const getOneFolder = async (cameraId, folderId) => {
+  const response = await instance.get(`/${cameraId}/folders/${folderId}`, { headers: getAuthHeader() });
+  return response;
+};
 
-const deleteOneFolder = async (cameraId, folderId) =>
-  await instance.delete(`/${cameraId}/folders/${folderId}`, { headers: getAuthHeader() });
+const deleteOneFolder = async (cameraId, folderId) => {
+  const response = await instance.delete(`/${cameraId}/folders/${folderId}`, { headers: getAuthHeader() });
+  return response;
+};
 
 export default {
   getFiles,

@@ -4,8 +4,8 @@ import { unwrapResult } from '@reduxjs/toolkit';
 import { useHistory } from 'react-router-dom';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import cameraThunks from '../../thunks/cameraThunks.js';
 import { Col, Form, Button, Spinner, InputGroup } from 'react-bootstrap';
+import cameraThunks from '../../thunks/cameraThunks.js';
 import Heading from '../UI/Heading.jsx';
 import Error from '../UI/Error.jsx';
 
@@ -14,7 +14,7 @@ const validationSchema = Yup.object({
   description: Yup.string().required().min(3).max(30),
 });
 
-const CameraForm = () => {
+function CameraForm() {
   const dispatch = useDispatch();
   const history = useHistory();
   const cameras = useSelector((state) => state.camera.allCameras);
@@ -53,56 +53,56 @@ const CameraForm = () => {
   // console.log('formik.values -', formik.values);
 
   return (
-    <Col md={12} className='mb-4'>
-      <Heading lvl={6} className='mb-3'>
+    <Col md={12} className="mb-4">
+      <Heading lvl={6} className="mb-3">
         Add new camera
       </Heading>
 
-      <Form className='mb-3' onSubmit={formik.handleSubmit}>
-        <Form.Group className='mb-3'>
-          <Form.Label htmlFor='name'>Name</Form.Label>
+      <Form className="mb-3" onSubmit={formik.handleSubmit}>
+        <Form.Group className="mb-3">
+          <Form.Label htmlFor="name">Name</Form.Label>
           <Form.Control
             onChange={formik.handleChange}
             value={formik.values.name}
-            name='name'
-            id='name'
-            type='text'
+            name="name"
+            id="name"
+            type="text"
             isInvalid={formik.errors && formik.errors.name}
           />
-          <Form.Control.Feedback type='invalid'>
+          <Form.Control.Feedback type="invalid">
             {formik.errors && formik.errors.name}
           </Form.Control.Feedback>
         </Form.Group>
 
-        <Form.Group className='mb-3'>
-          <Form.Label htmlFor='description'>Description</Form.Label>
+        <Form.Group className="mb-3">
+          <Form.Label htmlFor="description">Description</Form.Label>
           <Form.Control
             onChange={formik.handleChange}
             value={formik.values.description}
-            name='description'
-            id='description'
-            type='text'
+            name="description"
+            id="description"
+            type="text"
             isInvalid={formik.errors && formik.errors.description}
           />
-          <Form.Control.Feedback type='invalid'>
+          <Form.Control.Feedback type="invalid">
             {formik.errors && formik.errors.description}
           </Form.Control.Feedback>
         </Form.Group>
 
-        <Form.Label htmlFor='screenshotLink'>Screenshot Link</Form.Label>
-        <InputGroup className='mb-3'>
+        <Form.Label htmlFor="screenshotLink">Screenshot Link</Form.Label>
+        <InputGroup className="mb-3">
           <Form.Control
             onChange={formik.handleChange}
             value={formik.values.screenshotLink}
-            name='screenshotLink'
-            id='screenshotLink'
-            type='text'
+            name="screenshotLink"
+            id="screenshotLink"
+            type="url"
             isInvalid={formik.errors && formik.errors.screenshotLink}
           />
-          <Form.Control.Feedback type='invalid'>
+          <Form.Control.Feedback type="invalid">
             {formik.errors && formik.errors.screenshotLink}
           </Form.Control.Feedback>
-          <Button variant='outline-secondary' id='button-addon1'>
+          <Button variant="outline-secondary" id="button-addon1">
             Check
           </Button>
         </InputGroup>
@@ -111,29 +111,31 @@ const CameraForm = () => {
           <Button
             onClick={handleCancel}
             disabled={formik.isSubmitting}
-            variant='primary'
-            size='sm'
-            className='me-2'
+            variant="primary"
+            size="sm"
+            className="me-2"
           >
             Cancel
           </Button>
           <Button
-            type='submit'
+            type="submit"
             disabled={formik.isSubmitting}
-            variant='primary'
-            size='sm'
-            className='me-2'
+            variant="primary"
+            size="sm"
+            className="me-2"
           >
-            Submit {formik.isSubmitting && <Spinner as='span' animation='border' size='sm' />}
+            Submit
+            {' '}
+            {formik.isSubmitting && <Spinner as="span" animation="border" size="sm" />}
           </Button>
         </>
       </Form>
 
       <If condition={formik.errors && formik.errors.network}>
-        <Error message={'Networ error ..'} />
+        <Error message="Networ error .." />
       </If>
     </Col>
   );
-};
+}
 
 export default CameraForm;
