@@ -22,26 +22,8 @@ const deleteOneFile = async (cameraId, fileId) => {
   return response;
 };
 
-const getFolders = async (cameraId, parentId) => {
-  const response = await instance.get(`/${cameraId}/folders?parentId=${parentId}`, { headers: getAuthHeader() });
-  return response;
-};
-
-const getOneFolder = async (cameraId, folderId) => {
-  const response = await instance.get(`/${cameraId}/folders/${folderId}`, { headers: getAuthHeader() });
-  return response;
-};
-
-const deleteOneFolder = async (cameraId, folderId) => {
-  const response = await instance.delete(`/${cameraId}/folders/${folderId}`, { headers: getAuthHeader() });
-  return response;
-};
-
 export default {
   getFiles,
   getOneFile,
   deleteOneFile,
-  getFolders,
-  getOneFolder,
-  deleteOneFolder,
 };

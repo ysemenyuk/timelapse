@@ -16,21 +16,6 @@ const fetchFiles = createAsyncThunk('file/fetchFiles', async ({ cameraId, parent
   }
 });
 
-const fetchFolders = createAsyncThunk('folder/fetchFolders', async ({ cameraId, parentId }) => {
-  try {
-    console.log('folder/fetchFolders cameraId parentId -', { cameraId, parentId });
-
-    const response = await fileManagerService.getFolders(cameraId, parentId);
-
-    console.log('folder/fetchFolders response.data -', response.data);
-
-    return { cameraId, parentId, data: response.data };
-  } catch (e) {
-    console.log('folder/fetchFolders error -', e.message);
-    throw e;
-  }
-});
-
 const fetchMainFolder = createAsyncThunk(
   'folder/fetchMainFolder',
   async ({ cameraId, folderId }) => {
@@ -49,7 +34,7 @@ const fetchMainFolder = createAsyncThunk(
   },
 );
 
-const deletehOneFile = createAsyncThunk('file/deleteOneFile', async ({ cameraId, fileId }) => {
+const deleteOneFile = createAsyncThunk('file/deleteOneFile', async ({ cameraId, fileId }) => {
   try {
     console.log('file/deleteOneFile cameraId fileId -', { cameraId, fileId });
 
@@ -57,13 +42,11 @@ const deletehOneFile = createAsyncThunk('file/deleteOneFile', async ({ cameraId,
 
     console.log('file/deleteOneFile response.data -', response.data);
 
-    return fileId;
+    return { cameraId, fileId };
   } catch (e) {
     console.log('file/deleteOneFile error -', e.message);
     throw e;
   }
 });
 
-export default {
-  fetchFiles, fetchFolders, fetchMainFolder, deletehOneFile,
-};
+export default { fetchFiles, fetchMainFolder, deleteOneFile };

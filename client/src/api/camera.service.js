@@ -32,8 +32,8 @@ const deleteOne = async (id) => {
   return response;
 };
 
-const createScreenshot = async (cameraId) => {
-  const response = await instance.post(`/${cameraId}/screenshots`, null, { headers: getAuthHeader() });
+const createScreenshot = async (cameraId, parentId) => {
+  const response = await instance.post(`/${cameraId}/files/screenshot`, { parentId }, { headers: getAuthHeader() });
   return response;
 };
 

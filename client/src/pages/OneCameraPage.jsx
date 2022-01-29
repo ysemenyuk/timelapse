@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { Col, Row } from 'react-bootstrap';
@@ -7,7 +7,7 @@ import useThunkStatus from '../hooks/useThunkStatus.js';
 import FileManager from '../components/FileManager/FileManager.jsx';
 import ImgViewer from '../components/ImgViewer/ImgViewer.jsx';
 import ScreenshotsByTime from '../components/ScreenshotsByTime/ScreenshotsByTime.jsx';
-import VideosByTime from '../components/VideosByTime/VideosByTime.jsx';
+// import VideosByTime from '../components/VideosByTime/VideosByTime.jsx';
 // import Screenshot from '../components/Screenshot/Screenshot.jsx';
 import Spinner from '../components/UI/Spinner.jsx';
 import Error from '../components/UI/Error.jsx';
@@ -25,6 +25,16 @@ function CameraPage() {
     }
   }, []);
 
+  const [visible, setVisible] = useState(false);
+
+  const handleOpen = () => {
+    setVisible(true);
+  };
+
+  const handleClose = () => {
+    setVisible(false);
+  };
+
   return (
     <Choose>
       <When condition={!fetchOneCamera.isLoading && !fetchOneCamera.isError && selectedCamera}>
@@ -32,11 +42,11 @@ function CameraPage() {
           <Col sm={3}>
             {/* <Screenshot selectedCamera={selectedCamera} /> */}
             <ScreenshotsByTime selectedCamera={selectedCamera} />
-            <VideosByTime selectedCamera={selectedCamera} />
+            {/* <VideosByTime selectedCamera={selectedCamera} /> */}
           </Col>
           <Col sm={9}>
-            <FileManager selectedCamera={selectedCamera} />
-            <ImgViewer selectedCamera={selectedCamera} />
+            <FileManager selectedCamera={selectedCamera} onOpenImgViewer={handleOpen} />
+            <ImgViewer selectedCamera={selectedCamera} onCloseImgViewer={handleClose} visible={visible} />
           </Col>
         </Row>
       </When>

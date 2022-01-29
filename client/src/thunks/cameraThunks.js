@@ -64,11 +64,11 @@ const deleteOne = createAsyncThunk('camera/deleteOne', async (camera) => {
   }
 });
 
-const createScreenshot = createAsyncThunk('camera/createScreenshot', async (cameraId) => {
+const createScreenshot = createAsyncThunk('camera/createScreenshot', async ({ cameraId, parentId }) => {
   try {
-    console.log('camera/createScreenshot cameraId -', cameraId);
+    console.log('camera/createScreenshot cameraId, parentId -', cameraId, parentId);
 
-    const { data } = await cameraService.createScreenshot(cameraId);
+    const { data } = await cameraService.createScreenshot(cameraId, parentId);
 
     console.log('camera/createScreenshot response -', data);
     return data;
@@ -78,6 +78,4 @@ const createScreenshot = createAsyncThunk('camera/createScreenshot', async (came
   }
 });
 
-export default {
-  fetchAll, fetchOne, createOne, updateOne, deleteOne, createScreenshot,
-};
+export default { fetchAll, fetchOne, createOne, updateOne, deleteOne, createScreenshot };

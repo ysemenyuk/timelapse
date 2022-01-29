@@ -3,27 +3,21 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Modal, Button } from 'react-bootstrap';
 import ImgWrapper from '../UI/ImgWrapper/ImgWrapper.jsx';
 import { fileManagerActions } from '../../store/fileManagerSlice.js';
-import { imgViewerActions } from '../../store/imgViewerSlice.js';
 
-function ImgViewer({ selectedCamera }) {
+function ImgViewer({ selectedCamera, onCloseImgViewer, visible }) {
   const dispatch = useDispatch();
 
-  const { files, currentFileIndex, currentFolder } = useSelector((state) => state.fileManager);
-  const { visible } = useSelector((state) => state.imgViewer);
+  const { parent, files, currentFileIndex } = useSelector((state) => state.fileManager);
 
-  if (currentFileIndex === null || !visible) {
+  if (currentFileIndex === null || !visible || !parent) {
     return null;
   }
 
-  const parentId = currentFolder ? currentFolder._id : selectedCamera.mainFolder;
+  const parentId = parent[selectedCamera._id]._id;
   const currentFile = files[parentId][currentFileIndex];
 
   const nextImgBtnDisabled = currentFileIndex === files[parentId].length - 1;
   const prewImgBtnDisabled = currentFileIndex === 0;
-
-  const closeModalHandler = () => {
-    dispatch(imgViewerActions.close());
-  };
 
   const nextImageHandler = () => {
     dispatch(fileManagerActions.nextFileIndex());
@@ -36,7 +30,7 @@ function ImgViewer({ selectedCamera }) {
   const deleteImageHandler = () => {
     // console.log('delete', currentFile);
     dispatch(
-      fileManagerActions.deletehOneFile({
+      fileManagerActions.deleteOneFile({
         cameraId: selectedCamera._id,
         fileId: currentFile._id,
       }),
@@ -47,11 +41,11 @@ function ImgViewer({ selectedCamera }) {
     <Modal
       aria-labelledby="contained-modal-title-vcenter"
       show={visible}
-      onHide={closeModalHandler}
+      onHide={onCloseImgViewer}
       size="xl"
     >
       <Modal.Header closeButton>
-        <Modal.Title id="contained-modal-title-vcenter">{currentFile?.date}</Modal.Title>
+        <Modal.Title id="contained-modal-title-vcenter">{currentFile?.name}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <ImgWrapper width={100} height={0.5625} src={`/files/${currentFile?.name}`} />
@@ -66,7 +60,7 @@ function ImgViewer({ selectedCamera }) {
         <Button key="delete" onClick={deleteImageHandler}>
           Delete
         </Button>
-        <Button key="close" onClick={closeModalHandler}>
+        <Button key="close" onClick={onCloseImgViewer}>
           Close
         </Button>
       </Modal.Footer>

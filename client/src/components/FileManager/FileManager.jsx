@@ -2,57 +2,50 @@ import React from 'react';
 import { useDispatch } from 'react-redux';
 import { Breadcrumb, Col, Button, Spinner } from 'react-bootstrap';
 import styles from './FileManager.module.css';
+import ImgWrapper from '../UI/ImgWrapper/ImgWrapper.jsx';
+import folderImg from '../../assets/folder2.png';
 import { cameraActions } from '../../store/cameraSlice';
 import { fileManagerActions } from '../../store/fileManagerSlice';
-import { imgViewerActions } from '../../store/imgViewerSlice';
-import FilesList from './FileList/FilesList';
-import FoldersList from './FolderList/FoldersList';
 import ButtonsGroup from '../UI/ButtonsGroup';
 import Heading from '../UI/Heading';
 import Error from '../UI/Error';
 import useFileManager from '../../hooks/useFileManager';
 
-function CameraFileManager({ selectedCamera }) {
+function CameraFileManager({ selectedCamera, onOpenImgViewer }) {
   const dispatch = useDispatch();
 
-  const cameraId = selectedCamera._id;
-
   const {
-    folders,
     files,
+    folders,
     parentFolder,
     foldersStack,
     fetchStatus,
-    fetchMainFolder,
   } = useFileManager(selectedCamera);
 
-  const clickFileHandler = (fileIndex) => {
-    dispatch(fileManagerActions.setCurrentFileIndex({ cameraId, fileIndex }));
-    dispatch(imgViewerActions.open());
+  const cameraId = selectedCamera._id;
+  const btnDisabled = !parentFolder || fetchStatus.isLoading;
+
+  const clickFileHandler = (index) => {
+    dispatch(fileManagerActions.setCurrentFileIndex({ cameraId, index }));
+    onOpenImgViewer();
   };
 
-  const clickFolderHandler = (folder) => {
-    dispatch(fileManagerActions.pushToFoldersStack({ cameraId, folder }));
+  const clickFolderHandler = (item) => {
+    dispatch(fileManagerActions.pushToFoldersStack({ cameraId, item }));
   };
 
-  const breadcrumbClickHandler = (folder) => {
-    dispatch(fileManagerActions.setCurrentFolder({ cameraId, folder }));
+  const clickBreadcrumbHandler = (folder) => {
+    dispatch(fileManagerActions.setParentFolder({ cameraId, folder }));
   };
 
-  const backHandler = () => {
+  const clickBackHandler = () => {
     dispatch(fileManagerActions.popFromFoldersStack({ cameraId }));
   };
 
-  const refreshHandler = () => {
+  const clickRefreshHandler = () => {
     if (parentFolder) {
       dispatch(
         fileManagerActions.fetchFiles({
-          cameraId: selectedCamera._id,
-          parentId: parentFolder._id,
-        }),
-      );
-      dispatch(
-        fileManagerActions.fetchFolders({
           cameraId: selectedCamera._id,
           parentId: parentFolder._id,
         }),
@@ -61,8 +54,43 @@ function CameraFileManager({ selectedCamera }) {
   };
 
   const createScreenshotHandler = () => {
-    dispatch(cameraActions.createScreenshot(selectedCamera._id));
+    dispatch(cameraActions.createScreenshot({ cameraId: selectedCamera._id, parentId: parentFolder._id }));
   };
+
+  const renderBreadcrumbs = () => foldersStack.map((folder) => (
+    <Breadcrumb.Item
+      onClick={() => clickBreadcrumbHandler(folder)}
+      key={folder._id}
+    >
+      {folder.name}
+    </Breadcrumb.Item>
+  ));
+
+  const renderFolders = () => folders.map((folder) => (
+    <div className={styles.item} key={folder._id}>
+      <ImgWrapper
+        width={100}
+        height={0.5625}
+        src={folderImg}
+        role="button"
+        onClick={() => clickFolderHandler(folder)}
+      />
+      <span>{folder.name}</span>
+    </div>
+  ));
+
+  const renderFiles = () => files.map((file, index) => (
+    <div className={styles.item} key={file._id}>
+      <ImgWrapper
+        width={100}
+        height={0.5625}
+        src={`/files/${file.name}?size=thumbnail`}
+        role="button"
+        onClick={() => clickFileHandler(index)}
+      />
+      <span>{file.name}</span>
+    </div>
+  ));
 
   return (
     <>
@@ -75,20 +103,16 @@ function CameraFileManager({ selectedCamera }) {
           <Button
             type="primary"
             size="sm"
-            onClick={backHandler}
-            disabled={
-              !parentFolder
-              || fetchStatus.isLoading
-              || foldersStack.length === 1
-            }
+            onClick={clickBackHandler}
+            disabled={btnDisabled || foldersStack.length === 1}
           >
             Back
           </Button>
           <Button
             type="primary"
             size="sm"
-            onClick={refreshHandler}
-            disabled={!parentFolder || fetchStatus.isLoading}
+            onClick={clickRefreshHandler}
+            disabled={btnDisabled}
           >
             Refresh
           </Button>
@@ -96,33 +120,29 @@ function CameraFileManager({ selectedCamera }) {
             type="primary"
             size="sm"
             onClick={createScreenshotHandler}
-            disabled={!parentFolder || fetchStatus.isLoading}
+            disabled={btnDisabled}
           >
             CreateScreenshot
+          </Button>
+          <Button
+            type="primary"
+            size="sm"
+            disabled={btnDisabled}
+          >
+            CreateVideo
           </Button>
         </ButtonsGroup>
       </Col>
 
       <Choose>
-        <When condition={fetchMainFolder.isError}>
-          <Error message="Network error main folder" type="error" />
-        </When>
-
-        <When condition={!folders || !files || !parentFolder || !foldersStack}>
+        <When condition={!parentFolder || !foldersStack}>
           <Spinner animation="border" />
         </When>
 
         <Otherwise>
           <Col md={12} className="mb-4">
             <Breadcrumb>
-              {foldersStack.map((folder) => (
-                <Breadcrumb.Item
-                  onClick={() => breadcrumbClickHandler(folder)}
-                  key={folder._id}
-                >
-                  {folder.name}
-                </Breadcrumb.Item>
-              ))}
+              {renderBreadcrumbs()}
             </Breadcrumb>
           </Col>
 
@@ -132,7 +152,7 @@ function CameraFileManager({ selectedCamera }) {
                 <Error message="Network error folders and files" type="error" />
               </When>
 
-              <When condition={fetchStatus.isLoading}>
+              <When condition={!folders || !files || fetchStatus.isLoading}>
                 <Spinner animation="border" />
               </When>
 
@@ -140,18 +160,10 @@ function CameraFileManager({ selectedCamera }) {
                 <div className={styles.container}>No files or folders..</div>
               </When>
 
-              <When condition={fetchStatus.isSuccess}>
+              <When condition={folders && files}>
                 <div className={styles.container}>
-                  <FoldersList
-                    className={styles.item}
-                    folders={folders}
-                    onClickFolder={clickFolderHandler} //
-                  />
-                  <FilesList
-                    className={styles.item}
-                    files={files}
-                    onClickFile={clickFileHandler} //
-                  />
+                  {renderFolders()}
+                  {renderFiles()}
                 </div>
               </When>
             </Choose>
