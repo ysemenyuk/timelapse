@@ -17,8 +17,8 @@ function EditScreenshotsSettingsModal({ show, onHide, data }) {
     initialValues,
     // validationSchema,
     onSubmit: (values) => {
-      // console.log('onSubmit values', values);
-      onSubmit(values);
+      console.log('onSubmit values', values);
+      // onSubmit(values);
       onHide();
     },
   });
