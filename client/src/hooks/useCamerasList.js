@@ -7,7 +7,7 @@ import useThunkStatus from './useThunkStatus.js';
 export default function useCameraList() {
   const dispatch = useDispatch();
 
-  const { isLoading, isSuccess, isError } = useThunkStatus(cameraThunks.fetchAll);
+  const fetchStatus = useThunkStatus(cameraThunks.fetchAll);
   const cameras = useSelector((state) => state.camera.allCameras);
 
   useEffect(() => {
@@ -16,5 +16,5 @@ export default function useCameraList() {
     }
   }, []);
 
-  return { cameras, fetchStatus: { isLoading, isSuccess, isError } };
+  return { cameras, fetchStatus };
 }

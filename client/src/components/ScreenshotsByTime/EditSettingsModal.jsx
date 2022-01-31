@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useFormik } from 'formik';
 // import * as Yup from 'yup';
 import { Modal, Button, Form, Row, Col } from 'react-bootstrap';
@@ -10,27 +10,16 @@ import { getFilesPerDay } from '../../utils/utils.js';
 //   interval: Yup.string().required(),
 // });
 
-function EditSettingsModal({ screenshotsData, visible, onClose, onSubmit }) {
-  // const dispatch = useDispatch();
-
+function EditSettingsModal({ show, onHide, initialValues, onSubmit }) {
   const formik = useFormik({
-    initialValues: {
-      startTime: null,
-      stopTime: null,
-      screenshotInterval: 60,
-    },
+    initialValues,
     // validationSchema,
     onSubmit: (values) => {
-      console.log('onSubmit values', values);
-      onSubmit(formik.values);
-      onClose();
+      // console.log('onSubmit values', values);
+      onSubmit(values);
+      onHide();
     },
   });
-
-  useEffect(() => {
-    // eslint-disable-next-line no-unused-expressions
-    screenshotsData && formik.setValues(screenshotsData);
-  }, [screenshotsData]);
 
   // console.log('formik.errors -', formik.errors);
   // console.log('formik.values -', formik.values);
@@ -38,14 +27,13 @@ function EditSettingsModal({ screenshotsData, visible, onClose, onSubmit }) {
   return (
     <Modal
       aria-labelledby="modal-settings"
-      show={visible}
-      onHide={onClose}
+      show={show}
+      onHide={onHide}
     >
       <Modal.Header closeButton>
         <Modal.Title id="modal-settings">Edit settings</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-
         <Row className="mb-3">
           <Col>
             Create screenshot files every day
@@ -97,47 +85,44 @@ function EditSettingsModal({ screenshotsData, visible, onClose, onSubmit }) {
               </Form.Control.Feedback>
             </Form.Group>
           </Row>
-
-          <Row className="mb-3">
-            <Col>
-              <span className="fw-bold">
-                {`${getFilesPerDay(formik.values)} files`}
-              </span>
-              {' '}
-              per day
-            </Col>
-          </Row>
-
-          <Row className="mb-3">
-            <Col>
-              <span className="fw-bold">
-                {`${Math.round(getFilesPerDay(formik.values) / 25)} seconds`}
-              </span>
-              {' '}
-              (25 fps) video of the day
-            </Col>
-          </Row>
-
         </Form>
-      </Modal.Body>
 
+        <Row className="mb-3">
+          <Col>
+            <span className="fw-bold">
+              {`${getFilesPerDay(formik.values)} files`}
+            </span>
+            {' '}
+            per day
+          </Col>
+        </Row>
+
+        <Row className="mb-3">
+          <Col>
+            <span className="fw-bold">
+              {`${Math.round(getFilesPerDay(formik.values) / 25)} seconds`}
+            </span>
+            {' '}
+            (25 fps) video of the day
+          </Col>
+        </Row>
+
+      </Modal.Body>
       <Modal.Footer>
-        <>
-          <Button
-            key="close"
-            onClick={onClose}
-            className="me-2"
-          >
-            Cancel
-          </Button>
-          <Button
-            key="submit"
-            onClick={formik.handleSubmit}
-            className="me-2"
-          >
-            Submit
-          </Button>
-        </>
+        <Button
+          key="close"
+          onClick={onHide}
+          size="sm"
+        >
+          Cancel
+        </Button>
+        <Button
+          key="submit"
+          onClick={formik.handleSubmit}
+          size="sm"
+        >
+          Submit
+        </Button>
       </Modal.Footer>
     </Modal>
   );

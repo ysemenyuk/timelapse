@@ -17,10 +17,10 @@ const fileManagerSlice = createSlice({
       const { index } = action.payload;
       state.currentFileIndex = index;
     },
-    nextFileIndex: (state) => {
+    nextFile: (state) => {
       state.currentFileIndex += 1;
     },
-    prewFileIndex: (state) => {
+    prewFile: (state) => {
       state.currentFileIndex -= 1;
     },
     setParentFolder: (state, action) => {

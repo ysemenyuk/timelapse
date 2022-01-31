@@ -1,5 +1,5 @@
 import React from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Breadcrumb, Col, Button, Spinner } from 'react-bootstrap';
 import styles from './FileManager.module.css';
 import ImgWrapper from '../UI/ImgWrapper/ImgWrapper.jsx';
@@ -10,9 +10,13 @@ import ButtonsGroup from '../UI/ButtonsGroup';
 import Heading from '../UI/Heading';
 import Error from '../UI/Error';
 import useFileManager from '../../hooks/useFileManager';
+import { IMAGE_VIEWER } from '../../utils/constants';
+import { modalActions } from '../../store/modalSlice';
+import ImgViewerModal from './ImgViewerModal';
 
-function CameraFileManager({ selectedCamera, onOpenImgViewer }) {
+function CameraFileManager({ selectedCamera }) {
   const dispatch = useDispatch();
+  const modal = useSelector((state) => state.modal);
 
   const {
     files,
@@ -24,10 +28,15 @@ function CameraFileManager({ selectedCamera, onOpenImgViewer }) {
 
   const cameraId = selectedCamera._id;
   const btnDisabled = !parentFolder || fetchStatus.isLoading;
+  const isVisibleImgViewerModal = modal[IMAGE_VIEWER] || false;
+
+  const closeImgViewerModal = () => {
+    dispatch(modalActions.closeModal(IMAGE_VIEWER));
+  };
 
   const clickFileHandler = (index) => {
     dispatch(fileManagerActions.setCurrentFileIndex({ cameraId, index }));
-    onOpenImgViewer();
+    dispatch(modalActions.openModal(IMAGE_VIEWER));
   };
 
   const clickFolderHandler = (item) => {
@@ -54,7 +63,19 @@ function CameraFileManager({ selectedCamera, onOpenImgViewer }) {
   };
 
   const createScreenshotHandler = () => {
-    dispatch(cameraActions.createScreenshot({ cameraId: selectedCamera._id, parentId: parentFolder._id }));
+    dispatch(cameraActions.createScreenshot({
+      cameraId: selectedCamera._id,
+      parentId: parentFolder._id,
+    }));
+  };
+
+  const deleteFileHandler = (file) => {
+    dispatch(
+      fileManagerActions.deleteOneFile({
+        cameraId: selectedCamera._id,
+        fileId: file._id,
+      }),
+    );
   };
 
   const renderBreadcrumbs = () => foldersStack.map((folder) => (
@@ -170,6 +191,13 @@ function CameraFileManager({ selectedCamera, onOpenImgViewer }) {
           </Col>
         </Otherwise>
       </Choose>
+
+      <ImgViewerModal
+        show={isVisibleImgViewerModal}
+        onHide={closeImgViewerModal}
+        files={files}
+        onDeleteFile={deleteFileHandler}
+      />
     </>
   );
 }

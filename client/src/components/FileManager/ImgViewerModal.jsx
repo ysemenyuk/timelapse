@@ -4,44 +4,37 @@ import { Modal, Button } from 'react-bootstrap';
 import ImgWrapper from '../UI/ImgWrapper/ImgWrapper.jsx';
 import { fileManagerActions } from '../../store/fileManagerSlice.js';
 
-function ImgViewer({ selectedCamera, onCloseImgViewer, visible }) {
+function ImgViewerModal({ onHide, show, files, onDeletFile }) {
   const dispatch = useDispatch();
 
-  const { parent, files, currentFileIndex } = useSelector((state) => state.fileManager);
+  const { currentFileIndex } = useSelector((state) => state.fileManager);
 
-  if (currentFileIndex === null || !visible || !parent) {
+  if (currentFileIndex === null || !show || !files) {
     return null;
   }
 
-  const parentId = parent[selectedCamera._id]._id;
-  const currentFile = files[parentId][currentFileIndex];
+  const currentFile = files[currentFileIndex];
 
-  const nextImgBtnDisabled = currentFileIndex === files[parentId].length - 1;
+  const nextImgBtnDisabled = currentFileIndex === files.length - 1;
   const prewImgBtnDisabled = currentFileIndex === 0;
 
   const nextImageHandler = () => {
-    dispatch(fileManagerActions.nextFileIndex());
+    dispatch(fileManagerActions.nextFile());
   };
 
   const prewImageHandler = () => {
-    dispatch(fileManagerActions.prewFileIndex());
+    dispatch(fileManagerActions.prewFile());
   };
 
-  const deleteImageHandler = () => {
-    // console.log('delete', currentFile);
-    dispatch(
-      fileManagerActions.deleteOneFile({
-        cameraId: selectedCamera._id,
-        fileId: currentFile._id,
-      }),
-    );
+  const deletFileHandler = () => {
+    onDeletFile(currentFile);
   };
 
   return (
     <Modal
       aria-labelledby="contained-modal-title-vcenter"
-      show={visible}
-      onHide={onCloseImgViewer}
+      show={show}
+      onHide={onHide}
       size="xl"
     >
       <Modal.Header closeButton>
@@ -57,10 +50,10 @@ function ImgViewer({ selectedCamera, onCloseImgViewer, visible }) {
         <Button key="next" onClick={nextImageHandler} disabled={nextImgBtnDisabled}>
           NextItem
         </Button>
-        <Button key="delete" onClick={deleteImageHandler}>
+        <Button key="delete" onClick={deletFileHandler}>
           Delete
         </Button>
-        <Button key="close" onClick={onCloseImgViewer}>
+        <Button key="close" onClick={onHide}>
           Close
         </Button>
       </Modal.Footer>
@@ -68,4 +61,4 @@ function ImgViewer({ selectedCamera, onCloseImgViewer, visible }) {
   );
 }
 
-export default ImgViewer;
+export default ImgViewerModal;

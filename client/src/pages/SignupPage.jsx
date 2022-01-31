@@ -99,7 +99,7 @@ function LoginPage() {
                 id="confirmPassword"
                 autoComplete="current-password"
                 onChange={formik.handleChange}
-                value={formik.values.password}
+                value={formik.values.confirmPassword}
                 isInvalid={formik.errors && formik.errors.confirmPassword}
               />
               <Form.Control.Feedback type="invalid">

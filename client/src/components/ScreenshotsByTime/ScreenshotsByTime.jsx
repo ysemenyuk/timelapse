@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import { Col, Button, ListGroup, Badge } from 'react-bootstrap';
+import { useDispatch, useSelector } from 'react-redux';
 import Heading from '../UI/Heading.jsx';
 import EditSettingsModal from './EditSettingsModal.jsx';
 import { getFilesPerDay } from '../../utils/utils.js';
+import { modalActions } from '../../store/modalSlice.js';
+import { EDIT_SCREENSHOT_SETTINGS } from '../../utils/constants.js';
 
 const data = {
   status: 'Stopped',
@@ -12,25 +15,22 @@ const data = {
 };
 
 function ScreenshotsByTime({ selectedCamera }) {
+  const dispatch = useDispatch();
+  const modal = useSelector((state) => state.modal);
+
   const [screenshotsData, setScreenshotsData] = useState(data);
-
-  // useEffect(async () => {
-  //   const { data } = await cameraService.getScreenshotByTimeData(selectedCamera._id);
-  //   console.log(data);
-  //   setScreenshotsData(data);
-  // }, []);
-
   const [running, setRunning] = useState(false);
-  const [visible, setVisible] = useState(false);
+
+  const isVisibleEditSettingsModal = modal[EDIT_SCREENSHOT_SETTINGS] || false;
 
   const { startTime, stopTime, screenshotInterval } = screenshotsData;
 
-  const handleCloseSettings = () => {
-    setVisible(false);
+  const openEditSettingsModal = () => {
+    dispatch(modalActions.openModal(EDIT_SCREENSHOT_SETTINGS));
   };
 
-  const handleOpenSettings = () => {
-    setVisible(true);
+  const closeEditSettingsModal = () => {
+    dispatch(modalActions.closeModal(EDIT_SCREENSHOT_SETTINGS));
   };
 
   const handleStart = () => {
@@ -74,7 +74,7 @@ function ScreenshotsByTime({ selectedCamera }) {
         </ListGroup.Item>
       </ListGroup>
       <>
-        <Button onClick={handleOpenSettings} variant="primary" size="sm" className="me-2">
+        <Button onClick={openEditSettingsModal} variant="primary" size="sm" className="me-2">
           Edit
         </Button>
         <Button disabled={!running} onClick={handleStop} variant="primary" size="sm" className="me-2">
@@ -86,9 +86,9 @@ function ScreenshotsByTime({ selectedCamera }) {
       </>
 
       <EditSettingsModal
-        screenshotsData={screenshotsData}
-        visible={visible}
-        onClose={handleCloseSettings}
+        show={isVisibleEditSettingsModal}
+        onHide={closeEditSettingsModal}
+        initialValues={screenshotsData}
         onSubmit={setScreenshotsData}
       />
     </Col>

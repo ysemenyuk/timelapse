@@ -10,13 +10,13 @@
   },
   "extends": [
     "airbnb",
-    "plugin:jsx-control-statements/recommended" //
+    "plugin:jsx-control-statements/recommended"
   ],
   "plugins": [
     "react",
     "react-hooks",
     "jsx-control-statements",
-    "require-path-exists" //
+    "require-path-exists"
   ],
   "env": {
     "node": true,
@@ -32,6 +32,7 @@
     "react/jsx-no-undef": [2, { "allowGlobals": true }],
     "import/extensions": 0,
     "max-len": [1, 120, 2],
-    "object-curly-newline": "off"
+    "object-curly-newline": 0,
+    "react/jsx-props-no-spreading": 0
   }
 }

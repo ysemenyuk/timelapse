@@ -5,7 +5,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './assets/favicon.ico';
 import './index.css';
 import serviceWorker from './serviceWorker.js';
-import initApp from './App/init.jsx';
+import initApp from './components/App/init.jsx';
 import createStore from './store/index.js';
 
 if (process.env.NODE_ENV !== 'production') {
