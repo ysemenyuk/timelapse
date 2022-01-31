@@ -34,7 +34,7 @@ const io = new Server(httpServer, {
 const mode = process.env.NODE_ENV || 'development';
 const PORT = process.env.PORT || 4000;
 const dbUri = process.env.MONGO_URI;
-const storageType = process.env.STORAGE_TYPE || 'disk';
+const storageType = process.env.STORAGE_TYPE || 'gridfs';
 
 logger(`mode ${mode}`);
 logger(`storageType ${storageType}`);

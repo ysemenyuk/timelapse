@@ -7,5 +7,8 @@
   "eslint.alwaysShowStatus": true,
   "eslint.codeActionsOnSave.mode": "problems",
   "eslint.format.enable": true,
-  "eslint.packageManager": "yarn"
+  "eslint.packageManager": "yarn",
+  "[javascriptreact]": {
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+  }
 }

@@ -27,11 +27,6 @@ function NavBar() {
                     All cameras
                   </Link>
                 </Nav.Item>
-                <Nav.Item as="li">
-                  <Link className="nav-link" to="/form">
-                    Add camera
-                  </Link>
-                </Nav.Item>
               </Nav>
               <Link className="" to="/user">
                 User

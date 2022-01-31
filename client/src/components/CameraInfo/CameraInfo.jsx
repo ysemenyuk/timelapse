@@ -1,33 +1,26 @@
 import React from 'react';
 import cn from 'classnames';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { Col, Button, ListGroup, Spinner } from 'react-bootstrap';
 import cameraThunks from '../../thunks/cameraThunks.js';
 import Heading from '../UI/Heading.jsx';
-import { EDIT_CAMERA_SETTINGS } from '../../utils/constants.js';
-import EditCameraModal from './EditCameraModal.jsx';
+import { EDIT_CAMERA } from '../../utils/constants.js';
+// import EditCameraModal from './EditCameraModal.jsx';
 import { modalActions } from '../../store/modalSlice.js';
 import useThunkStatus from '../../hooks/useThunkStatus.js';
 
 function CameraInfo({ selectedCamera }) {
   const dispatch = useDispatch();
   const history = useHistory();
-  const modal = useSelector((state) => state.modal);
   const fetchStatus = useThunkStatus(cameraThunks.deleteOne);
-
-  const isVisibleEditCameraModal = modal[EDIT_CAMERA_SETTINGS] || false;
 
   const handleDelete = async () => {
     dispatch(cameraThunks.deleteOne(selectedCamera));
   };
 
   const openEditCameraModal = () => {
-    dispatch(modalActions.openModal(EDIT_CAMERA_SETTINGS));
-  };
-
-  const closeEditCameraModal = () => {
-    dispatch(modalActions.closeModal(EDIT_CAMERA_SETTINGS));
+    dispatch(modalActions.openModal({ type: EDIT_CAMERA, data: selectedCamera }));
   };
 
   const handleCameraPage = () => {
@@ -96,12 +89,6 @@ function CameraInfo({ selectedCamera }) {
           FilesPage
         </Button>
       </>
-
-      <EditCameraModal
-        initialValues={selectedCamera}
-        show={isVisibleEditCameraModal}
-        onHide={closeEditCameraModal}
-      />
     </Col>
   );
 }

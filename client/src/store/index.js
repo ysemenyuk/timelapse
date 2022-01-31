@@ -8,6 +8,9 @@ import modalSlice from './modalSlice.js';
 // console.log('store');
 
 export default () => configureStore({
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware({
+    serializableCheck: false,
+  }),
   reducer: {
     user: userReducer,
     camera: cameraReducer,

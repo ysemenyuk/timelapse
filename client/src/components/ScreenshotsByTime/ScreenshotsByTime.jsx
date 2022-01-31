@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
 import { Col, Button, ListGroup, Badge } from 'react-bootstrap';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import Heading from '../UI/Heading.jsx';
-import EditSettingsModal from './EditSettingsModal.jsx';
 import { getFilesPerDay } from '../../utils/utils.js';
 import { modalActions } from '../../store/modalSlice.js';
 import { EDIT_SCREENSHOT_SETTINGS } from '../../utils/constants.js';
 
-const data = {
+const initialValues = {
   status: 'Stopped',
   startTime: '08:00',
   stopTime: '20:00',
@@ -16,21 +15,17 @@ const data = {
 
 function ScreenshotsByTime({ selectedCamera }) {
   const dispatch = useDispatch();
-  const modal = useSelector((state) => state.modal);
 
-  const [screenshotsData, setScreenshotsData] = useState(data);
+  // const [screenshotsData, setScreenshotsData] = useState(data);
   const [running, setRunning] = useState(false);
 
-  const isVisibleEditSettingsModal = modal[EDIT_SCREENSHOT_SETTINGS] || false;
+  const { startTime, stopTime, screenshotInterval } = initialValues;
 
-  const { startTime, stopTime, screenshotInterval } = screenshotsData;
-
-  const openEditSettingsModal = () => {
-    dispatch(modalActions.openModal(EDIT_SCREENSHOT_SETTINGS));
-  };
-
-  const closeEditSettingsModal = () => {
-    dispatch(modalActions.closeModal(EDIT_SCREENSHOT_SETTINGS));
+  const handleOpenEditModal = () => {
+    dispatch(modalActions.openModal({
+      type: EDIT_SCREENSHOT_SETTINGS,
+      data: { initialValues },
+    }));
   };
 
   const handleStart = () => {
@@ -70,11 +65,11 @@ function ScreenshotsByTime({ selectedCamera }) {
         </ListGroup.Item>
         <ListGroup.Item className="d-flex">
           <div className="me-3 w-50">Files/day</div>
-          <span>{getFilesPerDay(screenshotsData)}</span>
+          <span>{getFilesPerDay(initialValues)}</span>
         </ListGroup.Item>
       </ListGroup>
       <>
-        <Button onClick={openEditSettingsModal} variant="primary" size="sm" className="me-2">
+        <Button onClick={handleOpenEditModal} variant="primary" size="sm" className="me-2">
           Edit
         </Button>
         <Button disabled={!running} onClick={handleStop} variant="primary" size="sm" className="me-2">
@@ -84,13 +79,6 @@ function ScreenshotsByTime({ selectedCamera }) {
           Start
         </Button>
       </>
-
-      <EditSettingsModal
-        show={isVisibleEditSettingsModal}
-        onHide={closeEditSettingsModal}
-        initialValues={screenshotsData}
-        onSubmit={setScreenshotsData}
-      />
     </Col>
   );
 }

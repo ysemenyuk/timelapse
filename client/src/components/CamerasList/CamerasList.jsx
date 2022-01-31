@@ -1,10 +1,12 @@
 import React from 'react';
 import cn from 'classnames';
 import { useDispatch } from 'react-redux';
-import { useHistory, useRouteMatch, Link } from 'react-router-dom';
-import { Col, ListGroup } from 'react-bootstrap';
+import { useHistory, useRouteMatch } from 'react-router-dom';
+import { Col, ListGroup, Button } from 'react-bootstrap';
 import Heading from '../UI/Heading.jsx';
 import { cameraActions } from '../../store/cameraSlice.js';
+import { ADD_CAMERA } from '../../utils/constants.js';
+import { modalActions } from '../../store/modalSlice.js';
 
 function CamerasList({ cameras, selectedCamera }) {
   const dispatch = useDispatch();
@@ -16,6 +18,10 @@ function CamerasList({ cameras, selectedCamera }) {
     if (match.isExact === false) {
       history.push('/');
     }
+  };
+
+  const handleAddCamera = () => {
+    dispatch(modalActions.openModal({ type: ADD_CAMERA }));
   };
 
   const renderCamerasList = () => cameras.map((camera) => (
@@ -51,11 +57,11 @@ function CamerasList({ cameras, selectedCamera }) {
           <ListGroup className="mb-3">
             {renderCamerasList()}
           </ListGroup>
-          <Link className="btn btn-sm btn-primary" to="/form">
-            Add camera
-          </Link>
         </Otherwise>
       </Choose>
+      <Button onClick={handleAddCamera} size="sm">
+        Add camera
+      </Button>
     </Col>
   );
 }

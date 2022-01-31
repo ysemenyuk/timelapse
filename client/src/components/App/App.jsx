@@ -9,8 +9,8 @@ import LoginPage from '../../pages/LoginPage.jsx';
 import SignupPage from '../../pages/SignupPage.jsx';
 import ProfilePage from '../../pages/ProfilePage.jsx';
 import CameraListPage from '../../pages/CamerasListPage.jsx';
-import CameraPage from '../../pages/OneCameraPage.jsx';
-import CameraAddPage from '../../pages/AddCameraPage.jsx';
+import OneCameraPage from '../../pages/OneCameraPage.jsx';
+import ModalWrapper from '../Modals/ModalWrapper.jsx';
 
 function PrivateRoute({ children, ...rest }) {
   const user = useSelector((state) => state.user);
@@ -41,12 +41,13 @@ function App() {
               <Route exact path="/signup" component={SignupPage} />
               <PrivateRoute>
                 <Route exact path="/user" component={ProfilePage} />
-                <Route exact path="/form" component={CameraAddPage} />
-                <Route exact path="/cameras/:id" component={CameraPage} />
+                <Route exact path="/cameras/:id" component={OneCameraPage} />
                 <Route exact path={['/', '/cameras']} component={CameraListPage} />
               </PrivateRoute>
               <Redirect to="/" />
             </Switch>
+
+            <ModalWrapper />
           </Router>
         </Otherwise>
       </Choose>

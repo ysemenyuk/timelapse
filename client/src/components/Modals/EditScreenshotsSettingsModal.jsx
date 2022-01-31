@@ -10,7 +10,9 @@ import { getFilesPerDay } from '../../utils/utils.js';
 //   interval: Yup.string().required(),
 // });
 
-function EditSettingsModal({ show, onHide, initialValues, onSubmit }) {
+function EditScreenshotsSettingsModal({ show, onHide, data }) {
+  const { initialValues } = data;
+
   const formik = useFormik({
     initialValues,
     // validationSchema,
@@ -26,12 +28,11 @@ function EditSettingsModal({ show, onHide, initialValues, onSubmit }) {
 
   return (
     <Modal
-      aria-labelledby="modal-settings"
       show={show}
       onHide={onHide}
     >
       <Modal.Header closeButton>
-        <Modal.Title id="modal-settings">Edit settings</Modal.Title>
+        <Modal.Title>Edit settings</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Row className="mb-3">
@@ -128,4 +129,4 @@ function EditSettingsModal({ show, onHide, initialValues, onSubmit }) {
   );
 }
 
-export default EditSettingsModal;
+export default EditScreenshotsSettingsModal;

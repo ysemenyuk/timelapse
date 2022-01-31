@@ -1,29 +1,36 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Modal } from 'react-bootstrap';
 import { modalActions } from '../../store/modalSlice';
+import { ADD_CAMERA, EDIT_CAMERA, EDIT_SCREENSHOT_SETTINGS, IMAGE_VIEWER } from '../../utils/constants.js';
+import EditCameraModal from './EditCameraModal.jsx';
+import AddCameraModal from './AddCameraModal.jsx';
+import ImgViewerModal from './ImgViewerModal.jsx';
+import EditScreenshotsSettingsModal from './EditScreenshotsSettingsModal.jsx';
 
-function ModalWrapper({ name, size, children, ...props }) {
+const modals = {
+  [EDIT_CAMERA]: EditCameraModal,
+  [ADD_CAMERA]: AddCameraModal,
+  [IMAGE_VIEWER]: ImgViewerModal,
+  [EDIT_SCREENSHOT_SETTINGS]: EditScreenshotsSettingsModal,
+};
+
+function ModalWrapper() {
   const dispatch = useDispatch();
 
-  const modal = useSelector((state) => state.modal);
-
-  const isVisible = modal[name] || false;
+  const { show, type, data } = useSelector((state) => state.modal);
 
   const handleClose = () => {
-    dispatch(modalActions.closeModal(name));
+    dispatch(modalActions.closeModal());
   };
 
+  if (!show) {
+    return null;
+  }
+
+  const Modal = modals[type];
+
   return (
-    <Modal
-      aria-labelledby="contained-modal-title"
-      show={isVisible}
-      onHide={handleClose}
-      size={size}
-      {...props}
-    >
-      {children}
-    </Modal>
+    <Modal show={show} onHide={handleClose} data={data} />
   );
 }
 

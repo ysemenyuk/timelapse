@@ -2,9 +2,7 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Col, Row } from 'react-bootstrap';
 import CamerasList from '../components/CamerasList/CamerasList.jsx';
-// import FormEditCamera from '../components/CameraForm/EditCameraForm.jsx';
-import AddCameraForm from '../components/AddCamera/AddCamera.jsx';
-// import Screenshot from '../components/Screenshot/Screenshot.jsx';
+import Screenshot from '../components/Screenshot/Screenshot.jsx';
 import CameraInfo from '../components/CameraInfo/CameraInfo.jsx';
 import Spinner from '../components/UI/Spinner.jsx';
 import Error from '../components/UI/Error.jsx';
@@ -33,7 +31,7 @@ function CameraListPage() {
           <Col sm={6}>
             <Choose>
               <When condition={!allCameras.length}>
-                <AddCameraForm />
+                Add your first camera
               </When>
               <Otherwise>
                 <CameraInfo selectedCamera={selectedCamera} />
@@ -41,7 +39,7 @@ function CameraListPage() {
             </Choose>
           </Col>
           <Col sm={3}>
-            {/* <Screenshot selectedCamera={selectedCamera} /> */}
+            <Screenshot selectedCamera={selectedCamera} />
           </Col>
         </Row>
       </When>
