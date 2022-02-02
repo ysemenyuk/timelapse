@@ -57,7 +57,7 @@ function LoginPage() {
 
           <Form className="mb-3" onSubmit={formik.handleSubmit}>
             <Form.Group className="mb-3">
-              <Form.Label htmlFor="email">Email address</Form.Label>
+              <Form.Label htmlFor="email">Email</Form.Label>
               <Form.Control
                 onChange={formik.handleChange}
                 value={formik.values.email}

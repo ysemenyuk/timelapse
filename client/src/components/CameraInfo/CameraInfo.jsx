@@ -6,7 +6,6 @@ import { Col, Button, ListGroup, Spinner } from 'react-bootstrap';
 import cameraThunks from '../../thunks/cameraThunks.js';
 import Heading from '../UI/Heading.jsx';
 import { EDIT_CAMERA } from '../../utils/constants.js';
-// import EditCameraModal from './EditCameraModal.jsx';
 import { modalActions } from '../../store/modalSlice.js';
 import useThunkStatus from '../../hooks/useThunkStatus.js';
 
@@ -58,25 +57,9 @@ function CameraInfo({ selectedCamera }) {
             {selectedCamera.screenshotLink || 'Empty link'}
           </div>
         </ListGroup.Item>
-        <ListGroup.Item>
-          <div className="d-flex justify-content-between align-items-start">
-            <div className="me-3">Make screenshots by time</div>
-            <span className="badge bg-secondary">Stopped</span>
-          </div>
-          <div className="w-75 text-truncate text-muted">
-            Start: 08:00, Stop: 20:00, Interval: 60 seconds, Files: 720
-          </div>
-        </ListGroup.Item>
-        <ListGroup.Item>
-          <div className="d-flex justify-content-between align-items-start">
-            <div className="me-3">Make video of the day</div>
-            <span className="badge bg-secondary">Stopped</span>
-          </div>
-          <div className="w-75 text-truncate text-muted">Video file length: 60 seconds</div>
-        </ListGroup.Item>
       </ListGroup>
 
-      <>
+      <div className="mb-3">
         <Button onClick={openEditCameraModal} variant="primary" size="sm" className="me-2">
           EditCamera
         </Button>
@@ -88,7 +71,8 @@ function CameraInfo({ selectedCamera }) {
         <Button onClick={handleCameraPage} variant="info" size="sm" className="me-2">
           FilesPage
         </Button>
-      </>
+      </div>
+
     </Col>
   );
 }

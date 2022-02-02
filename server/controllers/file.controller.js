@@ -78,10 +78,12 @@ const createScreenshot = async ({ userId, cameraId, parentId, logger }) => {
   await promisifyUploadStream(uploadStream);
 
   console.log('date', date, date.toLocaleString());
+  console.log('date', date, date.toISOString());
+
 
   const file = await fileRepository.createOne({
     name: fileName,
-    date,
+    date: date.toISOString(),
     user: userId,
     camera: cameraId,
     parent: parent._id,

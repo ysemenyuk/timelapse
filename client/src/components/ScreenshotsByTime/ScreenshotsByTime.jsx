@@ -10,16 +10,17 @@ const initialValues = {
   status: 'Stopped',
   startTime: '08:00',
   stopTime: '20:00',
-  screenshotInterval: 60,
+  interval: 60,
 };
 
-function ScreenshotsByTime({ selectedCamera }) {
+function ScreenshotsByTime({ selectedCamera, row }) {
   const dispatch = useDispatch();
 
   // const [screenshotsData, setScreenshotsData] = useState(data);
   const [running, setRunning] = useState(false);
 
-  const { startTime, stopTime, screenshotInterval } = initialValues;
+  const { startTime, stopTime, interval } = initialValues;
+  const files = getFilesPerDay(initialValues);
 
   const handleOpenEditModal = () => {
     dispatch(modalActions.openModal({
@@ -42,32 +43,50 @@ function ScreenshotsByTime({ selectedCamera }) {
 
   return (
     <Col md={12} className="mb-4">
-      <Heading lvl={6} className="mb-3">
-        Get screenshots by time
-      </Heading>
+      <Choose>
+        <When condition={row}>
+          <ListGroup className="mb-3">
+            <ListGroup.Item>
+              <div className="d-flex justify-content-between align-items-start">
+                <div className="me-3">Make screenshots by time</div>
+                <Badge bg={running ? 'success' : 'secondary'}>{running ? 'Running' : 'Stopped'}</Badge>
+              </div>
+              <div className="w-75 text-truncate text-muted">
+                {`Start: ${startTime}, Stop: ${stopTime}, Interval: ${interval} sec, Files/day: ${files}`}
+              </div>
+            </ListGroup.Item>
+          </ListGroup>
+        </When>
+        <Otherwise>
+          <Heading lvl={6} className="mb-3">
+            Get screenshots by time
+          </Heading>
 
-      <ListGroup className="mb-3">
-        <ListGroup.Item className="d-flex">
-          <div className="me-3 w-50">Status</div>
-          <Badge bg={running ? 'success' : 'secondary'}>{running ? 'Running' : 'Stopped'}</Badge>
-        </ListGroup.Item>
-        <ListGroup.Item className="d-flex">
-          <div className="me-3 w-50">Start time</div>
-          <span>{startTime}</span>
-        </ListGroup.Item>
-        <ListGroup.Item className="d-flex">
-          <div className="me-3 w-50">Stop time</div>
-          <span>{stopTime}</span>
-        </ListGroup.Item>
-        <ListGroup.Item className="d-flex">
-          <div className="me-3 w-50">Interval, sec</div>
-          <span>{screenshotInterval}</span>
-        </ListGroup.Item>
-        <ListGroup.Item className="d-flex">
-          <div className="me-3 w-50">Files/day</div>
-          <span>{getFilesPerDay(initialValues)}</span>
-        </ListGroup.Item>
-      </ListGroup>
+          <ListGroup className="mb-3">
+            <ListGroup.Item className="d-flex">
+              <div className="me-3 w-50">Status</div>
+              <Badge bg={running ? 'success' : 'secondary'}>{running ? 'Running' : 'Stopped'}</Badge>
+            </ListGroup.Item>
+            <ListGroup.Item className="d-flex">
+              <div className="me-3 w-50">Start time</div>
+              <span>{startTime}</span>
+            </ListGroup.Item>
+            <ListGroup.Item className="d-flex">
+              <div className="me-3 w-50">Stop time</div>
+              <span>{stopTime}</span>
+            </ListGroup.Item>
+            <ListGroup.Item className="d-flex">
+              <div className="me-3 w-50">Interval, sec</div>
+              <span>{interval}</span>
+            </ListGroup.Item>
+            <ListGroup.Item className="d-flex">
+              <div className="me-3 w-50">Files/day</div>
+              <span>{files}</span>
+            </ListGroup.Item>
+          </ListGroup>
+        </Otherwise>
+      </Choose>
+
       <>
         <Button onClick={handleOpenEditModal} variant="primary" size="sm" className="me-2">
           Edit

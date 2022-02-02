@@ -5,11 +5,12 @@
   "main": "./index.js",
   "scripts": {
     "start": "node index.js",
-    "dev": "DEBUG=request*,server* nodemon -r dotenv/config index.js"
+    "dev": "DEBUG=request*,server*,agenda:db_init,agenda:create,agenda:job nodemon -r dotenv/config index.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "agenda": "^4.2.1",
     "ajv": "^8.5.0",
     "ajv-formats": "^2.1.0",
     "aws-sdk": "^2.1065.0",

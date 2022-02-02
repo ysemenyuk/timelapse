@@ -15,14 +15,23 @@ import { errorHandlerMiddleware } from './middleware/errorHandlerMiddleware.js';
 import { Server } from 'socket.io';
 import http from 'http';
 import cors from 'cors';
+import { Agenda } from 'agenda/es.js';
 
 import __dirname from './dirname.js';
-console.log('__dirname', __dirname);
+// console.log('__dirname', __dirname);
 
 const assetsPath = path.join(__dirname, 'assets');
-console.log('assetsPath', assetsPath);
+// console.log('assetsPath', assetsPath);
+
+const mode = process.env.NODE_ENV || 'development';
+const PORT = process.env.PORT || 4000;
+const dbUri = process.env.MONGO_URI;
+const storageType = process.env.STORAGE_TYPE || 'gridfs';
 
 const logger = debug('server');
+
+logger(`mode ${mode}`);
+logger(`storageType ${storageType}`);
 
 const app = express();
 const httpServer = http.createServer(app);
@@ -30,14 +39,6 @@ const httpServer = http.createServer(app);
 const io = new Server(httpServer, {
   cors: { origin: '*' },
 });
-
-const mode = process.env.NODE_ENV || 'development';
-const PORT = process.env.PORT || 4000;
-const dbUri = process.env.MONGO_URI;
-const storageType = process.env.STORAGE_TYPE || 'gridfs';
-
-logger(`mode ${mode}`);
-logger(`storageType ${storageType}`);
 
 if (process.env.NODE_ENV === 'development') {
   app.use(debugMiddleware);
@@ -96,18 +97,69 @@ app.use(errorHandlerMiddleware);
 const startServer = async () => {
   try {
     await mongoClient.connect();
-    logger(`MongoClient successfully Connected`);
+    // logger(`MongoClient successfully Connected`);
 
-    await mongoose.connect(dbUri, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-      useFindAndModify: false,
+    // await mongoose.connect(dbUri, {
+    //   useNewUrlParser: true,
+    //   useUnifiedTopology: true,
+    //   useFindAndModify: false,
+    // });
+
+    // logger(`Mongoose successfully Connected`);
+
+    // console.log(111, agenda)
+
+    const agenda = new Agenda({ mongo: mongoClient.db('myFirstDatabase') });
+    // const agenda = new Agenda({ db: { adress: dbUri, options: {
+    //   useNewUrlParser: true,
+    //   useUnifiedTopology: true
+    //  } }});
+
+    // agenda.processEvery("10 seconds");
+    // agenda.lockLimit(1);
+
+    agenda.define('console1', { lockLifetime: 10000 }, (job) => {
+      console.log(111111, new Date().toISOString(), job.attrs);
     });
 
-    logger(`Mongoose successfully Connected`);
+    // agenda.define("console2", { lockLifetime: 10000 }, (job) => {
+    //   console.log(222222)
+    // });
 
-    app.listen(PORT, logger(`Api server running in ${mode} mode on port ${PORT}`));
-    httpServer.listen(5000, logger(`Socket server running in ${mode} mode on port ${5000}`));
+    // const job = agenda.create('console1', { cameraId: 1 });
+    // job.repeatEvery('10 seconds');
+    // await job.save();
+
+    // const job2 = agenda.create('console1', { cameraId: 2 });
+    // job2.repeatEvery('15 seconds');
+    // await job2.save();
+
+    // console.log("Job successfully saved");
+
+    await agenda.start();
+
+    const jobs = await agenda.jobs();
+    console.log('Jobs', jobs);
+
+    // await agenda.every("10 seconds", "console1", {cameraId: 1});
+    // await agenda.every("15 seconds", "console1", {cameraId: 2});
+
+    // await agenda.every("15 seconds", "console2");
+
+    agenda
+      .on('ready', () => console.log('Agenda started!'))
+      .on('error', () => console.log('Agenda connection error!'));
+
+    // agenda
+    // .on("start", (job) => {
+    //   console.log(`Job ${job.attrs.name} starting`);
+    // })
+    // .on("complete", (job) => {
+    //   console.log(`Job ${job.attrs.name} finished`);
+    // });
+
+    // app.listen(PORT, logger(`Api server running in ${mode} mode on port ${PORT}`));
+    // httpServer.listen(5000, logger(`Socket server running in ${mode} mode on port ${5000}`));
   } catch (e) {
     console.log('catch err', e);
   }

@@ -6,6 +6,7 @@ const getAll = async ({ userId, cameraId, parentId, logger }) => {
     user: userId,
     camera: cameraId,
     parent: parentId,
+    date: { $gte: new Date('2021-01-31T15:00:30'),  $lt: new Date('2022-01-31T15:00:35') } 
   });
 };
 

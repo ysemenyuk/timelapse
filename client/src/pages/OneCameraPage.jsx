@@ -5,7 +5,6 @@ import { Col, Row } from 'react-bootstrap';
 import cameraThunks from '../thunks/cameraThunks.js';
 import useThunkStatus from '../hooks/useThunkStatus.js';
 import FileManager from '../components/FileManager/FileManager.jsx';
-// import ImgViewer from '../components/ImgViewer/ImgViewer.jsx';
 import ScreenshotsByTime from '../components/ScreenshotsByTime/ScreenshotsByTime.jsx';
 // import VideosByTime from '../components/VideosByTime/VideosByTime.jsx';
 import Screenshot from '../components/Screenshot/Screenshot.jsx';

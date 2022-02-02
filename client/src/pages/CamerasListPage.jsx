@@ -8,6 +8,7 @@ import Spinner from '../components/UI/Spinner.jsx';
 import Error from '../components/UI/Error.jsx';
 import useThunkStatus from '../hooks/useThunkStatus.js';
 import cameraThunks from '../thunks/cameraThunks.js';
+import ScreenshotsByTime from '../components/ScreenshotsByTime/ScreenshotsByTime.jsx';
 
 function CameraListPage() {
   const dispatch = useDispatch();
@@ -35,6 +36,7 @@ function CameraListPage() {
               </When>
               <Otherwise>
                 <CameraInfo selectedCamera={selectedCamera} />
+                <ScreenshotsByTime row selectedCamera={selectedCamera} />
               </Otherwise>
             </Choose>
           </Col>
