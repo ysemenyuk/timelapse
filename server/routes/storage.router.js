@@ -1,72 +1,73 @@
 import express from 'express';
 import { asyncHandler } from '../middleware/errorHandlerMiddleware.js';
-import storage from '../storage/index.js';
 import fileRepository from '../repositories/file.repository.js';
 import imageService from '../services/image.service.js';
 import * as consts from '../utils/constants.js';
 
-const router = express.Router();
+export default (app) => {
+  const router = express.Router();
 
-router.get(
-  '/:fileName',
-  asyncHandler(async (req, res) => {
-    req.logger(`storage.router.get /files/${req.params.fileName}`);
+  router.get(
+    '/:fileName',
+    asyncHandler(async (req, res) => {
+      req.logger(`storage.router.get /files/${req.params.fileName}`);
 
-    const file = await fileRepository.getOneByName({
-      name: req.params.fileName,
-      logger: req.logger,
-    });
+      const file = await fileRepository.getOneByName({
+        name: req.params.fileName,
+        logger: req.logger,
+      });
 
-    if (!file) {
-      res.sendStatus(404);
-      req.logResp(req);
-      return;
-    }
+      if (!file) {
+        res.sendStatus(404);
+        req.logResp(req);
+        return;
+      }
 
-    const isThumbnail = req.query && req.query.size && req.query.size === 'thumbnail';
+      const isThumbnail = req.query && req.query.size && req.query.size === 'thumbnail';
 
-    const stream = storage.openDownloadStream({
-      file,
-      logger: req.logger,
-    });
+      const stream = app.storage.openDownloadStream({
+        file,
+        logger: req.logger,
+      });
 
-    if (isThumbnail) {
-      stream.pipe(imageService.resize(consts.THUMBNAIL_SIZE)).pipe(res);
-    } else {
-      stream.pipe(res);
-    }
+      if (isThumbnail) {
+        stream.pipe(imageService.resize(consts.THUMBNAIL_SIZE)).pipe(res);
+      } else {
+        stream.pipe(res);
+      }
 
-    stream.on('error', (e) => {
-      // console.log('stream.on error', e);
-      res.sendStatus(500);
-      req.logResp(req);
-    });
+      stream.on('error', (e) => {
+        // console.log('stream.on error', e);
+        res.sendStatus(500);
+        req.logResp(req);
+      });
 
-    stream.on('end', () => {
-      // console.log('stream.on end');
-      req.logResp(req);
-    });
-  })
-);
+      stream.on('end', () => {
+        // console.log('stream.on end');
+        req.logResp(req);
+      });
+    })
+  );
 
-// router.post(
-//   '/',
-//   asyncHandler((req, res) => {
-//     if (!req.files || !req.files.file) {
-//       return res.status(400).send('No file.');
-//     }
+  // router.post(
+  //   '/',
+  //   asyncHandler((req, res) => {
+  //     if (!req.files || !req.files.file) {
+  //       return res.status(400).send('No file.');
+  //     }
 
-//     const file = req.files.file.data;
-//     const fileName = req.files.file.name;
+  //     const file = req.files.file.data;
+  //     const fileName = req.files.file.name;
 
-//     const uploadStream = storage.openUploadStream({ fileName, logger });
+  //     const uploadStream = storage.openUploadStream({ fileName, logger });
 
-//     Readable.from(file).pipe(uploadStream);
+  //     Readable.from(file).pipe(uploadStream);
 
-//     uploadStream.on('error', () => res.sendStatus(500));
+  //     uploadStream.on('error', () => res.sendStatus(500));
 
-//     uploadStream.on('finish', () => res.send(fileName));
-//   })
-// );
+  //     uploadStream.on('finish', () => res.send(fileName));
+  //   })
+  // );
 
-export default router;
+  return router;
+};

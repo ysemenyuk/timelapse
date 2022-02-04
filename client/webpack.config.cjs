@@ -24,7 +24,7 @@ module.exports = {
     contentBase: path.join(__dirname, 'public'),
     publicPath: '/public/',
     proxy: {
-      context: ['/auth', '/api', '/files', '/assets'],
+      context: ['/auth', '/api', '/files'],
       target: 'http://localhost:4000',
     },
     historyApiFallback: true,
