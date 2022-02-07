@@ -3,12 +3,12 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Modal, Button } from 'react-bootstrap';
 import ImgWrapper from '../UI/ImgWrapper/ImgWrapper.jsx';
 import { fileManagerActions } from '../../store/fileManagerSlice.js';
+import withModalWrapper from './withModalWrapper.jsx';
+import { IMAGE_VIEWER } from '../../utils/constants.js';
 
-function ImgViewerModal({ show, onHide, data }) {
+function ImgViewerModal({ type, show, onHide, files, onDeleteFile }) {
   const dispatch = useDispatch();
   const { currentFileIndex } = useSelector((state) => state.fileManager);
-
-  const { files, selectedCamera } = data;
 
   if (currentFileIndex === null || !files) {
     return null;
@@ -28,17 +28,12 @@ function ImgViewerModal({ show, onHide, data }) {
   };
 
   const deleteFileHandler = () => {
-    dispatch(
-      fileManagerActions.deleteOneFile({
-        cameraId: selectedCamera._id,
-        fileId: currentFile._id,
-      }),
-    );
+    onDeleteFile(currentFile);
   };
 
   return (
     <Modal
-      show={show}
+      show={show && type === IMAGE_VIEWER}
       onHide={onHide}
       size="xl"
     >
@@ -66,4 +61,4 @@ function ImgViewerModal({ show, onHide, data }) {
   );
 }
 
-export default ImgViewerModal;
+export default withModalWrapper(ImgViewerModal);

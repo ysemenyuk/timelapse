@@ -2,11 +2,10 @@ import express from 'express';
 import authMiddleware from '../middleware/authMiddleware.js';
 import cameraValidator from '../validators/camera.validators.ajv.js';
 import { asyncHandler } from '../middleware/errorHandlerMiddleware.js';
-import createCameraController from '../controllers/camera.controller.js';
+// import createCameraController from '../controllers/camera.controller.js';
 
-export default (app) => {
+export default (cameraController) => {
   const router = express.Router({ mergeParams: true });
-  const cameraController = createCameraController(app);
 
   router.use(authMiddleware);
 
@@ -31,8 +30,7 @@ export default (app) => {
       req.logger(`cameraRouter.get /api/cameras/${req.params.cameraId}`);
 
       const camera = await cameraController.getOne({
-        userId: req.userId,
-        cameraId: req.params.cameraId,
+        id: req.params.cameraId,
         logger: req.logger,
       });
 
@@ -47,7 +45,7 @@ export default (app) => {
     asyncHandler(async (req, res) => {
       req.logger('cameraRouter.post /api/cameras');
 
-      console.log(1111, req.body);
+      // console.log(1111, req.body);
 
       const camera = await cameraController.createOne({
         userId: req.userId,
@@ -67,8 +65,7 @@ export default (app) => {
       req.logger('cameraRouter.put /:cameraId');
 
       const camera = await cameraController.updateOne({
-        userId: req.userId,
-        cameraId: req.params.cameraId,
+        id: req.params.cameraId,
         payload: req.body,
         logger: req.logger,
       });
@@ -84,8 +81,7 @@ export default (app) => {
       req.logger('cameraRouter.delete /:cameraId');
 
       await cameraController.deleteOne({
-        userId: req.userId,
-        cameraId: req.params.cameraId,
+        id: req.params.cameraId,
         logger: req.logger,
       });
 

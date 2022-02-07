@@ -3,52 +3,25 @@ import mongoose from 'mongoose';
 import mongodb from 'mongodb';
 import fileUpload from 'express-fileupload';
 import debug from 'debug';
-import userRouter from './routes/user.router.js';
-import cameraRouter from './routes/camera.router.js';
-import fileRouter from './routes/file.router.js';
-import taskRouter from './routes/task.router.js';
 import debugMiddleware from './middleware/debugMiddleware.js';
-import storageRouter from './routes/storage.router.js';
 import { errorHandlerMiddleware } from './middleware/errorHandlerMiddleware.js';
-// import { Server } from 'socket.io';
 import http from 'http';
 import cors from 'cors';
 import initWorker from './worker.js';
-import initStorage from './storage.js';
-import __dirname from './dirname.js';
-
-const { MongoClient } = mongodb;
+import initSocket from './socket.js';
+import initStorage from './storage/index.js';
+import getRouters from './routes/index.js';
+import getControllers from './controllers/index.js';
+// import __dirname from './dirname.js';
 
 const mode = process.env.NODE_ENV || 'development';
 const PORT = process.env.PORT || 4000;
 const dbUri = process.env.MONGO_URI;
-const storageType = process.env.STORAGE_TYPE || 'gridfs';
-const jobTypes = process.env.JOB_TYPES ? process.env.JOB_TYPES.split(',') : [];
 
 const logger = debug('server');
 
-logger(`mode ${mode}`);
-logger(`storageType ${storageType}`);
-
 const app = express();
 const httpServer = http.createServer(app);
-
-// const io = new Server(httpServer, {
-//   cors: { origin: '*' },
-// });
-
-// io.on('connection', (socket) => {
-//   logger('user connected');
-
-//   socket.on('disconnect', () => {
-//     logger('user disconnected');
-//   });
-// });
-
-// app.use((req, res, next) => {
-//   req.io = io;
-//   return next();
-// });
 
 if (process.env.NODE_ENV === 'development') {
   app.use(debugMiddleware);
@@ -60,6 +33,8 @@ app.use(fileUpload());
 
 const startServer = async () => {
   try {
+    const { MongoClient } = mongodb;
+
     const mongoClient = new MongoClient(dbUri, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
@@ -77,16 +52,19 @@ const startServer = async () => {
 
     logger(`Mongoose successfully Connected`);
 
-    app.storage = initStorage(storageType, mongoClient);
-    app.worker = initWorker(jobTypes, mongoClient);
+    const io = initSocket(httpServer);
+    const worker = await initWorker(mongoClient, io);
+    const storage = initStorage(mongoClient);
 
-    await app.worker.start();
+    const routers = getRouters();
+    const controllers = getControllers();
 
-    app.use('/files', storageRouter(app));
-    app.use('/api/users', userRouter(app));
-    app.use('/api/cameras/:cameraId/tasks', taskRouter(app));
-    app.use('/api/cameras/:cameraId/files', fileRouter(app));
-    app.use('/api/cameras', cameraRouter(app));
+    app.use('/files', routers.storage(storage));
+
+    app.use('/api/users', routers.user(controllers.user()));
+    app.use('/api/cameras/:cameraId/tasks', routers.task(controllers.task(worker)));
+    app.use('/api/cameras/:cameraId/files', routers.file(controllers.file(storage)));
+    app.use('/api/cameras', routers.camera(controllers.camera()));
 
     app.use((req, res, next) => {
       res.status(404).send('Sorry cant find that!');

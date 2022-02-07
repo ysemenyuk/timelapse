@@ -1,16 +1,20 @@
 import { Agenda } from 'agenda/es.js';
 import jobs from './jobs/index.js';
 
-export default (jobTypes, mongoClient) => {
+const jobTypes = process.env.JOB_TYPES ? process.env.JOB_TYPES.split(',') : [];
+
+export default async (mongoClient, io) => {
   const agenda = new Agenda({ mongo: mongoClient.db('myFirstDatabase') });
 
+  agenda.processEvery('10 seconds');
+
   jobTypes.forEach((type) => {
-    jobs[type](agenda);
+    jobs[type](agenda, io);
   });
 
-  // if (jobTypes.length) {
-  //   await worker.start();
-  // }
+  if (jobTypes.length) {
+    await agenda.start();
+  }
 
   // const { ObjectID } = mongodb;
   // const id = new ObjectID('61fd39591baa2821f1a4a508');
@@ -25,9 +29,6 @@ export default (jobTypes, mongoClient) => {
 //   useNewUrlParser: true,
 //   useUnifiedTopology: true
 //  } }});
-
-// agenda.processEvery("10 seconds");
-// agenda.lockLimit(1);
 
 // agenda.define('console1', { lockLifetime: 10000 }, (job) => {
 //   console.log(111111, new Date().toISOString(), job.attrs);

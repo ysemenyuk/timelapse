@@ -7,6 +7,7 @@ import Heading from '../UI/Heading.jsx';
 import { cameraActions } from '../../store/cameraSlice.js';
 import { ADD_CAMERA } from '../../utils/constants.js';
 import { modalActions } from '../../store/modalSlice.js';
+import AddCameraModal from '../Modals/AddCameraModal.jsx';
 
 function CamerasList({ cameras, selectedCamera }) {
   const dispatch = useDispatch();
@@ -21,7 +22,7 @@ function CamerasList({ cameras, selectedCamera }) {
   };
 
   const handleAddCamera = () => {
-    dispatch(modalActions.openModal({ type: ADD_CAMERA }));
+    dispatch(modalActions.openModal(ADD_CAMERA));
   };
 
   const renderCamerasList = () => cameras.map((camera) => (
@@ -62,6 +63,7 @@ function CamerasList({ cameras, selectedCamera }) {
       <Button onClick={handleAddCamera} size="sm">
         Add camera
       </Button>
+      <AddCameraModal />
     </Col>
   );
 }

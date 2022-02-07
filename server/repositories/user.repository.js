@@ -1,18 +1,18 @@
 import bcrypt from 'bcryptjs';
 import User from '../models/User.js';
 
-const getById = async ({ userId, logger }) => {
-  logger(`userRepository.getById userId: ${userId}`);
-  return await User.findById(userId);
+const getById = async ({ id, logger }) => {
+  logger(`user.repository.getById id: ${id}`);
+  return await User.findById(id);
 };
 
 const getByEmail = async ({ email, logger }) => {
-  logger(`userRepository.getByEmail email: ${email}`);
+  logger(`user.repository.getByEmail email: ${email}`);
   return await User.findOne({ email });
 };
 
 const createOne = async ({ email, password, logger }) => {
-  logger(`userRepository.createOne email: ${email}`);
+  logger(`user.repository.createOne email: ${email}`);
 
   const hashPassword = await bcrypt.hash(password, 8);
   const user = new User({ email, password: hashPassword });
@@ -20,31 +20,27 @@ const createOne = async ({ email, password, logger }) => {
   return await user.save();
 };
 
-const updateOne = async ({ userId, payload, logger }) => {
-  logger(`userRepository.updateOne userId: ${userId}`);
+const updateOne = async ({ id, payload, logger }) => {
+  logger(`user.repository.updateOne id: ${id}`);
 
-  console.log(payload);
+  // console.log(payload);
 
   const { name, email, password } = payload;
   const hashPassword = await bcrypt.hash(password, 8);
 
-  return await User.findOneAndUpdate(
-    { _id: userId },
-    { name, email, password: hashPassword },
-    { new: true }
-  );
+  return await User.findOneAndUpdate({ _id: id }, { name, email, password: hashPassword }, { new: true });
 };
 
-const deleteOne = async ({ userId, logger }) => {
-  logger(`userRepository.deleteOne userId: ${userId}`);
-  const user = await User.findById(userId);
+const deleteOne = async ({ id, logger }) => {
+  logger(`user.repositoryy.deleteOne id: ${id}`);
+  const user = await User.findById(id);
   return await user.remove();
 };
 
-const updateAvatar = async ({ userId, avatar, logger }) => {
-  logger(`userRepository.updateAvatar userId: ${userId}`);
+const updateAvatar = async ({ id, avatar, logger }) => {
+  logger(`user.repository.updateAvatar id: ${id}`);
 
-  return await User.findOneAndUpdate({ _id: userId }, { avatar: avatar.name }, { new: true });
+  return await User.findOneAndUpdate({ _id: id }, { avatar: avatar.name }, { new: true });
 };
 
 export default { getById, getByEmail, createOne, updateOne, deleteOne, updateAvatar };

@@ -2,9 +2,9 @@ import express from 'express';
 import authMiddleware from '../middleware/authMiddleware.js';
 import { asyncHandler } from '../middleware/errorHandlerMiddleware.js';
 import userValidator from '../validators/user.validators.ajv.js';
-import userController from '../controllers/user.controller.js';
+// import userController from '../controllers/user.controller.js';
 
-export default (app) => {
+export default (userController) => {
   const router = express.Router();
 
   router.post(

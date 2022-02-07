@@ -4,20 +4,18 @@ import cameraRepository from '../repositories/camera.repository.js';
 import fileRepository from '../repositories/file.repository.js';
 import { makeFileName, promisifyUploadStream } from '../utils/index.js';
 
-export default (app) => {
-  const storage = app.storage;
-
-  const getAll = async ({ userId, cameraId, parentId, logger }) => {
+export default (storage) => {
+  const getAll = async ({ cameraId, parentId, logger }) => {
     logger(`fileController.getAll cameraId: ${cameraId}`);
 
-    const files = await fileRepository.getAll({ userId, cameraId, parentId, logger });
+    const files = await fileRepository.getAll({ camera: cameraId, parent: parentId, logger });
     return files;
   };
 
-  const getOne = async ({ userId, cameraId, id, logger }) => {
+  const getOne = async ({ id, logger }) => {
     logger(`fileController.getOne id: ${id}`);
 
-    const file = await fileRepository.getOneById({ userId, cameraId, id, logger });
+    const file = await fileRepository.getOneById({ id, logger });
 
     if (!file) {
       logger(`fileController.getOne id: ${id} - not found`);
@@ -27,16 +25,16 @@ export default (app) => {
     return file;
   };
 
-  const createFolder = async ({ userId, cameraId, parentId, name, logger }) => {
+  const createOne = async ({ userId, cameraId, payload, logger }) => {
     logger(`fileController.createOne`);
 
-    return await fileRepository.createOne({ userId, cameraId, parentId, name, type: 'folder', logger });
+    return await fileRepository.createOne({ user: userId, camera: cameraId, ...payload, logger });
   };
 
-  const deleteOne = async ({ userId, cameraId, id, logger }) => {
+  const deleteOne = async ({ id, logger }) => {
     logger(`fileController.deleteOne id: ${id}`);
 
-    const file = await fileRepository.getOneById({ userId, cameraId, id, logger });
+    const file = await fileRepository.getOneById({ id, logger });
 
     if (!file) {
       logger(`fileController.deleteOne id: ${id} - not found`);
@@ -45,22 +43,24 @@ export default (app) => {
 
     // TODO: delete file from storage
 
-    return await fileRepository.deleteOne({ userId, cameraId, id, logger });
+    return await fileRepository.deleteOne({ id, logger });
   };
 
-  const deleteMany = async ({ userId, cameraId, filesIds, logger }) => {
+  const deleteMany = async ({ ids, logger }) => {
     logger(`fileController.deleteMany`);
 
     // TODO: delete files from storage
 
-    return await fileRepository.deleteMany({ userId, cameraId, filesIds, logger });
+    return await fileRepository.deleteMany({ ids, logger });
   };
 
-  const createScreenshot = async ({ userId, cameraId, parentId, logger }) => {
+  const createScreenshot = async ({ userId, cameraId, payload, logger }) => {
     logger(`fileController.createScreenshot cameraId: ${cameraId}`);
 
-    const camera = await cameraRepository.getOne({ userId, cameraId, logger });
-    const parent = await fileRepository.getOneById({ userId, cameraId, id: parentId, logger });
+    const { parentId } = payload;
+
+    const camera = await cameraRepository.getOne({ id: cameraId, logger });
+    const parent = await fileRepository.getOneById({ id: parentId, logger });
 
     // TODO: check folder if not exist create
 
@@ -78,25 +78,25 @@ export default (app) => {
 
     await promisifyUploadStream(uploadStream);
 
-    console.log('date', date, date.toLocaleString());
-    console.log('date', date, date.toISOString());
+    // console.log('date', date, date.toLocaleString());
+    // console.log('date', date, date.toISOString());
 
     const file = await fileRepository.createOne({
       name: fileName,
       date: date.toISOString(),
       user: userId,
       camera: cameraId,
-      parent: parent._id,
+      parent: parentId,
       path: filePath,
-      storage: storageType,
+      storage: storage.type,
       type: 'screenshot',
       logger,
     });
 
-    console.log('fileController.createScreenshot file', file);
+    // console.log('fileController.createScreenshot file', file);
 
     return file;
   };
 
-  return { getAll, getOne, createFolder, deleteOne, deleteMany, createScreenshot };
+  return { getAll, getOne, createOne, deleteOne, deleteMany, createScreenshot };
 };

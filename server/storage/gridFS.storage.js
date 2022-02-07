@@ -33,5 +33,5 @@ export default (mongoClient) => {
     // return bucket.delete(file);
   };
 
-  return { openUploadStream, openDownloadStream, deleteOne };
+  return { openUploadStream, openDownloadStream, deleteOne, type: 'gridfs' };
 };

@@ -1,7 +1,7 @@
 import axios from 'axios';
 import getAuthHeader from './authHeader.js';
 
-const host = 'http://localhost:3000';
+const host = 'http://localhost:4000';
 
 const instance = axios.create({
   baseURL: `${host}/api/cameras`,
@@ -22,8 +22,14 @@ const deleteOneFile = async (cameraId, fileId) => {
   return response;
 };
 
+const createScreenshot = async (cameraId, parentId) => {
+  const response = await instance.post(`/${cameraId}/files/screenshot`, { parentId }, { headers: getAuthHeader() });
+  return response;
+};
+
 export default {
   getFiles,
   getOneFile,
   deleteOneFile,
+  createScreenshot,
 };

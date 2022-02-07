@@ -6,17 +6,16 @@ const { singup, login, tokenVerification, uploadAvatar, deleteAvatar, updateOne 
 
 const userInfo = JSON.parse(localStorage.getItem('userInfo'));
 
-const initialState =
-  userInfo && userInfo.userId && userInfo.token
-    ? { tokenVerification: true, isLoggedIn: false, user: null }
-    : { tokenVerification: false, isLoggedIn: false, user: null };
+const initialState = userInfo && userInfo.userId && userInfo.token
+  ? { tokenVerification: true, isLoggedIn: false, user: null }
+  : { tokenVerification: false, isLoggedIn: false, user: null };
 
 const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
-    logout: (state, action) => {
-      localStorage.removeItem('userInfo');
+    logout: (state) => {
+      localStorage.removeItem('userInfo'); // TODO: remove from reducer
 
       state.isLoggedIn = false;
       state.user = null;
@@ -45,7 +44,7 @@ const userSlice = createSlice({
       state.isLoggedIn = true;
       state.user = action.payload.user;
     },
-    [tokenVerification.rejected]: (state, action) => {
+    [tokenVerification.rejected]: (state) => {
       state.tokenVerification = false;
       state.isLoggedIn = false;
       state.user = null;
@@ -53,6 +52,6 @@ const userSlice = createSlice({
   },
 });
 
-export const userActions = userSlice.actions;
+export const userActions = { ...userSlice.actions, userThunks };
 
 export default userSlice.reducer;

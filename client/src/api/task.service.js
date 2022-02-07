@@ -12,18 +12,18 @@ const getAll = async () => {
   return response;
 };
 
-const getOne = async (id) => {
-  const response = await instance.get(`/${id}`, { headers: getAuthHeader() });
+const getOne = async (cameraId, taskId) => {
+  const response = await instance.get(`${cameraId}/tasks/${taskId}`, { headers: getAuthHeader() });
   return response;
 };
 
-const createOne = async (data) => {
-  const response = await instance.post('/', data, { headers: getAuthHeader() });
+const createOne = async (cameraId, data) => {
+  const response = await instance.post(`/${cameraId}/tasks`, data, { headers: getAuthHeader() });
   return response;
 };
 
-const updateOne = async (id, data) => {
-  const response = await instance.put(`/${id}`, data, { headers: getAuthHeader() });
+const updateOne = async (cameraId, data) => {
+  const response = await instance.put(`/${cameraId}/tasks`, data, { headers: getAuthHeader() });
   return response;
 };
 
@@ -38,5 +38,4 @@ export default {
   createOne,
   updateOne,
   deleteOne,
-
 };

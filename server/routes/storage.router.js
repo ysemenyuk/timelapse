@@ -4,7 +4,7 @@ import fileRepository from '../repositories/file.repository.js';
 import imageService from '../services/image.service.js';
 import * as consts from '../utils/constants.js';
 
-export default (app) => {
+export default (storage) => {
   const router = express.Router();
 
   router.get(
@@ -25,7 +25,7 @@ export default (app) => {
 
       const isThumbnail = req.query && req.query.size && req.query.size === 'thumbnail';
 
-      const stream = app.storage.openDownloadStream({
+      const stream = storage.openDownloadStream({
         file,
         logger: req.logger,
       });

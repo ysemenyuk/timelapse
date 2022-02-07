@@ -3,6 +3,8 @@ import { useFormik } from 'formik';
 // import * as Yup from 'yup';
 import { Modal, Button, Form, Row, Col } from 'react-bootstrap';
 import { getFilesPerDay } from '../../utils/utils.js';
+import withModalWrapper from './withModalWrapper.jsx';
+import { EDIT_SCREENSHOT_SETTINGS } from '../../utils/constants.js';
 
 // const validationSchema = Yup.object({
 //   start: Yup.string().required(),
@@ -10,25 +12,25 @@ import { getFilesPerDay } from '../../utils/utils.js';
 //   interval: Yup.string().required(),
 // });
 
-function EditScreenshotsSettingsModal({ show, onHide, data }) {
-  const { initialValues } = data;
+function EditScreenshotsSettingsModal({ type, show, onHide, onSubmit, initialValues }) {
+  console.log(111666, initialValues);
 
   const formik = useFormik({
     initialValues,
     // validationSchema,
     onSubmit: (values) => {
       console.log('onSubmit values', values);
-      // onSubmit(values);
+      onSubmit(values);
       onHide();
     },
   });
 
-  // console.log('formik.errors -', formik.errors);
-  // console.log('formik.values -', formik.values);
+  console.log('formik.errors -', formik.errors);
+  console.log('formik.values -', formik.values);
 
   return (
     <Modal
-      show={show}
+      show={show && type === EDIT_SCREENSHOT_SETTINGS}
       onHide={onHide}
     >
       <Modal.Header closeButton>
@@ -72,17 +74,17 @@ function EditScreenshotsSettingsModal({ show, onHide, data }) {
               </Form.Control.Feedback>
             </Form.Group>
             <Form.Group as={Col}>
-              <Form.Label htmlFor="screenshotInterval">Interval (seconds)</Form.Label>
+              <Form.Label htmlFor="interval">Interval (seconds)</Form.Label>
               <Form.Control
                 onChange={formik.handleChange}
-                value={formik.values.screenshotInterval}
-                name="screenshotInterval"
-                id="screenshotInterval"
+                value={formik.values.interval}
+                name="interval"
+                id="interval"
                 type="number"
-                isInvalid={formik.errors && formik.errors.screenshotInterval}
+                isInvalid={formik.errors && formik.errors.interval}
               />
               <Form.Control.Feedback type="invalid">
-                {formik.errors && formik.errors.screenshotInterval}
+                {formik.errors && formik.errors.interval}
               </Form.Control.Feedback>
             </Form.Group>
           </Row>
@@ -129,4 +131,4 @@ function EditScreenshotsSettingsModal({ show, onHide, data }) {
   );
 }
 
-export default EditScreenshotsSettingsModal;
+export default withModalWrapper(EditScreenshotsSettingsModal);

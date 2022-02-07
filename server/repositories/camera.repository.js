@@ -1,34 +1,34 @@
 import Camera from '../models/Camera.js';
 
-const getAll = async ({ userId, logger }) => {
-  logger(`cameraRepository.getAll userId: ${userId}`);
-  return await Camera.find({ user: userId });
+const getAll = async ({ user, logger }) => {
+  logger(`camera.repository.getAll user: ${user}`);
+  return await Camera.find({ user });
 };
 
-const getOne = async ({ userId, cameraId, logger }) => {
-  logger(`cameraRepository.getOne cameraId: ${cameraId}`);
-  return await Camera.findOne({ user: userId, _id: cameraId });
+const getOne = async ({ id, logger }) => {
+  logger(`camera.repository.getOne id: ${id}`);
+  return await Camera.findOne({ _id: id }).populate('imagesByTimeTask');
 };
 
-const getOneById = async ({ cameraId, logger }) => {
-  logger(`cameraRepository.getOneById cameraId: ${cameraId}`);
-  return await Camera.findOne({ _id: cameraId });
+const getOneById = async ({ id, logger }) => {
+  logger(`camera.repository.getOneById id: ${id}`);
+  return await Camera.findOne({ _id: id });
 };
 
-const createOne = async ({ userId, payload, logger }) => {
-  logger(`cameraRepository.createOne payload: ${payload}`);
-  const camera = new Camera({ user: userId, ...payload });
+const createOne = async ({ user, payload, logger }) => {
+  logger(`camera.repository.createOne payload: ${payload}`);
+  const camera = new Camera({ user, ...payload });
   return await camera.save();
 };
 
-const updateOne = async ({ userId, cameraId, payload, logger }) => {
-  logger(`cameraRepository.updateOne cameraId: ${cameraId}, payload: ${payload}`);
-  return await Camera.updateOne({ user: userId, _id: cameraId }, payload);
+const updateOne = async ({ id, payload, logger }) => {
+  logger(`camera.repository.updateOne id: ${id}, payload: ${payload}`);
+  return await Camera.updateOne({ _id: id }, payload);
 };
 
-const deleteOne = async ({ userId, cameraId, logger }) => {
-  logger(`cameraRepository.deleteOne cameraId: ${cameraId}`);
-  const camera = await Camera.findOne({ user: userId, _id: cameraId });
+const deleteOne = async ({ id, logger }) => {
+  logger(`camera.repository.deleteOne id: ${id}`);
+  const camera = await Camera.findOne({ _id: id });
   return await camera.remove();
 };
 

@@ -2,6 +2,7 @@ import React from 'react';
 import { Col } from 'react-bootstrap';
 import ImgWrapper from '../UI/ImgWrapper/ImgWrapper.jsx';
 import Heading from '../UI/Heading.jsx';
+import noImg from '../../assets/no_img.png';
 
 function CameraScreen({ selectedCamera }) {
   if (selectedCamera === null) {
@@ -10,7 +11,7 @@ function CameraScreen({ selectedCamera }) {
 
   const imageSrc = selectedCamera.avatar
     ? `/files/${selectedCamera.avatar}`
-    : '/assets/no_img.png';
+    : noImg;
 
   return (
     <Col md={12} className="mb-4">

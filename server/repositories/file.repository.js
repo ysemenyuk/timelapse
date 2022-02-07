@@ -1,27 +1,26 @@
 import CameraFile from '../models/File.js';
 
-const getAll = async ({ userId, cameraId, parentId, logger }) => {
-  logger(`fileRepository.getAll cameraId: ${cameraId}`);
+const getAll = async ({ camera, parent, logger }) => {
+  logger(`file.repository.getAll camera: ${camera}`);
   return await CameraFile.find({
-    user: userId,
-    camera: cameraId,
-    parent: parentId,
-    date: { $gte: new Date('2021-01-31T15:00:30'),  $lt: new Date('2022-01-31T15:00:35') } 
+    camera,
+    parent,
+    // date: { $gte: new Date('2021-01-31T15:00:30'), $lt: new Date('2022-01-31T15:00:35') },
   });
 };
 
-const getOneById = async ({ userId, cameraId, id, logger }) => {
-  logger(`fileRepository.getOneById id: ${id}`);
-  return await CameraFile.findOne({ user: userId, camera: cameraId, _id: id });
+const getOneById = async ({ id, logger }) => {
+  logger(`file.repository.getOneById id: ${id}`);
+  return await CameraFile.findOne({ _id: id });
 };
 
 const getOneByName = async ({ name, logger }) => {
-  logger(`fileRepository.getOneByName name: ${name}`);
-  return await CameraFile.findOne({ name: name });
+  logger(`file.repository.getOneByName name: ${name}`);
+  return await CameraFile.findOne({ name });
 };
 
 const createOne = async ({ date, name, user, camera, parent, storage, path, type, logger }) => {
-  logger(`fileRepository.createFile fileName: ${name}`);
+  logger(`file.repository.createFile fileName: ${name}`);
 
   const file = new CameraFile({
     date,
@@ -31,24 +30,29 @@ const createOne = async ({ date, name, user, camera, parent, storage, path, type
     parent,
     storage,
     path,
-    type
+    type,
   });
 
   await file.save();
   return file;
 };
 
-const deleteOne = async ({ userId, cameraId, id, logger }) => {
-  logger(`fileRepository.deleteById id: ${id}`);
-  return await CameraFile.findOneAndDelete({ user: userId, camera: cameraId, _id: id });
+const updateOne = async ({ id, payload, logger }) => {
+  logger(`file.repository.updateOne id: ${id}, payload: ${payload}`);
+  return await CameraFile.updateOne({ _id: id }, payload);
 };
 
-const deleteMany = async ({ userId, cameraId, ids, logger }) => {
-  logger(`fileRepository.deleteMany`);
+const deleteOne = async ({ id, logger }) => {
+  logger(`file.repository.deleteById id: ${id}`);
+  return await CameraFile.findOneAndDelete({ _id: id });
+};
+
+const deleteMany = async ({ ids, logger }) => {
+  logger(`file.repository.deleteMany`);
 
   // console.log('ids', ids);
 
-  return await CameraFile.deleteMany({ user: userId, camera: cameraId, _id: { $in: ids } });
+  return await CameraFile.deleteMany({ _id: { $in: ids } });
 };
 
-export default { getAll, getOneById, getOneByName, createOne, deleteOne, deleteMany };
+export default { getAll, getOneById, getOneByName, createOne, updateOne, deleteOne, deleteMany };

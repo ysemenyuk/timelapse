@@ -49,4 +49,18 @@ const deleteOneFile = createAsyncThunk('file/deleteOneFile', async ({ cameraId, 
   }
 });
 
-export default { fetchFiles, fetchMainFolder, deleteOneFile };
+const createScreenshot = createAsyncThunk('file/createScreenshot', async ({ cameraId, parentId }) => {
+  try {
+    console.log('file/createScreenshot cameraId, parentId -', cameraId, parentId);
+
+    const { data } = await fileManagerService.createScreenshot(cameraId, parentId);
+
+    console.log('file/createScreenshot response -', data);
+    return data;
+  } catch (e) {
+    console.log('file/createScreenshot error -', e.message);
+    throw e;
+  }
+});
+
+export default { fetchFiles, fetchMainFolder, deleteOneFile, createScreenshot };

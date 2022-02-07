@@ -10,7 +10,6 @@ import SignupPage from '../../pages/SignupPage.jsx';
 import ProfilePage from '../../pages/ProfilePage.jsx';
 import CameraListPage from '../../pages/CamerasListPage.jsx';
 import OneCameraPage from '../../pages/OneCameraPage.jsx';
-import ModalWrapper from '../Modals/ModalWrapper.jsx';
 
 function PrivateRoute({ children, ...rest }) {
   const user = useSelector((state) => state.user);
@@ -24,6 +23,7 @@ function App() {
   const user = useSelector((state) => state.user);
 
   useEffect(() => {
+    // eslint-disable-next-line no-unused-expressions
     user.tokenVerification && dispatch(userThunks.tokenVerification());
   }, []);
 
@@ -46,8 +46,6 @@ function App() {
               </PrivateRoute>
               <Redirect to="/" />
             </Switch>
-
-            <ModalWrapper />
           </Router>
         </Otherwise>
       </Choose>

@@ -8,6 +8,7 @@ import Heading from '../UI/Heading.jsx';
 import { EDIT_CAMERA } from '../../utils/constants.js';
 import { modalActions } from '../../store/modalSlice.js';
 import useThunkStatus from '../../hooks/useThunkStatus.js';
+import EditCameraModal from '../Modals/EditCameraModal.jsx';
 
 function CameraInfo({ selectedCamera }) {
   const dispatch = useDispatch();
@@ -19,7 +20,7 @@ function CameraInfo({ selectedCamera }) {
   };
 
   const openEditCameraModal = () => {
-    dispatch(modalActions.openModal({ type: EDIT_CAMERA, data: selectedCamera }));
+    dispatch(modalActions.openModal(EDIT_CAMERA));
   };
 
   const handleCameraPage = () => {
@@ -72,6 +73,8 @@ function CameraInfo({ selectedCamera }) {
           FilesPage
         </Button>
       </div>
+
+      <EditCameraModal data={selectedCamera} />
 
     </Col>
   );

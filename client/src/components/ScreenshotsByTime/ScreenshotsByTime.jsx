@@ -5,36 +5,50 @@ import Heading from '../UI/Heading.jsx';
 import { getFilesPerDay } from '../../utils/utils.js';
 import { modalActions } from '../../store/modalSlice.js';
 import { EDIT_SCREENSHOT_SETTINGS } from '../../utils/constants.js';
+import taskService from '../../api/task.service.js';
+import EditScreenshotsSettingsModal from '../Modals/EditScreenshotsSettingsModal.jsx';
 
-const initialValues = {
-  status: 'Stopped',
-  startTime: '08:00',
-  stopTime: '20:00',
-  interval: 60,
-};
+// const initialValues = {
+//   status: 'Stopped',
+//   startTime: '08:00',
+//   stopTime: '20:00',
+//   interval: 10,
+//   jobName: 'consoleLog',
+// };
 
 function ScreenshotsByTime({ selectedCamera, row }) {
   const dispatch = useDispatch();
 
-  // const [screenshotsData, setScreenshotsData] = useState(data);
-  const [running, setRunning] = useState(false);
+  const [screenshotsData, setScreenshotsData] = useState(() => {
+    const { status, data } = selectedCamera.imagesByTimeTask;
+    return { status, ...data };
+  });
 
-  const { startTime, stopTime, interval } = initialValues;
-  const files = getFilesPerDay(initialValues);
+  // console.log(111111444, screenshotsData);
+
+  // useEffect(() => {
+  //   taskService.getOne(selectedCamera._id, selectedCamera.imagesByTimeTask)
+  //     .then((resp) => {
+  //       console.log(11112, resp.data);
+  //       setScreenshotsData({ status: resp.data.status, ...resp.data.data });
+  //     });
+  // }, []);
+
+  const { status, startTime, stopTime, interval } = screenshotsData;
+  const isRunning = status === 'running';
+  const files = getFilesPerDay(screenshotsData);
 
   const handleOpenEditModal = () => {
-    dispatch(modalActions.openModal({
-      type: EDIT_SCREENSHOT_SETTINGS,
-      data: { initialValues },
-    }));
+    dispatch(modalActions.openModal(EDIT_SCREENSHOT_SETTINGS));
   };
 
-  const handleStart = () => {
-    setRunning(true);
+  const handleStart = async () => {
+    const { data } = await taskService.updateOne(selectedCamera._id, screenshotsData);
+    console.log(111222, data);
   };
 
   const handleStop = () => {
-    setRunning(false);
+    // console.log('stop')
   };
 
   if (!selectedCamera) {
@@ -49,7 +63,7 @@ function ScreenshotsByTime({ selectedCamera, row }) {
             <ListGroup.Item>
               <div className="d-flex justify-content-between align-items-start">
                 <div className="me-3">Make screenshots by time</div>
-                <Badge bg={running ? 'success' : 'secondary'}>{running ? 'Running' : 'Stopped'}</Badge>
+                <Badge bg={isRunning ? 'success' : 'secondary'}>{isRunning ? 'Running' : 'Stopped'}</Badge>
               </div>
               <div className="w-75 text-truncate text-muted">
                 {`Start: ${startTime}, Stop: ${stopTime}, Interval: ${interval} sec, Files/day: ${files}`}
@@ -65,7 +79,7 @@ function ScreenshotsByTime({ selectedCamera, row }) {
           <ListGroup className="mb-3">
             <ListGroup.Item className="d-flex">
               <div className="me-3 w-50">Status</div>
-              <Badge bg={running ? 'success' : 'secondary'}>{running ? 'Running' : 'Stopped'}</Badge>
+              <Badge bg={isRunning ? 'success' : 'secondary'}>{isRunning ? 'Running' : 'Stopped'}</Badge>
             </ListGroup.Item>
             <ListGroup.Item className="d-flex">
               <div className="me-3 w-50">Start time</div>
@@ -91,13 +105,18 @@ function ScreenshotsByTime({ selectedCamera, row }) {
         <Button onClick={handleOpenEditModal} variant="primary" size="sm" className="me-2">
           Edit
         </Button>
-        <Button disabled={!running} onClick={handleStop} variant="primary" size="sm" className="me-2">
+        <Button disabled={!isRunning} onClick={handleStop} variant="primary" size="sm" className="me-2">
           Stop
         </Button>
-        <Button disabled={running} onClick={handleStart} variant="primary" size="sm" className="me-2">
+        <Button disabled={isRunning} onClick={handleStart} variant="primary" size="sm" className="me-2">
           Start
         </Button>
       </>
+
+      <EditScreenshotsSettingsModal
+        initialValues={screenshotsData}
+        onSubmit={setScreenshotsData}
+      />
     </Col>
   );
 }

@@ -4,8 +4,10 @@ import { unwrapResult } from '@reduxjs/toolkit';
 import { Modal } from 'react-bootstrap';
 import cameraThunks from '../../thunks/cameraThunks.js';
 import CameraForm from './CameraForm.jsx';
+import { ADD_CAMERA } from '../../utils/constants.js';
+import withModalWrapper from './withModalWrapper.jsx';
 
-function AddCameraModal({ show, onHide }) {
+function AddCameraModal({ type, show, onHide }) {
   const dispatch = useDispatch();
 
   const handleSubmit = (values, { resetForm, setSubmitting, setFieldError }) => {
@@ -25,7 +27,7 @@ function AddCameraModal({ show, onHide }) {
 
   return (
     <Modal
-      show={show}
+      show={show && type === ADD_CAMERA}
       onHide={onHide}
     >
       <Modal.Header closeButton>
@@ -41,4 +43,4 @@ function AddCameraModal({ show, onHide }) {
   );
 }
 
-export default AddCameraModal;
+export default withModalWrapper(AddCameraModal);

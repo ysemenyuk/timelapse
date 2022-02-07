@@ -18,6 +18,8 @@ function CameraPage() {
   const fetchOneCamera = useThunkStatus(cameraThunks.fetchOne);
   const selectedCamera = useSelector((state) => state.camera.selectedCamera);
 
+  console.log(1111, selectedCamera);
+
   useEffect(() => {
     if (selectedCamera === null) {
       dispatch(cameraThunks.fetchOne(id));

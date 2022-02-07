@@ -12,6 +12,7 @@ import Error from '../UI/Error';
 import useFileManager from '../../hooks/useFileManager';
 import { IMAGE_VIEWER } from '../../utils/constants';
 import { modalActions } from '../../store/modalSlice';
+import ImgViewerModal from '../Modals/ImgViewerModal';
 
 function CameraFileManager({ selectedCamera }) {
   const dispatch = useDispatch();
@@ -29,10 +30,7 @@ function CameraFileManager({ selectedCamera }) {
 
   const clickFileHandler = (index) => {
     dispatch(fileManagerActions.setCurrentFileIndex({ cameraId, index }));
-    dispatch(modalActions.openModal({
-      type: IMAGE_VIEWER,
-      data: { files, selectedCamera },
-    }));
+    dispatch(modalActions.openModal(IMAGE_VIEWER));
   };
 
   const clickFolderHandler = (item) => {
@@ -63,6 +61,15 @@ function CameraFileManager({ selectedCamera }) {
       cameraId: selectedCamera._id,
       parentId: parentFolder._id,
     }));
+  };
+
+  const deleteFileHandler = (currentFile) => {
+    dispatch(
+      fileManagerActions.deleteOneFile({
+        cameraId: selectedCamera._id,
+        fileId: currentFile._id,
+      }),
+    );
   };
 
   const renderBreadcrumbs = () => foldersStack.map((folder) => (
@@ -179,12 +186,10 @@ function CameraFileManager({ selectedCamera }) {
         </Otherwise>
       </Choose>
 
-      {/* <ImgViewerModal
-        show={isVisibleImgViewerModal}
-        onHide={closeImgViewerModal}
+      <ImgViewerModal
         files={files}
         onDeleteFile={deleteFileHandler}
-      /> */}
+      />
     </>
   );
 }

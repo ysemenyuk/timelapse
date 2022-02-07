@@ -2,11 +2,10 @@ import express from 'express';
 import authMiddleware from '../middleware/authMiddleware.js';
 import userCameraMiddleware from '../middleware/userCameraMiddleware.js';
 import { asyncHandler } from '../middleware/errorHandlerMiddleware.js';
-import createFileController from '../controllers/file.controller.js';
+// import createFileController from '../controllers/file.controller.js';
 
-export default (app) => {
+export default (fileController) => {
   const router = express.Router({ mergeParams: true });
-  const fileController = createFileController(app);
 
   router.use(authMiddleware);
   router.use(userCameraMiddleware);
@@ -17,7 +16,6 @@ export default (app) => {
       req.logger(`fileRouter.get api/cameras/:cameraId/files?parent=${req.query.parentId}`);
 
       const files = await fileController.getAll({
-        userId: req.userId,
         cameraId: req.cameraId,
         parentId: req.query.parentId,
         logger: req.logger,
@@ -31,14 +29,12 @@ export default (app) => {
   );
 
   router.get(
-    '/:id',
+    '/:fileId',
     asyncHandler(async (req, res) => {
-      req.logger(`fileRouter.get api/cameras/:cameraId/files/${req.params.id}`);
+      req.logger(`fileRouter.get api/cameras/:cameraId/files/${req.params.fileId}`);
 
       const file = await fileController.getOne({
-        userId: req.userId,
-        cameraId: req.cameraId,
-        id: req.params.id,
+        id: req.params.fileId,
         logger: req.logger,
       });
 
@@ -50,18 +46,16 @@ export default (app) => {
   );
 
   router.post(
-    '/folder',
+    '/',
     asyncHandler(async (req, res) => {
       req.logger('fileRouter.post api/cameras/:cameraId/files/folder');
 
-      const folder = await fileController.createFolder({
+      const folder = await fileController.createOne({
         userId: req.userId,
         cameraId: req.cameraId,
-        name: req.body.name,
+        payload: req.body,
         logger: req.logger,
       });
-
-      // console.log('fileRouter folder:', folder);
 
       res.status(201).send(folder);
       req.logResp(req);
@@ -73,12 +67,12 @@ export default (app) => {
     asyncHandler(async (req, res) => {
       req.logger('fileRouter.post api/cameras/:cameraId/files/screenshot');
 
-      console.log('fileRouter screenshot req.body:', req.body);
+      // console.log('fileRouter screenshot req.body:', req.body);
 
       const screenshot = await fileController.createScreenshot({
         userId: req.userId,
         cameraId: req.cameraId,
-        parentId: req.body.parentId,
+        payload: req.body,
         logger: req.logger,
       });
 
@@ -90,14 +84,12 @@ export default (app) => {
   );
 
   router.delete(
-    '/:id',
+    '/:fileId',
     asyncHandler(async (req, res) => {
-      req.logger(`fileRouter.delete api/cameras/:cameraId/files/${req.params.id}`);
+      req.logger(`fileRouter.delete api/cameras/:cameraId/files/${req.params.fileId}`);
 
       await fileController.deleteOne({
-        userId: req.userId,
-        cameraId: req.cameraId,
-        id: req.params.id,
+        id: req.params.fileId,
         logger: req.logger,
       });
 

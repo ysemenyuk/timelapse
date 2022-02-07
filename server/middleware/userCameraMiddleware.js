@@ -7,7 +7,7 @@ export default async (req, res, next) => {
 
   try {
     const camera = await CameraRepo.getOneById({
-      cameraId: req.params.cameraId,
+      id: req.params.cameraId,
       logger: req.logger,
     });
 
