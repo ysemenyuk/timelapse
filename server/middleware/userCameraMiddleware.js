@@ -1,4 +1,4 @@
-import CameraRepo from '../repositories/camera.repository.js';
+import cameraService from '../services/camera.service.js';
 
 export default async (req, res, next) => {
   req.logger(`userCameraMiddleware cameraId: ${req.params.cameraId}`);
@@ -6,8 +6,8 @@ export default async (req, res, next) => {
   // console.log('req.params', req.params, req.userId);
 
   try {
-    const camera = await CameraRepo.getOneById({
-      id: req.params.cameraId,
+    const camera = await cameraService.getOneById({
+      cameraId: req.params.cameraId,
       logger: req.logger,
     });
 

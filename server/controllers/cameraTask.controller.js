@@ -1,7 +1,7 @@
 import mongodb from 'mongodb';
-import taskRepository from '../repositories/task.repository.js';
+import cameraTaskService from '../services/cameraTask.service.js';
 
-export default (worker) => {
+export default () => {
   const getAll = async ({ cameraId, logger }) => {
     logger(`task.controller.getAll`);
     const tasks = await taskRepository.getAll({ camera: cameraId, logger });

@@ -11,8 +11,8 @@ const CameraSchema = mongoose.Schema({
   imagesByTimeFolder: { type: mongoose.ObjectId, ref: 'CameraFile' },
   videosFolder: { type: mongoose.ObjectId, ref: 'CameraFile' },
   videosByTimeFolder: { type: mongoose.ObjectId, ref: 'CameraFile' },
-  imagesByTimeTask: { type: mongoose.ObjectId, ref: 'Task' },
-  videosByTimeTask: { type: mongoose.ObjectId, ref: 'Task' },
+  imagesByTimeTask: { type: mongoose.ObjectId, ref: 'CameraTask' },
+  videosByTimeTask: { type: mongoose.ObjectId, ref: 'CameraTask' },
 });
 
 const Camera = mongoose.model('Camera', CameraSchema);

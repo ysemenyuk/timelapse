@@ -56,14 +56,17 @@ const startServer = async () => {
     const worker = await initWorker(mongoClient, io);
     const storage = initStorage(mongoClient);
 
+    app.worker = worker;
+    app.storage = storage;
+
     const routers = getRouters();
     const controllers = getControllers();
 
     app.use('/files', routers.storage(storage));
 
     app.use('/api/users', routers.user(controllers.user()));
-    app.use('/api/cameras/:cameraId/tasks', routers.task(controllers.task(worker)));
-    app.use('/api/cameras/:cameraId/files', routers.file(controllers.file(storage)));
+    app.use('/api/cameras/:cameraId/tasks', routers.cameraTask(controllers.cameraTask()));
+    app.use('/api/cameras/:cameraId/files', routers.cameraFile(controllers.cameraFile()));
     app.use('/api/cameras', routers.camera(controllers.camera()));
 
     app.use((req, res, next) => {

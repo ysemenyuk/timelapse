@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-const TaskSchema = mongoose.Schema({
+const CameraTaskSchema = mongoose.Schema({
   name: { type: String },
   type: { type: String },
   status: { type: String },
@@ -14,6 +14,6 @@ const TaskSchema = mongoose.Schema({
   },
 });
 
-const Task = mongoose.model('Task', TaskSchema);
+const CameraTask = mongoose.model('CameraTask', CameraTaskSchema);
 
-export default Task;
+export default CameraTask;

@@ -1,6 +1,6 @@
 import express from 'express';
 import { asyncHandler } from '../middleware/errorHandlerMiddleware.js';
-import fileRepository from '../repositories/file.repository.js';
+import cameraFileService from '../services/cameraFile.service.js';
 import imageService from '../services/image.service.js';
 import * as consts from '../utils/constants.js';
 
@@ -12,8 +12,8 @@ export default (storage) => {
     asyncHandler(async (req, res) => {
       req.logger(`storage.router.get /files/${req.params.fileName}`);
 
-      const file = await fileRepository.getOneByName({
-        name: req.params.fileName,
+      const file = await cameraFileService.getOneByName({
+        fileName: req.params.fileName,
         logger: req.logger,
       });
 
@@ -48,26 +48,6 @@ export default (storage) => {
       });
     })
   );
-
-  // router.post(
-  //   '/',
-  //   asyncHandler((req, res) => {
-  //     if (!req.files || !req.files.file) {
-  //       return res.status(400).send('No file.');
-  //     }
-
-  //     const file = req.files.file.data;
-  //     const fileName = req.files.file.name;
-
-  //     const uploadStream = storage.openUploadStream({ fileName, logger });
-
-  //     Readable.from(file).pipe(uploadStream);
-
-  //     uploadStream.on('error', () => res.sendStatus(500));
-
-  //     uploadStream.on('finish', () => res.send(fileName));
-  //   })
-  // );
 
   return router;
 };

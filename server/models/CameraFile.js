@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-const FileSchema = mongoose.Schema({
+const CameraFileSchema = mongoose.Schema({
   name: { type: String, required: true },
   date: { type: Date, default: new Date() },
   user: { type: mongoose.ObjectId, ref: 'User' },
@@ -12,6 +12,6 @@ const FileSchema = mongoose.Schema({
   path: { type: String },
 });
 
-const File = mongoose.model('CameraFile', FileSchema);
+const CameraFile = mongoose.model('CameraFile', CameraFileSchema);
 
-export default File;
+export default CameraFile;
