@@ -1,98 +1,77 @@
-import bcrypt from 'bcryptjs';
-import _ from 'lodash';
-import jwt from '../libs/token.js';
-import { BadRequestError } from '../middleware/errorHandlerMiddleware.js';
 import userService from '../services/user.service.js';
 
 export default () => {
-  const singUp = async ({ payload, logger }) => {
-    logger(`userController.singUp payload: ${payload}`);
+  const singUp = async (req, res) => {
+    req.logger(`userController.singUp /api/user/singup`);
 
-    const { email, password } = payload;
-
-    // console.log('payload', payload);
-
-    const user = await userService.getByEmail({ email, logger });
-
-    if (user) {
-      logger(`userController.singUp email ${email} - already exist`);
-      throw new BadRequestError(`User with email ${email} already exist`);
-    }
-
-    const newUser = await userService.createOne({
-      email,
-      password,
-      logger,
+    const { token, user } = await userService.singUp({
+      email: req.body.email,
+      password: req.body.password,
+      logger: req.logger,
     });
 
-    // console.log('newUser', newUser);
-
-    const token = jwt.sign(newUser._id);
-
-    return { token, user: _.pick(newUser, ['_id', 'name', 'email', 'avatar']) };
+    res.status(201).send({ token, user });
+    req.logResp(req);
   };
 
-  const logIn = async ({ payload, logger }) => {
-    const { email, password } = payload;
-    logger(`userController.logIn email: ${email}`);
+  const logIn = async (req, res) => {
+    req.logger('userController.logIn /api/user/login');
 
-    const user = await userService.getByEmail({ email, logger });
+    const { token, user } = await userService.logIn({
+      email: req.body.email,
+      password: req.body.password,
+      logger: req.logger,
+    });
 
-    if (!user) {
-      logger(`userController.logIn Invalid email`);
-      throw new BadRequestError(`Invalid email`);
-    }
-
-    const isPassValid = bcrypt.compareSync(password, user.password);
-
-    if (!isPassValid) {
-      logger(`userController.logIn Invalid password`);
-      throw new BadRequestError(`Invalid password`);
-    }
-
-    const token = jwt.sign(user._id);
-
-    return { token, user: _.pick(user, ['_id', 'name', 'email', 'avatar']) };
+    res.status(200).send({ token, user });
+    req.logResp(req);
   };
 
-  const auth = async ({ userId, logger }) => {
-    logger(`userController.auth userId: ${userId}`);
+  const auth = async (req, res) => {
+    req.logger('userRouter.get /api/user/auth');
 
-    const user = await userService.getById({ id: userId, logger });
+    const { token, user } = await userService.auth({
+      userId: req.userId,
+      logger: req.logger,
+    });
 
-    const token = jwt.sign(user._id);
-
-    return { token, user: _.pick(user, ['_id', 'name', 'email', 'avatar']) };
+    res.status(200).send({ token, user });
+    req.logResp(req);
   };
 
-  const getOne = async ({ userId, logger }) => {
-    logger(`userController.getOne userId: ${userId}`);
+  const getOne = async (req, res) => {
+    logger(`userController.getOne userId: ${req.userId}`);
 
-    const user = await userService.getById({ id: userId, logger });
+    const user = await userService.getById({
+      userId: req.userId,
+      logger: req.logger,
+    });
 
-    return { user: _.pick(user, ['_id', 'name', 'email', 'avatar']) };
+    return user;
   };
 
-  const updateOne = async ({ userId, payload, logger }) => {
-    logger(`userController.updateOne userId: ${userId}`);
+  const updateOne = async (req, res) => {
+    logger(`userController.updateOne userId: ${req.userId}`);
 
-    const updatedUser = await userService.updateOne({ id: userId, payload, logger });
+    const updated = await userService.updateOne({
+      userId: req.userId,
+      payload: req.body,
+      logger: req.logger,
+    });
 
-    return { user: _.pick(updatedUser, ['_id', 'name', 'email', 'avatar']) };
+    return updated;
   };
 
-  const deleteOne = async ({ userId, logger }) => {
-    logger(`userController.deleteOne userId: ${userId}`);
+  const deleteOne = async (req, res) => {
+    logger(`userController.deleteOne userId: ${req.userId}`);
 
-    return await userService.deleteOne({ id: userId, logger });
+    const deleted = await userService.deleteOne({
+      userId: req.userId,
+      logger: req.logger,
+    });
+
+    return deleted;
   };
 
-  return {
-    singUp,
-    logIn,
-    auth,
-    getOne,
-    updateOne,
-    deleteOne,
-  };
+  return { singUp, logIn, auth, getOne, updateOne, deleteOne };
 };

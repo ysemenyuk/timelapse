@@ -62,15 +62,15 @@ function CameraInfo({ selectedCamera }) {
 
       <div className="mb-3">
         <Button onClick={openEditCameraModal} variant="primary" size="sm" className="me-2">
-          EditCamera
+          EditSettings
         </Button>
         <Button onClick={handleDelete} variant="primary" size="sm" className="me-2">
-          DeleteCamera
+          Delete
           {' '}
           {fetchStatus.isLoading && <Spinner as="span" animation="border" size="sm" />}
         </Button>
         <Button onClick={handleCameraPage} variant="info" size="sm" className="me-2">
-          FilesPage
+          GoToFiles
         </Button>
       </div>
 

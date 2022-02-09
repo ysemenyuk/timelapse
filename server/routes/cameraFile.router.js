@@ -4,18 +4,18 @@ import userCameraMiddleware from '../middleware/userCameraMiddleware.js';
 import { asyncHandler } from '../middleware/errorHandlerMiddleware.js';
 // import createFileController from '../controllers/file.controller.js';
 
-export default (fileController) => {
+export default (cameraFileController) => {
   const router = express.Router({ mergeParams: true });
 
   router.use(authMiddleware);
   router.use(userCameraMiddleware);
 
-  router.get('/', asyncHandler(fileController.getAll));
-  router.get('/:fileId', asyncHandler(fileController.getOne));
+  router.get('/', asyncHandler(cameraFileController.getAll));
+  router.get('/:fileId', asyncHandler(cameraFileController.getOne));
 
-  router.post('/', asyncHandler(fileController.createOne));
+  router.post('/', asyncHandler(cameraFileController.createOne));
 
-  router.delete('/:fileId', asyncHandler(fileController.deleteOne));
+  router.delete('/:fileId', asyncHandler(cameraFileController.deleteOne));
 
   return router;
 };

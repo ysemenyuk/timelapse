@@ -11,8 +11,10 @@ export default (cameraController) => {
   router.get('/', asyncHandler(cameraController.getAll));
   router.get('/:cameraId', asyncHandler(cameraController.getOne));
 
-  router.post('/', asyncHandler(cameraController.createOne));
-  router.post('/screenshot', asyncHandler(cameraController.createScreenshot));
+  router.post('/', cameraValidator.createOne, asyncHandler(cameraController.createOne));
+
+  router.post('/:cameraId/screenshot', asyncHandler(cameraController.createScreenshot));
+  router.post('/:cameraId/videofile', asyncHandler(cameraController.createVideoFile));
 
   router.put('/:cameraId', cameraValidator.updateOne, asyncHandler(cameraController.updateOne));
 

@@ -8,21 +8,23 @@ import { EDIT_SCREENSHOT_SETTINGS } from '../../utils/constants.js';
 import taskService from '../../api/task.service.js';
 import EditScreenshotsSettingsModal from '../Modals/EditScreenshotsSettingsModal.jsx';
 
-// const initialValues = {
-//   status: 'Stopped',
-//   startTime: '08:00',
-//   stopTime: '20:00',
-//   interval: 10,
-//   jobName: 'consoleLog',
-// };
+const initialValues = {
+  status: 'Stopped',
+  startTime: '08:00',
+  stopTime: '20:00',
+  interval: 10,
+  jobName: 'consoleLog',
+};
 
 function ScreenshotsByTime({ selectedCamera, row }) {
   const dispatch = useDispatch();
 
-  const [screenshotsData, setScreenshotsData] = useState(() => {
-    const { status, data } = selectedCamera.imagesByTimeTask;
-    return { status, ...data };
-  });
+  // const [screenshotsData, setScreenshotsData] = useState(() => {
+  //   const { status, data } = selectedCamera.imagesByTimeTask;
+  //   return { status, ...data };
+  // });
+
+  const [screenshotsData, setScreenshotsData] = useState(initialValues);
 
   // console.log(111111444, screenshotsData);
 
@@ -103,7 +105,7 @@ function ScreenshotsByTime({ selectedCamera, row }) {
 
       <>
         <Button onClick={handleOpenEditModal} variant="primary" size="sm" className="me-2">
-          Edit
+          EditSettings
         </Button>
         <Button disabled={!isRunning} onClick={handleStop} variant="primary" size="sm" className="me-2">
           Stop

@@ -1,4 +1,3 @@
-// import logger from '../libs/logger.js';
 import jwt from '../libs/token.js';
 
 export default (req, res, next) => {

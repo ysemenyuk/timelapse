@@ -20,7 +20,7 @@ const getOneByName = async ({ fileName, logger }) => {
 };
 
 const createOne = async ({ logger, ...payload }) => {
-  logger(`cameraFileService.createOne payload: ${payload}`);
+  logger(`cameraFileService.createOne payload.name: ${payload.name}`);
 
   const file = new CameraFile({
     ...payload,
@@ -44,8 +44,17 @@ const deleteOne = async ({ fileId, logger }) => {
   return deleted;
 };
 
-const deleteMany = async ({ filesIds, logger }) => {
-  logger(`cameraFileService.deleteMany`);
+const deleteCameraFiles = async ({ cameraId, logger }) => {
+  logger(`cameraFileService.deleteCameraFiles`);
+
+  // console.log('ids', ids);
+
+  const deleted = await CameraFile.deleteMany({ camera: cameraId });
+  return deleted;
+};
+
+const deleteManyByIds = async ({ filesIds, logger }) => {
+  logger(`cameraFileService.deleteManyByIds`);
 
   // console.log('ids', ids);
 
@@ -53,4 +62,13 @@ const deleteMany = async ({ filesIds, logger }) => {
   return deleted;
 };
 
-export default { getAll, getOneById, getOneByName, createOne, updateOne, deleteOne, deleteMany };
+export default {
+  getAll,
+  getOneById,
+  getOneByName,
+  createOne,
+  updateOne,
+  deleteOne,
+  deleteCameraFiles,
+  deleteManyByIds,
+};

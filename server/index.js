@@ -53,23 +53,25 @@ const startServer = async () => {
     logger(`Mongoose successfully Connected`);
 
     const io = initSocket(httpServer);
-    const worker = await initWorker(mongoClient, io);
     const storage = initStorage(mongoClient);
 
-    app.worker = worker;
+    const worker = await initWorker(mongoClient, storage, io);
+
+    app.io = io;
     app.storage = storage;
+    app.worker = worker;
 
     const routers = getRouters();
     const controllers = getControllers();
 
-    app.use('/files', routers.storage(storage));
+    app.use('/files', routers.storage());
 
-    app.use('/api/users', routers.user(controllers.user()));
     app.use('/api/cameras/:cameraId/tasks', routers.cameraTask(controllers.cameraTask()));
     app.use('/api/cameras/:cameraId/files', routers.cameraFile(controllers.cameraFile()));
     app.use('/api/cameras', routers.camera(controllers.camera()));
+    app.use('/api/users', routers.user(controllers.user()));
 
-    app.use((req, res, next) => {
+    app.use((req, res) => {
       res.status(404).send('Sorry cant find that!');
     });
 

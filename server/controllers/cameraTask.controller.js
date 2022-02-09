@@ -1,96 +1,68 @@
-import mongodb from 'mongodb';
+// import mongodb from 'mongodb';
 import cameraTaskService from '../services/cameraTask.service.js';
 
 export default () => {
-  const getAll = async ({ cameraId, logger }) => {
-    logger(`task.controller.getAll`);
-    const tasks = await taskRepository.getAll({ camera: cameraId, logger });
-    return tasks;
+  const getAll = async (req, res) => {
+    req.logger('cameraTask.controller getAll api/cameras/:cameraId/tasks');
+
+    const tasks = await cameraTaskService.getAll({
+      cameraId: req.params.cameraId,
+      logger: req.logger,
+    });
+
+    res.status(200).send(tasks);
+    req.logResp(req);
   };
 
-  const getOne = async ({ id, logger }) => {
-    logger(`task.controller.getOne id: ${id}`);
-    const task = await taskRepository.getOne({ id, logger });
+  const getOne = async (req, res) => {
+    req.logger(`cameraTask.controller getOne api/cameras/:cameraId/tasks/${req.params.taskId}`);
 
-    if (!task) {
-      logger(`task.controller.getOne id: ${id} - not found`);
-      throw new Error('task not found');
-    }
+    const task = await cameraTaskService.getOne({
+      taskId: req.params.taskId,
+      logger: req.logger,
+    });
 
-    return task;
+    res.status(200).send(task);
+    req.logResp(req);
   };
 
-  const createOne = async ({ userId, cameraId, payload, logger }) => {
-    logger(`task.controller.createOne payload: ${payload}`);
+  const createOne = async (req, res) => {
+    req.logger(`cameraTask.controller createOne api/cameras/:cameraId/tasks/`);
 
-    // TODO: create jobs?
+    const task = await cameraTaskService.createOne({
+      userId: req.userId,
+      cameraId: req.params.cameraId,
+      payload: req.body,
+      logger: req.logger,
+    });
 
-    console.log('task.controller.createOne payload', payload);
-
-    // const { jobName, status, ...data } = payload;
-
-    // const jobs = await worker.jobs({ name: jobName, 'data.cameraId': cameraId });
-
-    // console.log(333, jobs);
-
-    // const job = worker.create(jobName, { userId, cameraId, ...payload });
-    // job.repeatEvery(`${payload.interval} seconds`);
-    // const j = await job.save();
-
-    // // console.log(222, job);
-    // console.log(333, job.attrs._id);
-
-    // const task = await taskRepository.createOne({
-    //   user: userId,
-    //   camera: cameraId,
-    //   name: jobName,
-    //   status: status,
-    //   job: job.attrs._id,
-    //   data: data,
-    //   logger,
-    // });
-
-    // return task;
+    res.status(201).send(task);
+    req.logResp(req);
   };
 
-  const updateOne = async ({ id, payload, logger }) => {
-    logger(`task.controller.updateOne id: ${id}`);
-    const task = await taskRepository.getOne({ id, logger });
+  const updateOne = async (req, res) => {
+    req.logger(`cameraTask.controller updateOne api/cameras/:cameraId/tasks/${req.params.taskId}`);
 
-    if (!task) {
-      logger(`task.controller.updateOne id: ${id} - not found`);
-      throw new Error('task not found');
-    }
+    const updated = await cameraTaskService.updateOne({
+      taskId: req.params.taskId,
+      payload: req.body,
+      logger: req.logger,
+    });
 
-    // const { ObjectID } = mongodb;
-    // const id = new ObjectID(task.job);
-
-    console.log('task.controller.updateOne payload', payload);
-
-    // const { jobName, status, ...data } = payload;
-
-    // const jobs = await worker.jobs({ _id: task.job });
-
-    // console.log(111333, jobs);
-
-    // await taskRepository.updateOne({ userId, taskId, payload, logger });
-    // const updated = await taskRepository.getOne({ userId, id, logger });
-    // return updated;
+    res.status(201).send(updated);
+    req.logResp(req);
   };
 
-  const deleteOne = async ({ id, logger }) => {
-    logger(`task.controller.deleteOne taskId: ${id}`);
-    const task = await taskRepository.getOne({ id, logger });
+  const deleteOne = async (req, res) => {
+    req.logger(`cameraTask.controller deleteOne api/cameras/:cameraId/tasks/${req.params.taskId}`);
 
-    if (!task) {
-      logger(`task.controller.deleteOne taskId: ${taskId} - not found`);
-      throw new Error('taskId not found');
-    }
+    const deleted = await cameraTaskService.deleteOne({
+      id: req.params.taskId,
+      logger: req.logger,
+    });
 
-    // TODO: delete jobs?
-
-    const deleted = await taskRepository.deleteOne({ id, logger });
-    return deleted;
+    res.status(204).send(deleted);
+    req.logResp(req);
   };
 
   return { getAll, getOne, createOne, updateOne, deleteOne };

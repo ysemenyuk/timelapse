@@ -27,8 +27,8 @@ const updateOne = async (cameraId, data) => {
   return response;
 };
 
-const deleteOne = async (id) => {
-  const response = await instance.delete(`/${id}`, { headers: getAuthHeader() });
+const deleteOne = async (cameraId, taskId) => {
+  const response = await instance.delete(`/${cameraId}/tasks/${taskId}`, { headers: getAuthHeader() });
   return response;
 };
 

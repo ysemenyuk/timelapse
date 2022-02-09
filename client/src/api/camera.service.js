@@ -12,8 +12,8 @@ const getAll = async () => {
   return response;
 };
 
-const getOne = async (id) => {
-  const response = await instance.get(`/${id}`, { headers: getAuthHeader() });
+const getOne = async (cameraId) => {
+  const response = await instance.get(`/${cameraId}`, { headers: getAuthHeader() });
   return response;
 };
 
@@ -22,13 +22,18 @@ const createOne = async (data) => {
   return response;
 };
 
-const updateOne = async (id, data) => {
-  const response = await instance.put(`/${id}`, data, { headers: getAuthHeader() });
+const updateOne = async (cameraId, data) => {
+  const response = await instance.put(`/${cameraId}`, data, { headers: getAuthHeader() });
   return response;
 };
 
-const deleteOne = async (id) => {
-  const response = await instance.delete(`/${id}`, { headers: getAuthHeader() });
+const deleteOne = async (cameraId) => {
+  const response = await instance.delete(`/${cameraId}`, { headers: getAuthHeader() });
+  return response;
+};
+
+const createScreenshot = async (cameraId, parentId) => {
+  const response = await instance.post(`/${cameraId}/screenshot`, { parentId }, { headers: getAuthHeader() });
   return response;
 };
 
@@ -38,5 +43,5 @@ export default {
   createOne,
   updateOne,
   deleteOne,
-
+  createScreenshot,
 };

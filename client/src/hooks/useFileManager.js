@@ -21,7 +21,7 @@ export default function useFileManager(selectedCamera) {
       dispatch(
         fileManagerActions.setParentFolder({
           cameraId: selectedCamera._id,
-          folder: { _id: selectedCamera.mainFolder, name: 'main' },
+          folder: selectedCamera.mainFolder,
         }),
       );
     }

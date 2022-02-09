@@ -10,7 +10,7 @@ function CameraScreen({ selectedCamera }) {
   }
 
   const imageSrc = selectedCamera.avatar
-    ? `/files/${selectedCamera.avatar}`
+    ? `/files/${selectedCamera.avatar.name}`
     : noImg;
 
   return (

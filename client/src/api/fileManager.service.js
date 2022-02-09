@@ -22,14 +22,8 @@ const deleteOneFile = async (cameraId, fileId) => {
   return response;
 };
 
-const createScreenshot = async (cameraId, parentId) => {
-  const response = await instance.post(`/${cameraId}/files/screenshot`, { parentId }, { headers: getAuthHeader() });
-  return response;
-};
-
 export default {
   getFiles,
   getOneFile,
   deleteOneFile,
-  createScreenshot,
 };

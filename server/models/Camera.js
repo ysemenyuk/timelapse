@@ -7,11 +7,11 @@ const CameraSchema = mongoose.Schema({
   user: { type: mongoose.ObjectId, ref: 'User' },
   avatar: { type: mongoose.ObjectId, ref: 'CameraFile' },
   mainFolder: { type: mongoose.ObjectId, ref: 'CameraFile' },
-  imagesFolder: { type: mongoose.ObjectId, ref: 'CameraFile' },
-  imagesByTimeFolder: { type: mongoose.ObjectId, ref: 'CameraFile' },
+  screenshotsFolder: { type: mongoose.ObjectId, ref: 'CameraFile' },
+  screenshotsByTimeFolder: { type: mongoose.ObjectId, ref: 'CameraFile' },
   videosFolder: { type: mongoose.ObjectId, ref: 'CameraFile' },
   videosByTimeFolder: { type: mongoose.ObjectId, ref: 'CameraFile' },
-  imagesByTimeTask: { type: mongoose.ObjectId, ref: 'CameraTask' },
+  screenshotsByTimeTask: { type: mongoose.ObjectId, ref: 'CameraTask' },
   videosByTimeTask: { type: mongoose.ObjectId, ref: 'CameraTask' },
 });
 
