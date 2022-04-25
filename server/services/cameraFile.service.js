@@ -1,12 +1,19 @@
 import CameraFile from '../models/CameraFile.js';
 
+const storageType = process.env.STORAGE_TYPE || 'gridfs';
+
 const getAll = async ({ cameraId, parentId, logger }) => {
   logger(`cameraFileService.getAll cameraId: ${cameraId} parentId: ${parentId}`);
   return await CameraFile.find({
     camera: cameraId,
     parent: parentId,
+    // storage: storageType,
     // date: { $gte: new Date('2021-01-31T15:00:30'), $lt: new Date('2022-01-31T15:00:35') },
   });
+};
+
+const getOne = async (payload) => {
+  return await CameraFile.findOne(payload);
 };
 
 const getOneById = async ({ fileId, logger }) => {
@@ -15,12 +22,12 @@ const getOneById = async ({ fileId, logger }) => {
 };
 
 const getOneByName = async ({ fileName, logger }) => {
-  logger(`cameraFileService.getOneByName cameraFileName: ${fileName}`);
+  logger && logger(`cameraFileService.getOneByName cameraFileName: ${fileName}`);
   return await CameraFile.findOne({ name: fileName });
 };
 
 const createOne = async ({ logger, ...payload }) => {
-  logger(`cameraFileService.createOne payload.name: ${payload.name}`);
+  logger && logger(`cameraFileService.createOne payload.name: ${payload.name}`);
 
   const file = new CameraFile({
     ...payload,
@@ -64,6 +71,7 @@ const deleteManyByIds = async ({ filesIds, logger }) => {
 
 export default {
   getAll,
+  getOne,
   getOneById,
   getOneByName,
   createOne,

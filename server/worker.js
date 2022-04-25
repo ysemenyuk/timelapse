@@ -4,7 +4,7 @@ import jobs from './jobs/index.js';
 const jobTypes = process.env.JOB_TYPES ? process.env.JOB_TYPES.split(',') : [];
 
 export default async (mongoClient, storage, io) => {
-  const agenda = new Agenda({ mongo: mongoClient.db('myFirstDatabase') });
+  const agenda = new Agenda({ mongo: mongoClient.db('timelapse') });
 
   agenda.processEvery('10 seconds');
 

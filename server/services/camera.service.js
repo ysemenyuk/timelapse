@@ -1,4 +1,7 @@
-import path from 'path';
+import fs from "fs";
+import path from "path";
+const fsp = fs.promises;
+import moment from 'moment';
 import { makeFileName, promisifyUploadStream } from '../utils/index.js';
 import cameraFileService from './cameraFile.service.js';
 import cameraApiService from './cameraApi.service.js';
@@ -111,11 +114,13 @@ const createScreenshot = async ({ userId, cameraId, payload, storage, logger }) 
 
   // TODO: check folder if not exist create
 
-  const filePath = path.join(camera._id.toString(), parent.name);
+  const filePath = [camera._id.toString(), parent.name]
 
   const date = new Date();
   const fileName = makeFileName(date);
-
+  
+  // const date = moment().format()
+  // const fileName = `${date}.jpg`;
   // console.log(111, date, date.toString())
 
   const dataStream = await cameraApiService.getScreenshot(camera.screenshotLink, 'stream');
@@ -125,12 +130,15 @@ const createScreenshot = async ({ userId, cameraId, payload, storage, logger }) 
 
   await promisifyUploadStream(uploadStream);
 
+  // const file = await storage.writeFile({ filePath, fileName, logger, data });
+  // console.log(2222, file)
+
   // console.log('date', date, date.toLocaleString());
   // console.log('date', date, date.toISOString());
 
   const screenshot = await cameraFileService.createOne({
     name: fileName,
-    date: date.toISOString(),
+    date: date,
     user: userId,
     camera: cameraId,
     parent: parentId,
@@ -139,6 +147,8 @@ const createScreenshot = async ({ userId, cameraId, payload, storage, logger }) 
     type: constants.SCREENSHOT,
     logger,
   });
+
+  console.log(33333, 'screenshot', screenshot);
 
   return screenshot;
 };

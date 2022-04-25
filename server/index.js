@@ -16,7 +16,9 @@ import getControllers from './controllers/index.js';
 
 const mode = process.env.NODE_ENV || 'development';
 const PORT = process.env.PORT || 4000;
+// const dbUri = 'mongodb://localhost:27017/timelapse';
 const dbUri = process.env.MONGO_URI;
+
 
 const logger = debug('server');
 
@@ -33,6 +35,8 @@ app.use(fileUpload());
 
 const startServer = async () => {
   try {
+    console.log(`Starting server`);
+
     const { MongoClient } = mongodb;
 
     const mongoClient = new MongoClient(dbUri, {
@@ -42,6 +46,8 @@ const startServer = async () => {
 
     await mongoClient.connect();
 
+
+    console.log(`MongoClient successfully Connected`);
     logger(`MongoClient successfully Connected`);
 
     await mongoose.connect(dbUri, {
@@ -50,6 +56,7 @@ const startServer = async () => {
       useFindAndModify: false,
     });
 
+    console.log(`Mongoose successfully Connected`);
     logger(`Mongoose successfully Connected`);
 
     const io = initSocket(httpServer);
@@ -78,6 +85,7 @@ const startServer = async () => {
     app.use(errorHandlerMiddleware);
 
     httpServer.listen(PORT, () => {
+      console.log(`httpServer running in ${mode} mode on port ${PORT}`);
       logger(`httpServer running in ${mode} mode on port ${PORT}`);
     });
   } catch (e) {
