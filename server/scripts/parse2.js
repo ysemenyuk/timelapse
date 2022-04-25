@@ -8,24 +8,37 @@ const fsp = fs.promises;
 
 const dbUri = 'mongodb+srv://qwer:qwer1234@cluster0.y8ae6.mongodb.net/myFirstDatabase?retryWrites=true&w=majority';
 
-const pathToStorage = 'C:\\timelapse\\timelapse\\server\\files';
-const pathToDir = '60b56c7c2fdb7d0b6a820a73\\screenshots';
+const pathToStorage = 'C:\\timelapse\\storage';
+const startPath = '60b56c7c2fdb7d0b6a820a73';
+const startParent = '60b56c7c2fdb7d0b6a820a73'
 
-const fullPath = path.join(pathToStorage, pathToDir);
 
-const start = async () => {
-  try {
-    const files = await fsp.readdir(fullPath);
-    console.log(222, 'files', files);
 
-    console.log(await fsp.stat(files[0]));
+const start = (filePath, parent) => {
+  const fullPath = path.join(pathToStorage, filePath);
+  const files = fs.readdirSync(fullPath);
 
-    // files.map(async (file) => {
-    //   console.log(await fsp.stat(file));
-    // });
-  } catch (error) {
-    console.log(123, error);
-  }
+  console.log(222, 'files', files);
+
+  const result = []
+
+  files.forEach((fileName) => {
+    const fullFilePath = path.join(fullPath, fileName)
+    const fileStat = fs.statSync(fullFilePath)
+
+    const item = {name: fileName, path: filePath, parent }
+
+    if (fileStat.isDirectory()) {
+      const nextPath = path.join(filePath, fileName)
+      result.push({...item, type: 'dir'}, ...start(nextPath, fileName))
+    } else {
+      result.push({...item, type: 'file'})
+    }
+    
+  });
+  
+  return result
 };
 
-start();
+const res = start(startPath, startParent);
+console.log(res)
