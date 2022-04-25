@@ -6,7 +6,7 @@ import CameraFile from '../models/CameraFile.js';
 
 const fsp = fs.promises;
 
-const dbUri = 'mongodb+srv://qwer:qwer1234@cluster0.y8ae6.mongodb.net/myFirstDatabase?retryWrites=true&w=majority';
+const dbUri = 'mongodb://localhost:27017/timelapse';
 
 const pathToStorage = 'C:\\timelapse\\timelapse\\server\\files';
 const pathToDir = '60b56c7c2fdb7d0b6a820a73\\screenshots';
